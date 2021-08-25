@@ -1,0 +1,1166 @@
+﻿
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["PageName"] = "tables_basic";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i>  Dashboard";
+    ViewData["Category1"] = "html";
+    ViewData["PageDescription"] = "";
+}
+<link rel="stylesheet" media="screen, print" href="~/css/statistics/c3/c3.css">
+
+<div class="row">
+    <div class="col-sm-12 col-xl-12">
+        <h1>
+            <span class="fw-400">Total sums collected during the month of <span class="text-info">  (October)  </span>  </span> <span class="color-success-700 fw-900">  (SAR 425,4556)  </span>  </span>
+        </h1>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-sm-6 col-xl-2">
+        <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+            <div class="">
+                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                    425,823
+                    <small class="m-0 l-h-n"> <h3 class="fw-500"> Building </h3> </small>
+                </h3>
+            </div>
+            <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
+            <div class="">
+                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                    425,823
+                    <small class="m-0 l-h-n"> <h3 class="fw-500">  Daar Residence </h3> </small>
+                </h3>
+            </div>
+            <i class="fal fa-gem position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
+            <div class="">
+                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                    452,789
+                    <small class="m-0 l-h-n"> <h3 class="fw-500">   Desert Rose </h3> </small>
+                </h3>
+            </div>
+            <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+            <div class="">
+                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                    425,823
+                    <small class="m-0 l-h-n"> <h3 class="fw-500"> Meadow Park  </h3> </small>
+                </h3>
+            </div>
+            <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4" style="font-size: 6rem;"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
+            <div class="">
+                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                    425,823
+                    <small class="m-0 l-h-n"> <h3 class="fw-500">  24 Villa </h3> </small>
+                </h3>
+            </div>
+            <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4" style="font-size: 6rem;"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
+            <div class="">
+                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                    425,823
+                    <small class="m-0 l-h-n"> <h3 class="fw-500">  14 Villa </h3> </small>
+                </h3>
+            </div>
+            <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4" style="font-size: 6rem;"></i>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+
+
+
+
+    <div class="col-xl-12">
+        <div class="row">
+            <div class="col-xl-6">
+                <div id="panel-9" class="panel">
+                    <div class="panel-hdr">
+                        <h2>
+                            Daar Residence
+                            <span class="fw-300"><i>Chart</i></span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                            <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                          
+                            <div id="pieChart" style="width:100%; height:300px;"></div>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div id="panel-9" class="panel">
+                    <div class="panel-hdr">
+                        <h2>
+                            Daar Residence
+                            <span class="fw-300"><i>Chart</i></span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                            <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+
+                            <div id="pieChart" style="width:100%; height:300px;"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+<div class="row">
+    <div class="col-xl-12">
+
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary">  Representative  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Representative </th>
+                                <th>Collected amounts </th>
+                                <th>New contracts </th>
+                                <th>Renewed contracts </th>
+                                <th>Commission </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> 01 </td>
+                                <td> Hisham Madien</td>
+                                <td> 64564654 SAR </td>
+                                <td> 12 </td>
+                                <td> 5 </td>
+                                <td> 64564654 SAR </td>
+
+                            </tr>
+                            <tr>
+                                <td> 02 </td>
+                                <td> Hisham Madien</td>
+                                <td> 6456254654 SAR </td>
+                                <td> 152 </td>
+                                <th> 95 </th>
+                                <th> 964564654 SAR </th>
+
+                            </tr>
+
+
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+
+                                <th class="text-danger ">Total</th>
+                                <th> </th>
+                                <th class="text-danger "> 156546 SAR</th>
+                                <th class="text-danger ">12 </th>
+                                <th class="text-danger"> 5</th>
+                                <th class="text-danger"> 464646 SAR</th>
+
+
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6">
+
+        <div id="panel-5" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Daar Residence Contracts <span class="fw-300"><i></i></span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+
+                    <div class="frame-wrap">
+                        <table class="table table-bordered table-hover m-0 table-striped">
+                            <thead class="thead-themed">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Occupied</th>
+                                    <th> Vacant</th>
+                                    <th class="text-info ">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Villa AZ</th>
+                                    <td>2</td>
+                                    <td>10</td>
+                                    <th scope="row" class="text-info ">12</th>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row"> Flats AZ  </th>
+                                    <td>3</td>
+                                    <td>15</td>
+                                    <th scope="row" class="text-info ">18</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row"> Flats AZ employee </th>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <th scope="row" class="text-info ">9</th>
+                                </tr>
+
+
+                                <tr>
+                                    <th scope="row"> Villa AZ employee </th>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <th scope="row" class="text-info ">1</th>
+                                </tr>
+
+
+
+
+
+                                <tr>
+                                    <th scope="row" class="text-danger ">   Total  </th>
+                                    <td scope="row" class="text-danger "> 10 </td>
+                                    <td scope="row" class="text-danger ">30</td>
+                                    <th scope="row" class="text-danger ">40</th>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="col-xl-6">
+
+        <div id="panel-5" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Desert Rose Contracts<span class="fw-300"><i></i></span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+
+                    <div class="frame-wrap">
+                        <table class="table table-bordered table-hover m-0 table-striped">
+                            <thead class="thead-themed">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Occupied</th>
+                                    <th> Vacant</th>
+                                    <th class="text-info ">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Villa AZ</th>
+                                    <td>2</td>
+                                    <td>10</td>
+                                    <th scope="row" class="text-info ">12</th>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row"> Flats AZ  </th>
+                                    <td>3</td>
+                                    <td>15</td>
+                                    <th scope="row" class="text-info ">18</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row"> Flats AZ employee </th>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <th scope="row" class="text-info ">9</th>
+                                </tr>
+
+
+                                <tr>
+                                    <th scope="row"> Villa AZ employee </th>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <th scope="row" class="text-info ">1</th>
+                                </tr>
+
+
+
+
+
+                                <tr>
+                                    <th scope="row" class="text-danger ">   Total  </th>
+                                    <td scope="row" class="text-danger "> 10 </td>
+                                    <td scope="row" class="text-danger ">30</td>
+                                    <th scope="row" class="text-danger ">40</th>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-xl-4">
+
+        <div id="panel-5" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Daar Residence Contracts <span class="fw-300"><i></i></span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+
+                    <div class="frame-wrap">
+                        <table class="table table-bordered table-hover m-0 table-striped">
+                            <thead class="thead-themed">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Occupied</th>
+                                    <th> Vacant</th>
+                                    <th class="text-info ">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Villa AZ</th>
+                                    <td>2</td>
+                                    <td>10</td>
+                                    <th scope="row" class="text-info ">12</th>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row"> Flats AZ  </th>
+                                    <td>3</td>
+                                    <td>15</td>
+                                    <th scope="row" class="text-info ">18</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row"> Flats AZ employee </th>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <th scope="row" class="text-info ">9</th>
+                                </tr>
+
+
+                                <tr>
+                                    <th scope="row"> Villa AZ employee </th>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <th scope="row" class="text-info ">1</th>
+                                </tr>
+
+
+
+
+
+                                <tr>
+                                    <th scope="row" class="text-danger ">   Total  </th>
+                                    <td scope="row" class="text-danger "> 10 </td>
+                                    <td scope="row" class="text-danger ">30</td>
+                                    <th scope="row" class="text-danger ">40</th>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="col-xl-4">
+
+        <div id="panel-5" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    24 Villa Contracts <span class="fw-300"><i></i></span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+
+                    <div class="frame-wrap">
+                        <table class="table table-bordered table-hover m-0 table-striped">
+                            <thead class="thead-themed">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Occupied</th>
+                                    <th> Vacant</th>
+                                    <th class="text-info ">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Villa AZ</th>
+                                    <td>2</td>
+                                    <td>10</td>
+                                    <th scope="row" class="text-info ">12</th>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row"> Flats AZ  </th>
+                                    <td>3</td>
+                                    <td>15</td>
+                                    <th scope="row" class="text-info ">18</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row"> Flats AZ employee </th>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <th scope="row" class="text-info ">9</th>
+                                </tr>
+
+
+                                <tr>
+                                    <th scope="row"> Villa AZ employee </th>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <th scope="row" class="text-info ">1</th>
+                                </tr>
+
+
+
+
+
+                                <tr>
+                                    <th scope="row" class="text-danger ">   Total  </th>
+                                    <td scope="row" class="text-danger "> 10 </td>
+                                    <td scope="row" class="text-danger ">30</td>
+                                    <th scope="row" class="text-danger ">40</th>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="col-xl-4">
+
+        <div id="panel-5" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Building  <span class="fw-300"><i></i></span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="frame-wrap">
+                        <table class="table table-bordered table-hover m-0 table-striped">
+                            <thead class="thead-themed">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Occupied</th>
+                                    <th> Vacant</th>
+                                    <th class="text-info ">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Villa AZ</th>
+                                    <td>2</td>
+                                    <td>10</td>
+                                    <th scope="row" class="text-info ">12</th>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row"> Flats AZ  </th>
+                                    <td>3</td>
+                                    <td>15</td>
+                                    <th scope="row" class="text-info ">18</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row"> Flats AZ employee </th>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <th scope="row" class="text-info ">9</th>
+                                </tr>
+
+
+                                <tr>
+                                    <th scope="row"> Villa AZ employee </th>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <th scope="row" class="text-info ">1</th>
+                                </tr>
+
+
+
+
+
+                                <tr>
+                                    <th scope="row" class="text-danger ">   Total  </th>
+                                    <td scope="row" class="text-danger "> 10 </td>
+                                    <td scope="row" class="text-danger ">30</td>
+                                    <th scope="row" class="text-danger ">40</th>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+    **********
+<div class="row">
+    <div class="col-lg-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Marketing profits
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content bg-subtlelight-fade">
+                    <div id="js-checkbox-toggles" class="d-flex mb-3">
+                        <div class="custom-control custom-switch mr-2">
+                            <input type="checkbox" class="custom-control-input" name="gra-0" id="gra-0" checked="checked">
+                            <label class="custom-control-label" for="gra-0">Target Profit</label>
+                        </div>
+                        <div class="custom-control custom-switch mr-2">
+                            <input type="checkbox" class="custom-control-input" name="gra-1" id="gra-1" checked="checked">
+                            <label class="custom-control-label" for="gra-1">Actual Profit</label>
+                        </div>
+                        <div class="custom-control custom-switch mr-2">
+                            <input type="checkbox" class="custom-control-input" name="gra-2" id="gra-2" checked="checked">
+                            <label class="custom-control-label" for="gra-2">User Signups</label>
+                        </div>
+                    </div>
+                    <div id="flot-toggles" class="w-100 mt-4" style="height: 300px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div id="panel-2" class="panel panel-locked" data-panel-sortable data-panel-collapsed data-panel-close>
+            <div class="panel-hdr">
+                <h2>
+                    Representative <span class="fw-300"><i>Hisham</i></span>
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content poisition-relative">
+                    <div class="p-1 position-absolute pos-right pos-top mt-3 mr-3 z-index-cloud d-flex align-items-center justify-content-center">
+                        <div class="border-faded border-top-0 border-left-0 border-bottom-0 py-2 pr-4 mr-3 hidden-sm-down">
+                            <div class="text-right fw-500 l-h-n d-flex flex-column">
+                                <div class="h3 m-0 d-flex align-items-center justify-content-end">
+                                    <div class='icon-stack mr-2'>
+                                        <i class="base base-7 icon-stack-3x opacity-100 color-success-600"></i>
+                                        <i class="base base-7 icon-stack-2x opacity-100 color-success-500"></i>
+                                        <i class="fal fa-arrow-up icon-stack-1x opacity-100 color-white"></i>
+                                    </div>
+                                    $44.34 / GE
+                                </div>
+                                <span class="m-0 fs-xs text-muted">Increased Profit as per redux margins and estimates</span>
+                            </div>
+                        </div>
+                        <div class="js-easy-pie-chart color-info-400 position-relative d-inline-flex align-items-center justify-content-center" data-percent="35" data-piesize="95" data-linewidth="10" data-scalelength="5">
+                            <div class="js-easy-pie-chart color-success-400 position-relative position-absolute pos-left pos-right pos-top pos-bottom d-flex align-items-center justify-content-center" data-percent="65" data-piesize="60" data-linewidth="5" data-scalelength="1" data-scalecolor="#fff">
+                                <div class="position-absolute pos-top pos-left pos-right pos-bottom d-flex align-items-center justify-content-center fw-500 fs-xl text-dark">78%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="flot-area" style="width:100%; height:300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div id="panel-3" class="panel panel-locked" data-panel-sortable data-panel-collapsed data-panel-close>
+            <div class="panel-hdr">
+                <h2>
+                    Effective <span class="fw-300"><i>Marketing</i></span>
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content poisition-relative">
+                    <div class="pb-5 pt-3">
+                        <div class="row">
+                            <div class="col-6 col-xl-3 d-sm-flex align-items-center">
+                                <div class="p-2 mr-3 bg-info-200 rounded">
+                                    <span class="peity-bar" data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">3,4,5,8,2</span>
+                                </div>
+                                <div>
+                                    <label class="fs-sm mb-0">Bounce Rate</label>
+                                    <h4 class="font-weight-bold mb-0">37.56%</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 col-xl-3 d-sm-flex align-items-center">
+                                <div class="p-2 mr-3 bg-info-300 rounded">
+                                    <span class="peity-bar" data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">5,3,1,7,9</span>
+                                </div>
+                                <div>
+                                    <label class="fs-sm mb-0">Sessions</label>
+                                    <h4 class="font-weight-bold mb-0">759</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 col-xl-3 d-sm-flex align-items-center">
+                                <div class="p-2 mr-3 bg-success-300 rounded">
+                                    <span class="peity-bar" data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">3,4,3,5,5</span>
+                                </div>
+                                <div>
+                                    <label class="fs-sm mb-0">New Sessions</label>
+                                    <h4 class="font-weight-bold mb-0">12.17%</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 col-xl-3 d-sm-flex align-items-center">
+                                <div class="p-2 mr-3 bg-success-500 rounded">
+                                    <span class="peity-bar" data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">6,4,7,5,6</span>
+                                </div>
+                                <div>
+                                    <label class="fs-sm mb-0">Clickthrough</label>
+                                    <h4 class="font-weight-bold mb-0">19.77%</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="flotVisit" style="width:100%; height:208px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section ScriptsBlock {
+    <script src="~/js/statistics/d3/d3.js"></script>
+    <script src="~/js/statistics/c3/c3.js"></script>
+    <script src="~/js/statistics/demo-data/demo-c3.js"></script>
+    <script>
+        var colors = [color.success._500, color.danger._500, color.info._500, color.primary._500, color.warning._500];
+        var simpleLine = c3.generate({
+            bindto: "#simpleLine",
+            data: {
+                columns: [
+                    ["data1", 100, 165, 140, 270, 200, 140, 220],
+                    ["data2", 110, 80, 100, 85, 125, 90, 100]
+                ]
+            },
+            color: {
+                pattern: colors
+            }
+        });
+        var linleRegions = c3.generate({
+            bindto: "#linleRegions",
+            data: {
+                columns: [
+                    ['data1', 30, 200, 100, 400, 150, 250],
+                    ['data2', 50, 20, 10, 40, 15, 25]
+                ],
+                regions: {
+                    'data1': [{ 'start': 1, 'end': 2, 'style': 'dashed' }, { 'start': 3 }], // currently 'dashed' style only
+                    'data2': [{ 'end': 3 }]
+                }
+            },
+            color: {
+                pattern: colors
+            }
+        });
+        var timeSeries = c3.generate({
+            bindto: "#timeSeries",
+            data: {
+                x: 'x',
+                xFormat: '%Y',
+                columns: [
+                    ['x', '2010', '2011', '2012', '2013', '2014', '2015'],
+                    ['data1', 30, 200, 100, 400, 150, 250],
+                    ['data2', 130, 340, 200, 500, 250, 350]
+                ]
+            },
+            color: {
+                pattern: colors
+            },
+            axis: {
+                x: {
+                    type: 'timeseries',
+                    // if true, treat x value as localtime (Default)
+                    // if false, convert to UTC internally
+                    localtime: false,
+                    tick: {
+                        format: '%Y-%m-%d %H:%M:%S'
+                    }
+                }
+            }
+        });
+        var splilneLine = c3.generate({
+            bindto: "#splilneLine",
+            data: {
+                columns: [
+                    ['data1', 30, 200, 100, 400, 150, 250],
+                    ['data2', 130, 100, 140, 200, 150, 50]
+                ],
+                type: 'spline'
+            },
+            color: {
+                pattern: colors
+            }
+        });
+        var scatterChart = c3.generate({
+            bindto: "#scatterChart",
+            data: {
+                xs: {
+                    setosa: 'setosa_x',
+                    versicolor: 'versicolor_x',
+                },
+                // iris data from R
+                columns: [
+                    ["setosa_x", 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.4, 3.0, 3.0, 4.0, 4.4, 3.9, 3.5, 3.8, 3.8, 3.4, 3.7, 3.6, 3.3, 3.4, 3.0, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3.0, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3.0, 3.8, 3.2, 3.7, 3.3],
+                    ["versicolor_x", 3.2, 3.2, 3.1, 2.3, 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2.0, 3.0, 2.2, 2.9, 2.9, 3.1, 3.0, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3.0, 2.8, 3.0, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3.0, 3.4, 3.1, 2.3, 3.0, 2.5, 2.6, 3.0, 2.6, 2.3, 2.7, 3.0, 2.9, 2.9, 2.5, 2.8],
+                    ["setosa", 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2, 0.4, 0.4, 0.3, 0.3, 0.3, 0.2, 0.4, 0.2, 0.5, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.4, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2, 0.3, 0.3, 0.2, 0.6, 0.4, 0.3, 0.2, 0.2, 0.2, 0.2],
+                    ["versicolor", 1.4, 1.5, 1.5, 1.3, 1.5, 1.3, 1.6, 1.0, 1.3, 1.4, 1.0, 1.5, 1.0, 1.4, 1.3, 1.4, 1.5, 1.0, 1.5, 1.1, 1.8, 1.3, 1.5, 1.2, 1.3, 1.4, 1.4, 1.7, 1.5, 1.0, 1.1, 1.0, 1.2, 1.6, 1.5, 1.6, 1.5, 1.3, 1.3, 1.3, 1.2, 1.4, 1.2, 1.0, 1.3, 1.2, 1.3, 1.3, 1.1, 1.3],
+                ],
+                type: 'scatter'
+            },
+            color: {
+                pattern: colors
+            },
+            axis: {
+                x: {
+                    label: 'Sepal.Width',
+                    tick: {
+                        fit: false
+                    }
+                },
+                y: {
+                    label: 'Petal.Width'
+                }
+            }
+        });
+        var scatterChartLoad = function () {
+            $("#scatterChartLoad").attr("disabled", true);
+            setTimeout(function () {
+                scatterChart.load({
+                    xs: {
+                        virginica: 'virginica_x'
+                    },
+                    columns: [
+                        ["virginica_x", 3.3, 2.7, 3.0, 2.9, 3.0, 3.0, 2.5, 2.9, 2.5, 3.6, 3.2, 2.7, 3.0, 2.5, 2.8, 3.2, 3.0, 3.8, 2.6, 2.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3.0, 2.8, 3.0, 2.8, 3.8, 2.8, 2.8, 2.6, 3.0, 3.4, 3.1, 3.0, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3.0, 2.5, 3.0, 3.4, 3.0],
+                        ["virginica", 2.5, 1.9, 2.1, 1.8, 2.2, 2.1, 1.7, 1.8, 1.8, 2.5, 2.0, 1.9, 2.1, 2.0, 2.4, 2.3, 1.8, 2.2, 2.3, 1.5, 2.3, 2.0, 2.0, 1.8, 2.1, 1.8, 1.8, 1.8, 2.1, 1.6, 1.9, 2.0, 2.2, 1.5, 1.4, 2.3, 2.4, 1.8, 1.8, 2.1, 2.4, 2.3, 1.9, 2.3, 2.5, 2.3, 1.9, 2.0, 2.3, 1.8],
+                    ]
+                });
+            }, 1000);
+            setTimeout(function () {
+                scatterChart.unload({
+                    ids: 'setosa'
+                });
+            }, 2000);
+            setTimeout(function () {
+                scatterChart.load({
+                    columns: [
+                        ["virginica", 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2, 0.4, 0.4, 0.3, 0.3, 0.3, 0.2, 0.4, 0.2, 0.5, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.4, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2, 0.3, 0.3, 0.2, 0.6, 0.4, 0.3, 0.2, 0.2, 0.2, 0.2],
+                    ]
+                });
+            }, 3000);
+            setTimeout(function () {
+                scatterChart.load({
+                    columns: [
+                        ["setosa_x", 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.4, 3.0, 3.0, 4.0, 4.4, 3.9, 3.5, 3.8, 3.8, 3.4, 3.7, 3.6, 3.3, 3.4, 3.0, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3.0, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3.0, 3.8, 3.2, 3.7, 3.3],
+                        ["versicolor_x", 3.2, 3.2, 3.1, 2.3, 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2.0, 3.0, 2.2, 2.9, 2.9, 3.1, 3.0, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3.0, 2.8, 3.0, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3.0, 3.4, 3.1, 2.3, 3.0, 2.5, 2.6, 3.0, 2.6, 2.3, 2.7, 3.0, 2.9, 2.9, 2.5, 2.8],
+                        ["setosa", 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2, 0.4, 0.4, 0.3, 0.3, 0.3, 0.2, 0.4, 0.2, 0.5, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.4, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2, 0.3, 0.3, 0.2, 0.6, 0.4, 0.3, 0.2, 0.2, 0.2, 0.2],
+                        ["versicolor", 1.4, 1.5, 1.5, 1.3, 1.5, 1.3, 1.6, 1.0, 1.3, 1.4, 1.0, 1.5, 1.0, 1.4, 1.3, 1.4, 1.5, 1.0, 1.5, 1.1, 1.8, 1.3, 1.5, 1.2, 1.3, 1.4, 1.4, 1.7, 1.5, 1.0, 1.1, 1.0, 1.2, 1.6, 1.5, 1.6, 1.5, 1.3, 1.3, 1.3, 1.2, 1.4, 1.2, 1.0, 1.3, 1.2, 1.3, 1.3, 1.1, 1.3],
+                    ]
+                });
+            }, 4000);
+            setTimeout(function () {
+                $("#scatterChartLoad").attr("disabled", false);
+            }, 5000)
+        }
+        var barChart = c3.generate({
+            bindto: "#barChart",
+            data: {
+                columns: [
+                    ['data1', 30, 200, 100, 400, 150, 250],
+                    ['data2', 130, 100, 140, 200, 150, 50]
+                ],
+                type: 'bar'
+            },
+            color: {
+                pattern: colors
+            },
+            bar: {
+                width: {
+                    ratio: 0.8 // this makes bar width 50% of length between ticks
+                }
+                // or
+                //width: 100 // this makes bar width 100px
+            }
+        });
+        var barChartLoad = function () {
+            $("#barChartLoad").attr("disabled", true);
+            $("#barChartLoad").text("loading...")
+            setTimeout(function () {
+                barChart.load({
+                    columns: [
+                        ['data3', 130, -150, 200, 300, -200, 100]
+                    ]
+                });
+            }, 1000);
+            setTimeout(function () {
+                barChart.load({
+                    columns: [
+                        ['data4', 50, -70, 130, 170, 100, 50]
+                    ]
+                });
+            }, 2000);
+            setTimeout(function () {
+                barChart.load({
+                    columns: [
+                        ['data5', 70, -50, -110, 70, 40, -70]
+                    ]
+                });
+            }, 3000);
+            setTimeout(function () {
+                $("#barChartLoad").text("load complete")
+            }, 4000)
+        };
+        var stackedBar = c3.generate({
+            bindto: "#stackedBar",
+            data: {
+                columns: [
+                    ['data1', -30, 200, 200, 400, -150, 250],
+                    ['data2', 130, 100, -100, 200, -150, 50],
+                    ['data3', -230, 200, 200, -300, 250, 250]
+                ],
+                type: 'bar',
+                groups: [
+                    ['data1', 'data2']
+                ]
+            },
+            color: {
+                pattern: colors
+            }
+        });
+        var stackedBarLoad = function () {
+            $("#stackedBarLoad").attr("disabled", true);
+            $("#stackedBarLoad").text("loading...");
+            setTimeout(function () {
+                $("#stackedBarLoad").text("grouping...")
+                stackedBar.groups([['data1', 'data2', 'data3']])
+            }, 1000);
+            setTimeout(function () {
+                $("#stackedBarLoad").text("grouping...")
+                stackedBar.load({
+                    columns: [['data4', 100, -50, 150, 200, -300, -100]]
+                });
+            }, 2000);
+            setTimeout(function () {
+                $("#stackedBarLoad").text("grouping...")
+                stackedBar.groups([['data1', 'data2', 'data3', 'data4']])
+            }, 3000);
+            setTimeout(function () {
+                $("#stackedBarLoad").text("load complete")
+            }, 4000)
+        };
+        var stepChart = c3.generate({
+            bindto: "#stepChart",
+            data: {
+                columns: [
+                    ['data1', 300, 350, 300, 0, 0, 100],
+                    ['data2', 130, 100, 140, 200, 150, 50]
+                ],
+                types: {
+                    data1: 'step',
+                    data2: 'area-step'
+                }
+            },
+            color: {
+                pattern: [color.info._500, color.warning._500, color.success._500, color.danger._500, color.fusion._300]
+            }
+        });
+        var stepChartLoad = function () {
+            $("#stepChartLoad").attr("disabled", true);
+            $("#stepChartLoad").text("loading...");
+            setTimeout(function () {
+                stepChart.load({
+                    columns: [
+                        ['data3', 130, -50, 200, 300, -200, 100]
+                    ],
+                    type: 'area-step',
+                });
+            }, 1000);
+            setTimeout(function () {
+                stepChart.load({
+                    columns: [
+                        ['data4', 50, 70, 130, 170, 100, 50]
+                    ],
+                    type: 'area-step'
+                });
+            }, 2000);
+            setTimeout(function () {
+                stepChart.load({
+                    columns: [
+                        ['data5', 70, -50, -110, 70, 40, -70]
+                    ],
+                    type: 'step'
+                });
+            }, 3000);
+            setTimeout(function () {
+                $("#stepChartLoad").text("load complete")
+            }, 4000)
+        }
+        var combinationChart = c3.generate({
+            bindto: "#combinationChart",
+            data: {
+                columns: [
+                    ['data1', 30, 20, 50, 40, 60, 50],
+                    ['data2', 200, 130, 90, 240, 130, 220],
+                    ['data3', 300, 200, 160, 400, 250, 250],
+                    ['data4', 200, 130, 90, 240, 130, 220],
+                    ['data5', 130, 120, 150, 140, 160, 150],
+                    ['data6', 90, 70, 20, 50, 60, 120],
+                ],
+                type: 'bar',
+                types: {
+                    data3: 'spline',
+                    data4: 'line',
+                    data6: 'area',
+                },
+                groups: [
+                    ['data1', 'data2']
+                ]
+            },
+            color: {
+                pattern: colors
+            }
+        });
+        var pieChart = c3.generate({
+            bindto: "#pieChart",
+            data: {
+                // iris data from R
+                columns: [
+                    ['Occupied', 20],
+                    ['Vacant', 80],
+                    //["AZ employee", 1.4, 1.5, 1.5, 1.3, 1.5, 1.3, 1.6, 1.0, 1.3, 1.4, 1.0, 1.5, 1.0, 1.4, 1.3, 1.4, 1.5, 1.0, 1.5, 1.1, 1.8, 1.3, 1.5, 1.2, 1.3, 1.4, 1.4, 1.7, 1.5, 1.0, 1.1, 1.0, 1.2, 1.6, 1.5, 1.6, 1.5, 1.3, 1.3, 1.3, 1.2, 1.4, 1.2, 1.0, 1.3, 1.2, 1.3, 1.3, 1.1, 1.3],
+                    //["Saad employee", 2.5, 1.9, 2.1, 1.8, 2.2, 2.1, 1.7, 1.8, 1.8, 2.5, 2.0, 1.9, 2.1, 2.0, 2.4, 2.3, 1.8, 2.2, 2.3, 1.5, 2.3, 2.0, 2.0, 1.8, 2.1, 1.8, 1.8, 1.8, 2.1, 1.6, 1.9, 2.0, 2.2, 1.5, 1.4, 2.3, 2.4, 1.8, 1.8, 2.1, 2.4, 2.3, 1.9, 2.3, 2.5, 2.3, 1.9, 2.0, 2.3, 1.8],
+                ],
+                type: 'pie'//,
+                /*onclick: function (d, i) { console.log("onclick", d, i); },
+                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                onmouseout: function (d, i) { console.log("onmouseout", d, i); }*/
+            },
+            color: {
+                pattern: colors
+            }
+        });
+        var pieChartUnload = function () {
+            $("#pieChartUnload").attr("disabled", true);
+            $("#pieChartUnload").text("unloading datasets...")
+            setTimeout(function () {
+                pieChart.unload({
+                    ids: 'virtigo'
+                });
+                pieChart.unload({
+                    ids: 'clarfy'
+                });
+            }, 1000);
+            setTimeout(function () {
+                $("#pieChartUnload").text("unload complete")
+            }, 2000);
+        };
+        var donutChart = c3.generate({
+            bindto: "#donutChart",
+            data: {
+                // iris data from R
+                columns: [
+                    ['IE', 30],
+                    ['Firefox', 120],
+                    ["Opera", 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2, 0.4, 0.4, 0.3, 0.3, 0.3, 0.2, 0.4, 0.2, 0.5, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.4, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2, 0.3, 0.3, 0.2, 0.6, 0.4, 0.3, 0.2, 0.2, 0.2, 0.2],
+                    ["Safari", 1.4, 1.5, 1.5, 1.3, 1.5, 1.3, 1.6, 1.0, 1.3, 1.4, 1.0, 1.5, 1.0, 1.4, 1.3, 1.4, 1.5, 1.0, 1.5, 1.1, 1.8, 1.3, 1.5, 1.2, 1.3, 1.4, 1.4, 1.7, 1.5, 1.0, 1.1, 1.0, 1.2, 1.6, 1.5, 1.6, 1.5, 1.3, 1.3, 1.3, 1.2, 1.4, 1.2, 1.0, 1.3, 1.2, 1.3, 1.3, 1.1, 1.3],
+                    ["Chrome", 2.5, 1.9, 2.1, 1.8, 2.2, 2.1, 1.7, 1.8, 1.8, 2.5, 2.0, 1.9, 2.1, 2.0, 2.4, 2.3, 1.8, 2.2, 2.3, 1.5, 2.3, 2.0, 2.0, 1.8, 2.1, 1.8, 1.8, 1.8, 2.1, 1.6, 1.9, 2.0, 2.2, 1.5, 1.4, 2.3, 2.4, 1.8, 1.8, 2.1, 2.4, 2.3, 1.9, 2.3, 2.5, 2.3, 1.9, 2.0, 2.3, 1.8],
+                ],
+                type: 'donut'//,
+                /*onclick: function (d, i) { console.log("onclick", d, i); },
+                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                onmouseout: function (d, i) { console.log("onmouseout", d, i); }*/
+            },
+            donut: {
+                title: "SmartAdmin Browsers"
+            },
+            color: {
+                pattern: colors
+            }
+        });
+        var donutChartUnload = function () {
+            $("#donutChartUnload").attr("disabled", true);
+            $("#donutChartUnload").text("unloading datasets...")
+            setTimeout(function () {
+                donutChart.unload({
+                    ids: 'Chrome'
+                });
+                donutChart.unload({
+                    ids: 'Opera'
+                });
+            }, 1000);
+            setTimeout(function () {
+                $("#donutChartUnload").text("unload complete")
+            }, 2000);
+        };
+        var interactiveExample = c3.generate({
+            bindto: "#interactiveExample",
+            data: {
+                columns: [
+                    ["data1", 100, 165, 140, 170, 200, 140, 220, 210, 190, 200, 170, 250],
+                    ["data2", 110, 80, 100, 85, 125, 110, 100, 130, 120, 100, 130, 145],
+                    ["data3", 75, 60, 70, 65, 85, 80, 70, 100, 100, 70, 90, 100]
+                ],
+                type: "area-spline"
+            },
+            subchart: {
+                show: true
+            },
+            color: {
+                pattern: colors
+            }
+        });
+        var interactiveWheel = c3.generate({
+            bindto: "#interactiveWheel",
+            data: {
+                columns: [
+                    ['sample', 30, 200, 100, 400, 150, 250, 150, 200, 170, 240, 350, 150, 100, 400, 150, 250, 150, 200, 170, 240, 100, 150, 250, 150, 200, 170, 240, 30, 200, 100, 400, 150, 250, 150, 200, 170, 240, 350, 150, 100, 400, 350, 220, 250, 300, 270, 140, 150, 90, 150, 50, 120, 70, 40]
+                ]
+            },
+            zoom: {
+                enabled: true
+            },
+            color: {
+                pattern: [color.primary._500, color.danger._500, color.info._500, color.success._500, color.warning._500]
+            },
+            grid: {
+                x: {
+                    show: true
+                },
+                y: {
+                    show: false
+                }
+            }
+        });
+    </script>
+}

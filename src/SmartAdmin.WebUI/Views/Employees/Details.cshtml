@@ -1,0 +1,308 @@
+﻿@model SmartAdmin.WebUI.Models.Employees
+
+@{
+    ViewData["Title"] = "Employee Details";
+    ViewData["PageName"] = "Employees page";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Employee Details";
+    ViewData["Category1"] = "Employees";
+    ViewData["PageDescription"] = "";
+}
+<div class="was-validated">
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Employee Details
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Full Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="fullName">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Iqama Expiration Date </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" asp-for="dtIqamaExpiryDate" autocomplete="off" disabled>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Iqama Number </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" autocomplete="off" asp-for="iqamaNumber" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Iqama Picture</label>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrWhiteSpace(Model.iqamaPic))
+                                    {
+                                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#imgIqamaModal"><strog>View Picture</strog></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-default"><strog>No Picture</strog></a>
+                                    }
+                                </div>
+                            </div>
+                            @* by auf *@
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Work Contract</label>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrWhiteSpace(Model.WorkContractFile))
+                                    {
+                                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#WorkContractFileModal"><strog>View Picture</strog></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-default"><strog>No Picture</strog></a>
+                                    }
+                                </div>
+                            </div>
+                            @* end auf *@
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Email </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="eMail" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Mobile </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="mobile" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Nationality
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdNationality" class="select2 form-control w-100" asp-items="ViewBag.IdNationality" disabled>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Work Place
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdWorkPlace" class="select2 form-control w-100" asp-items="ViewBag.IdWorkPlace" disabled>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    On Company kafala
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="checkbox" asp-for="IsCompanykafala" class="form-control" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Job Title </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="jobTitle" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Emp. Picture</label>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrWhiteSpace(Model.empPicture))
+                                    {
+                                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#empPictureImage"><strog>View Picture</strog></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-default"><strog>No Picture</strog></a>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Date Of Birth </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" asp-for="dtDateOfBirth" autocomplete="off" disabled>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Passport Picture </label>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrWhiteSpace(Model.passPortPic))
+                                    {
+                                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#passportimgModal"><strog>View Picture</strog></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-default"><strog>No Picture</strog></a>
+                                    }
+                                </div>
+                            </div>
+                            @* auf *@
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Flat Contract</label>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrWhiteSpace(Model.FlatContractFile))
+                                    {
+                                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#FlatContractFileModal"><strog>View Picture</strog></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-default"><strog>No Picture</strog></a>
+                                    }
+                                </div>
+                            </div>
+                            @* end auf *@
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Passport Number</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="passportNumber" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Passport Expiry </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" asp-for="dtpassPortExpiry" autocomplete="off" disabled>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Joining Date </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" asp-for="dtJoiningDate" autocomplete="off" disabled>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Contract Expiry </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" asp-for="dtcontractExpiryDate" autocomplete="off" disabled>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Notes </label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" asp-for="Notes" disabled>
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group  alert alert-primary alert-dismissible text-center">
+                    <a class="btn btn-secondary ml-1 waves-effect waves-themed" asp-action="Index">Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="imgIqamaModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img style="width:100%" src="~/assets/iqamaImages/@Model.iqamaPic" alt="@Model.iqamaPic" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="passportimgModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img style="width:100%" src="~/assets/passportImages/@Model.passPortPic" alt="@Model.passPortPic" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="empPictureImage">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img style="width:100%" src="~/assets/empImages/@Model.empPicture" alt="@Model.empPicture" />
+            </div>
+        </div>
+
+    </div>
+</div>
+@* by auf *@
+<div class="modal fade" id="WorkContractFileModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img style="width:100%" src="~/assets/WorkContractFiles/@Model.WorkContractFile" alt="@Model.WorkContractFile" />
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="FlatContractFileModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img style="width:100%" src="~/assets/FlatContractFiles/@Model.FlatContractFile" alt="@Model.FlatContractFile" />
+            </div>
+        </div>
+
+    </div>
+</div>
+@* end of auf *@

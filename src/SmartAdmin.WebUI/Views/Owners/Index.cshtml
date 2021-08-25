@@ -1,0 +1,112 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.Owners>
+
+
+@{ ViewData["Title"] = "Owners";
+    ViewData["PageName"] = "Owners";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Owners";
+    ViewData["Category1"] = "Owners"; }
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel-tag">
+            <p>
+                @Html.Partial("_CreateNewPartial")
+            </p>
+        </div>
+
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Owners :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+                </h2>
+                <div class="panel-toolbar" id="selectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th scope="col" class="span1">No <span class="column-sorter "></span></th>
+                                <th scope="col" class="span5">@Html.DisplayNameFor(model => model.OwnerName) <span class="column-sorter "></span></th>
+                                <th scope="col" class="span4">@Html.DisplayNameFor(model => model.OwnerMobile) <span class="column-sorter"></span></th>
+                                <th scope="col" class="span5">@Html.DisplayNameFor(model => model.OwnerPhone) <span class="column-sorter "></span></th>
+                                <th scope="col" class="span4">@Html.DisplayNameFor(model => model.Owneremail) <span class="column-sorter"></span></th>
+                                <th scope="col" class="span5">@Html.DisplayNameFor(model => model.OwnerAddress) <span class="column-sorter "></span></th>
+                                <th scope="col" class="span4">@Html.DisplayNameFor(model => model.CompanyName) <span class="column-sorter"></span></th>
+                                <th scope="col" class="span5">@Html.DisplayNameFor(model => model.ContactName) <span class="column-sorter "></span></th>
+                                <th scope="col" class="span4">@Html.DisplayNameFor(model => model.ContactPhone) <span class="column-sorter"></span></th>
+                                <th scope="col" class="span5">@Html.DisplayNameFor(model => model.OwnerNnotes) <span class="column-sorter "></span></th>
+
+                                <th scope="col" class="span4">Operations </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int counter = 0;}
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                            <td>@{counter++;} @counter</td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OwnerName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OwnerMobile)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OwnerPhone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Owneremail)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OwnerAddress)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompanyName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactPhone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OwnerNnotes)
+                            </td>
+
+                            <td >
+                                @Html.Partial("_TableButtonsPartial", item.IdOwner)
+                            </td>
+                        </tr>}
+                        </tbody>
+                    </table>
+
+                    <!-- // DATATABLE - DTB-1 -->
+
+                </div>
+                <!-- // Widget -->
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'List of Owners';
+    </script>
+}

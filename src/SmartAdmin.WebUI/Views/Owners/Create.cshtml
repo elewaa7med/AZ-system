@@ -1,0 +1,126 @@
+﻿@model SmartAdmin.WebUI.Models.Owners
+
+@{ ViewData["Title"] = "Add Owners";
+    ViewData["PageName"] = "Owners";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Add Owners";
+    ViewData["Category1"] = "Owners";
+    ViewData["PageDescription"] = ""; }
+
+
+
+<form asp-action="Create" enctype="multipart/form-data" class="was-validated">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @if (ViewBag.AlertSaveErr != null)
+    {
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
+    <div class="d-flex flex-start w-100">
+        <div class="d-flex flex-fill">
+            <div class="flex-fill">
+                <p>  @ViewBag.AlertSaveErr</p>
+            </div>
+        </div>
+    </div>
+</div>}
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Create Owners
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="OwnerName" class="col-form-label col-sm-3 text-sm-right form-label">Owner Name*</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="OwnerName" class="form-control" type="text" value="" name="OwnerName">
+                                    <span asp-validation-for="OwnerName" style="color:red;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="OwnerPhone" class="col-form-label col-sm-3 text-sm-right form-label">Owner Phone*</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="OwnerPhone" class="form-control" type="text" value="" name="OwnerPhone">
+                                    <span asp-validation-for="OwnerPhone" style="color:red;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="OwnerAddress" class="col-form-label col-sm-3 text-sm-right form-label">Owner Address*</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="OwnerAddress" class="form-control" type="text" value="" name="OwnerAddress">
+                                    <span asp-validation-for="OwnerAddress" style="color:red;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="ContactName" class="col-form-label col-sm-3 text-sm-right form-label">Contact Name*</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="ContactName" class="form-control" type="text" value="" name="ContactName">
+                                    <span asp-validation-for="ContactName" style="color:red;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="OwnerNnotes" class="col-form-label col-sm-3 text-sm-right form-label">Notes*</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="OwnerNnotes" class="form-control" type="text" value="" name="OwnerNnotes">
+                                    <span asp-validation-for="OwnerNnotes" style="color:red;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="OwnerMobile" class="col-form-label col-sm-3 text-sm-right form-label">Owner Mobile*</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="OwnerMobile" class="form-control" type="text" value="" name="OwnerMobile">
+                                    <span asp-validation-for="OwnerMobile" style="color:red;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="Owneremail" class="col-form-label col-sm-3 text-sm-right form-label">Owner email*</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Owneremail" class="form-control" type="text" value="" name="Owneremail">
+                                    <span asp-validation-for="Owneremail" style="color:red;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="CompanyName" class="col-form-label col-sm-3 text-sm-right form-label">Company Name*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" autocomplete="off" asp-for="CompanyName">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="ContactPhone" class="col-form-label col-sm-3 text-sm-right form-label"> Contact Phone*</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="ContactPhone" class="form-control" type="text" value="" name="ContactPhone">
+                                    <span asp-validation-for="ContactPhone" style="color:red;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="form-group  alert alert-primary alert-dismissible text-center">
+                <button class="btn btn-primary ml-auto waves-effect waves-themed" type="submit">Create</button>
+                <a class="btn btn-secondary ml-1 waves-effect waves-themed" asp-action="Index">Cancel</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'Create an Owner';
+    </script>
+}
+
+
+
+

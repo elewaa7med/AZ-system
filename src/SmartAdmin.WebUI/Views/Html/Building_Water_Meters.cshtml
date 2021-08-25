@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewData["Title"] = "Building_Water_Meters";
+
+    ViewData["PageName"] = "tables_basic";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i>  Building Water Meters";
+    ViewData["Category1"] = "html";
+    ViewData["PageDescription"] = "";
+
+}
+
+<div class="row">
+    <div class="col-xl-12">
+
+        <div class="panel-tag">
+            <p>
+                <button type="button" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                    <span>Add Building Water Meters</span>
+                </button>
+
+
+        </div>
+
+
+        <h1>
+            <span class="fw-900">  List of Units </span>
+        </h1>
+
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Units :  </span> &nbsp;<span class="color-danger-500"> 554  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Building No. </th>
+                                <th> Water Meter Number </th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>01</th>
+                                <th>Building No. </th>
+                                <th> Water Meter Number </th>
+                           
+
+
+                                <th>
+                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                            <div class="dropdown-menu">
+
+                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+
+                                                <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+
+
+
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                               
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

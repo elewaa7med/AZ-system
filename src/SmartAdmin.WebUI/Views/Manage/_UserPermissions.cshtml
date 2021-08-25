@@ -1,0 +1,32 @@
+﻿@model SmartAdmin.WebUI.Controllers.UserPermissionDTO
+<div class="modal-header">
+    <h4 class="modal-title">
+        User Permissions
+    </h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true"><i class="fal fa-times"></i></span>
+    </button>
+</div>
+<form asp-action="UserPermissions" class="was-validated">
+    <div class="modal-body">
+        <div class="col-sm-12">
+            <input type="hidden" asp-for="UserID" />
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Permissions </label>
+                <div class="col-sm-9">
+                    <select class="multiSelect2 select-control" multiple="multiple" asp-for="Permissions" asp-items="ViewBag.Permissions">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary waves-effect waves-themed" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary waves-effect waves-themed">Save changes</button>
+    </div>
+</form>
+<script>
+    $(function () {
+       
+    })
+</script>

@@ -1,0 +1,42 @@
+﻿@model SmartAdmin.WebUI.Models.MeterWaterInfo
+<style>
+    .dl-horizontal > dd:after {
+        display: table;
+        content: "";
+        clear: both;
+    }
+</style>
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MeterWaterInfo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MeterNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MeterNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MeterNotes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MeterNotes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.mBuilding)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.mBuilding.BuildingAddress)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.IdMeter">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

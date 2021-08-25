@@ -1,0 +1,649 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Building Dues";
+    ViewData["PageName"] = "Building dues page " + @ViewBag.id;
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Building Dues";
+    ViewData["Category1"] = "Buildings";
+    ViewData["PageDescription"] = "";
+    var canPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ShowPayment })).Succeeded;
+    var canEdit = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.EditContract })).Succeeded;
+    var canRenew = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.RenewContract })).Succeeded;
+    var canDelete = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DeleteContract })).Succeeded;
+    var canArchive = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ArchiveContract })).Succeeded;
+    var canNote = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.WritePaymentNote })).Succeeded;
+    var canLegal = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Legal })).Succeeded;
+}
+<input hidden id="representitveId" value="@Model" />
+<div class="row">
+    <div class="col-xl-12">
+        @if (ViewBag.Representatives != null)
+        {
+            <div class="alert alert-primary">
+                <div class="d-flex flex-start w-100">
+                    <div class="mr-2 hidden-md-down">
+                        <span class="icon-stack icon-stack-lg">
+                            <i class="base-2 icon-stack-3x color-primary-400"></i>
+                            <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                            <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                        </span>
+                    </div>
+                    <div class="d-flex flex-fill">
+                        <div class="flex-fill">
+                            <span class="h5"> Select Representitve  </span>
+                            <div class="form-group">
+                                <select class="select2 form-control w-100" id="representitveIdSelect" data-select2-id="single-default" tabindex="-1" asp-items="ViewBag.Representatives" aria-hidden="true">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <h1>
+            <span class="fw-900">   Due Rent Payments </span>
+        </h1>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Due Rent Payments :  </span> &nbsp;<span class="color-danger-500"><span id="dueTotal">0</span></span> @if (@ViewBag.id == 4) {<span> GBP </span> } else {<span>SAR </span>}
+
+</h2>
+
+<div class="panel-toolbar" id="dueRentSelectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <!-- datatable start -->
+                    <table id="dueRentTable" class="table  table-bordered table-hover table-striped w-100">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Bld</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Mobile </th>
+                                <th>Representative </th>
+                                <th>Annual Rent</th>
+                                <th>Due Rent </th>
+                                <th>Rent Collection</th>
+                                <th>Note</th>
+                                <th>Rent due after</th>
+                                <th class="noExport">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dueRentBody">
+                            @* <tr class=""><td valign="top" colspan="11" class="dataTables_empty">Loading ....</td></tr>*@
+
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr id="dueRentFooter">
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="row">
+    <div class="col-xl-12">
+        <h1>
+            @if (@ViewBag.id == 4)
+            {
+        <span class="fw-900">   Over Due (Over 4 days) Rent Payments </span> }
+                    else
+                    {
+                        <span class="fw-900">   Over Due (Over 15 days) Rent Payments </span>
+                                    }
+        </h1>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>
+                    @if (@ViewBag.id == 4)
+                    {<span class="fw-500  text-primary"> Total Over Due (Over 4 days) Rent Payments:  </span> }
+                                    else
+                                    {
+                                       <span class="fw-500  text-primary"> Total Over Due (Over 15 days) Rent Payments:  </span>
+                                                            }
+                                                            &nbsp;<span class="color-danger-500"> <span id="overDueTotal">0</span></span>
+                                                                            @if (@ViewBag.id == 4)
+                                                                            {<span> GBP </span> }
+                                                                            else
+                                                                            {<span>SAR </span>}
+                                                                                        </h2>
+                <div class="panel-toolbar" id="dueRent60SelectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="overDueRentTable" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Bld</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Mobile </th>
+                                <th>Representative </th>
+                                <th>Annual Rent</th>
+                                <th> Due Rent</th>
+                                <th>Rent Collection</th>
+                                <th>Note</th>
+
+                                <th>Rent due after</th>
+                                <th class="noExport">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="overDueRentBody">
+                            @*  <tr class="odd"><td valign="top" colspan="11" class="dataTables_empty">Loading ....</td></tr>*@
+
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr id="overDueRentFooter">
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="row">
+    <div class="col-xl-12">
+        <h1>
+            <span class="fw-900">Partially Paid Contract Payments </span>
+        </h1>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Rent Payments:  </span>&nbsp;<span class="color-danger-500"> <span id="partialPaymentTotal">0</span></span>
+                    @if (@ViewBag.id == 4)
+                    {<span> GBP </span> }
+                    else
+                    {<span>SAR </span>}
+                </h2>
+                <div class="panel-toolbar" id="partiallyPaidSelectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="partialPaymentTable" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Bld</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Mobile </th>
+                                <th>Representative </th>
+                                <th>Annual Rent</th>
+                                <th> Due Rent</th>
+                                <th>Rent Collection</th>
+                                <th>Note</th>
+                                <th>Rent due after</th>
+                                <th class="noExport">Contract</th>
+                            </tr>
+                        </thead>
+                        <tbody id="partialPaymentBody">
+                            @*  <tr class="odd"><td valign="top" colspan="11" class="dataTables_empty">Loading ....</td></tr>*@
+
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr id="partialPaymentFooter">
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="row">
+    <div class="col-xl-12">
+        <h1>
+            <span class="fw-900"> Contracts Expiry </span>
+        </h1>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Remaining Amount:  </span> &nbsp;<span class="color-danger-500"> <span id="totalRemainingAmount">0</span></span>
+                    @if (@ViewBag.id == 4)
+                    {<span> GBP </span> }
+                    else
+                    {<span>SAR </span>}
+                    @*<span> &nbsp; &nbsp;  -  &nbsp; &nbsp; </span>*@
+                    @*<span class="fw-500  text-primary"> Total Due Rent	:  </span> &nbsp;<span class="color-danger-500"><span id="monthExpiryTotal">0</span> SAR  </span>*@
+                </h2>
+                <div class="panel-toolbar" id="expirySelectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="contractExpiryTable" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Bld</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                @*<th>Contract No</th>*@
+                                <th>Mobile </th>
+                                <th>Representative</th>
+                                <th>Annual Rent</th>
+                                <th>Remaining Amount</th>
+                                <th>Contract Expir Date</th>
+                                <th>Note</th>
+                                <th>Contract Expire After</th>
+                                <th class="noExport">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contractExpiryBody">
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Total Rent</th>
+                                <th id="expiryTotalRent"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="modal fade" id="default-example-modal-lg" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div id="noteModalBody">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect waves-themed" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsBlock{
+    <script>
+        var representitveId = $("#representitveId").val();
+        var first = false;
+        $(document).ajaxStop(function () {
+            cutText('.note');
+            setTimeout(function () {
+                if (first)
+                    return;
+                //initializeFilteredDataTable("#dueRentTable", 5, "#dueRentSelectContainer");
+                //initializeFilteredDataTable("#overDueRentTable", 5, "#dueRent60SelectContainer");
+                //initializeFilteredDataTable("#partialPaymentTable", 5, "#partiallyPaidSelectContainer");
+                //initializeFilteredDataTable("#contractExpiryTable", 5, "#expirySelectContainer");
+                initializeDataTable("#dueRentTable");
+                initializeDataTable("#overDueRentTable");
+                initializeDataTable("#contractExpiryTable");
+                columnNumberWithCommas('formatNumber');
+                initializeDataTable("#partialPaymentTable");
+                first = true;
+            }, 1000);
+        });
+        $(function () {
+            if (!$("#representitveId").val())
+                $("#representitveIdSelect").val(null);
+            fillDueRent();
+            fillOverDueRent();
+            fillContractExpiry();
+            fillPartialPayment();
+        })
+        function fillDueRent() {
+            var newhtmlduerents = "";
+            var url = '@Url.Content("~/")' + 'Home/GetBuildingsDue?id=' + @ViewBag.id;
+            $.getJSON(url, { representitveId: representitveId}, function (data) {
+                $.each(data.due, function (i, row) {
+                    if (row.totalDays <= 15)
+                        btncolorstr = 'btn-danger';
+                    else btncolorstr = 'btn-warning';
+                    newhtmlduerents += '<tr> ' +
+                        '<td>' + (parseInt(i) + 1) + '</td> ' +
+                        '<td> ' + row.building + ' </td>' +
+                        '<td> ' + row.unitNumber + ' </td>' +
+                        '<td> ' + row.tenantName + ' </td>' +
+                        '<td> ' + row.mobile + ' </td>' +
+                        '<td> ' + row.mandoob + ' </td>' +
+                        '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
+                        '<td> ' + numberWithCommas(row.value) + ' </td>' +
+                        '<td> ' + row.collectionDate + ' </td>' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a></td > ' +
+                        '<td>' +
+                        '<a href="/UnitRentContract/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
+                        '</td>' +
+                        '<td>' +
+
+                        //'<a href="/UnitRentContract/Details/' + row.contractID + '" title="Contract" class="btn btn-secondary waves-effect waves-themed">Contract</a>'
+                           `
+                            <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/UnitRentContract/Details/`+row.contractID+`">Contract</a>
+                                        @if (canPay)
+                                        {
+                                            <a class="dropdown-item" href="/UnitRentContract/Payment/`+ row.contractID +`">Payment</a>
+                                        }
+                                    @if (canNote)
+                                        {
+                                            <a class="dropdown-item" href="/UnitRentContract/Notes/`+ row.contractID +`"> Notes</a>
+                                        }
+                                </div>
+                            </div>
+                        `
+
+                        '</td>'
+                         '</tr>';
+                });
+                $("#dueRentFooter").html('<td></td><td></td><td></td><td></td><td></td><td></td><td class="color-danger-500 font-weight-bold">' + numberWithCommas(data.totalAnnualRent) + '</td><td class="color-danger-500 font-weight-bold" >' + numberWithCommas(data.totalRentValue) + '</td><td></td><td></td><td></td><td></td>');
+                $('#dueRentBody').html(newhtmlduerents);
+                 if (@((!canPay).ToString().ToLower())) {
+                     $("#dueRentBody .pay").removeAttr('href')
+                }
+                $("#dueTotal").text(numberWithCommas(data.totalValue));
+            });
+        }
+
+        function fillOverDueRent() {
+            var newhtmloverduerents = "";
+            var url = '@Url.Content("~/")' + 'Home/GetBuildingsDueOver60?id='+@ViewBag.id;
+            $.getJSON(url, { representitveId: representitveId }, function (data) {
+                $.each(data.due,  function (i, row) {
+                    if (row.totalDays <= 0)
+                        btncolorstr = ' btn-danger" ';
+                    else
+                        if (row.totalDays <= 14)
+                            btncolorstr = ' btn-warning" ';
+                        else
+                            btncolorstr = ' btn-success" ';
+                    newhtmloverduerents += '<tr> ' +
+                        '<td>' + (parseInt(i) + 1) + '</td> ' +
+                        '<td> ' + row.building + ' </td>' +
+                        '<td> ' + row.unitNumber + ' </td>' +
+                        '<td> ' + row.tenantName + ' </td>' +
+                        '<td> ' + row.mobile + ' </td>' +
+                        '<td> ' + row.mandoob + ' </td>' +
+                        '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
+                        '<td> ' + numberWithCommas(row.value) + ' </td>' +
+                        '<td> ' + row.collectionDate + ' </td>' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note+'</a></td > ' +
+
+                        '<td>' +
+                        '<a href="/UnitRentContract/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
+                        '</td>' +
+                        '<td>' +
+                        `
+                            <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/UnitRentContract/Details/`+row.contractID+`">Contract</a>
+                                         <a class="dropdown-item" href="/Legal/Create/`+ row.contractID + `">Legal</a>
+                                     @if (canPay)
+                                        {
+                                            <a class="dropdown-item" href="/UnitRentContract/Payment/`+ row.contractID +`">Payment</a>
+                                        }
+                                    @if ((await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.WritePaymentNote })).Succeeded)
+                                        {
+                                            <a class="dropdown-item" href="/UnitRentContract/Notes/`+ row.contractID +`"> Notes</a>
+                                        }
+                                </div>
+                            </div>
+                        `
+                        //'<a href="/UnitRentContract/Details/' + row.contractID + '" title="Contract" class="btn btn-secondary waves-effect waves-themed">ContractAuf</a>'
+                    '</td>'
+                    '</tr>';
+                });
+
+                $('#overDueRentBody').html(newhtmloverduerents);
+                $("#overDueRentFooter").html('<td></td><td></td><td></td><td></td><td></td><td></td><td class="color-danger-500 font-weight-bold">' + numberWithCommas(data.totalAnnualRent) + '</td><td class="color-danger-500 font-weight-bold">' + numberWithCommas(data.totalRentValue) + '</td><td></td><td></td><td></td><td></td>');
+
+                 if (@((!canPay).ToString().ToLower())) {
+                     $("#overDueRentBody .pay").removeAttr('href')
+                }
+                $("#overDueTotal").text(numberWithCommas(data.totalValue));
+
+            });
+        }
+        function fillContractExpiry() {
+            var htmlcontexp = "";
+            var bgbadge = "badge-success";
+            var url = '@Url.Content("~/")' + 'Home/getContractExpiryofBuildings?id='+@ViewBag.id;
+            $.getJSON(url, { representitveId: representitveId }, function (data) {
+                if (data.length != 0) {
+                    var totalRemainingAmount = data[0].table.map(t => { return t.remainingAmount }).reduce((total, current) => { return total += current; }, 0);
+                    var totalAmount = 0;
+                    $.each(data, function (i, row) {
+                        var noteText = row.itemArray[14];
+                        if (noteText == null) {
+                            noteText = "";
+                        }
+                        var noteId = row.itemArray[15];
+
+                        if (row.itemArray[5] <= 15)
+                            btncolorstr = ' btn-danger" ';
+                        else
+                            if (row.itemArray[5] <= 30)
+                                btncolorstr = ' btn-warning" ';
+                        //else
+                        //btncolorstr = ' btn-success" ';
+                        if (row.itemArray[16] > 0) {
+                            bgbadge = "badge-danger ";
+                        } else {
+                            bgbadge = "badge-success";
+                        }
+
+                        htmlcontexp += '<tr> ' +
+                            '<td><a href="/UnitRentContract/Details/' + row.itemArray[12] + '"  title="Go To Contract"><b> ' + row.itemArray[6] + '</b> </a> </td> ' +
+                            '<td> ' + row.itemArray[7] + ' </td>' +
+                            '<td> ' + row.itemArray[0] + ' </td>' +
+                            '<td> ' + row.itemArray[1] + ' </td>' +
+                            '<td > ' + row.itemArray[2] + ' </td>' +
+                            '<td > ' + row.itemArray[11] + ' </td>' +
+                            '<td class="">' + numberWithCommas(row.itemArray[3]) + ' </td>' +
+                            '<td class=""> <span class="badge ' + bgbadge + '" >' + numberWithCommas(row.itemArray[16]) + '</span ></td>' +
+                            //'<td class="">' + numberWithCommas(row.itemArray[3]) + '<span class="expiryMonth" style="display:none">' + row.itemArray[9] + '</span>' + '<span class="expiryYear" style="display:none">' + row.itemArray[3] + '</span>' +' </td>' +
+                            '<td> ' + row.itemArray[4] + ' </td>' +
+                            '<td ><a class="note" title="' + noteText + '" onClick=getNote(' + noteId + ')>' + noteText + '</a></td > ' +
+                            '<td><a class="btn waves-effect waves-themed ' + btncolorstr + '">' + row.itemArray[5] + ' </a></td>' +
+                            '<td><div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">' +
+                            '<div class="btn-group" role = "group">' +
+                            '<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>' +
+                            '<div class="dropdown-menu">' +
+                            '<a class="dropdown-item" href="/UnitRentContract/Details/' + row.itemArray[9] + '">Details</a>' +
+                            '<a class="dropdown-item edit" href="/UnitRentContract/Edit/' + row.itemArray[9] + '?pageid='+ @ViewBag.id+'">Edit</a>' +
+                            '<a class="dropdown-item renew" href="/UnitRentContract/Renew/' + row.itemArray[9] + '">Renew</a>' +
+                            '<a class="dropdown-item renew" href="/UnitRentContract/Payment/' + row.itemArray[9] + '">Payment</a>' +
+                            '<a class="dropdown-item legal" href="/Legal/Create/' + row.itemArray[9] + '">Legal</a>' +
+                            '<a class="dropdown-item " href="/UnitRentContract/Notes/' + row.itemArray[9] + '"> Notes</a>' +
+                            '<a class="dropdown-item archive" onclick="return confirm (\'Are you sure ?\')" href="/UnitRentContract/Archive/' + row.itemArray[9] + '">Archive</a>' +
+                            '<a class="dropdown-item delete" href="/UnitRentContract/Delete/' + row.itemArray[9] + '">Delete</a>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div></td>' +
+                            '</tr>';
+                        totalAmount += row.itemArray[3];
+                    });
+                    $('#contractExpiryBody').html(htmlcontexp);
+                    if (@((!canEdit).ToString().ToLower())) {
+                        $("#contractExpiryBody .edit").remove();
+                    }
+                    if (@((!canRenew).ToString().ToLower())) {
+                        $("#contractExpiryBody .renew").remove();
+                    }
+                    if (@((!canArchive).ToString().ToLower())) {
+                        $("#contractExpiryBody .archive").remove();
+                    }
+                    if (@((!canDelete).ToString().ToLower())) {
+                        $("#contractExpiryBody .delete").remove();
+                    }
+                    if (@((!canLegal).ToString().ToLower())) {
+                        $("#contractExpiryBody .legal").remove();
+                    }
+                    if (@((!canNote).ToString().ToLower())) {
+                        $("#contractExpiryBody .notes").remove();
+                    }
+                    //calculateTotal('expiryMonth', 'monthExpiryTotal');
+                    //calculateTotal('expiryYear', 'yearExpiryTotal');
+
+                    //$("#monthExpiryTotal").text(numberWithCommas(totalExpiryMonth));
+                    $("#totalRemainingAmount").text(numberWithCommas(totalRemainingAmount));
+                    $("#expiryTotalRent").text(numberWithCommas(totalAmount));
+                }
+
+                });
+
+        }
+        function fillPartialPayment() {
+            var newhtmloverduerents = "";
+            var url = '@Url.Content("~/")' + 'Home/GetBuildingssPatrtialPaymentDue?id='+@ViewBag.id;
+            $.getJSON(url, { representitveId: representitveId }, function (data) {
+                $.each(data.due,  function (i, row) {
+                    if (row.totalDays <= 0)
+                        btncolorstr = ' btn-danger" ';
+                    else
+                        if (row.totalDays <= 14)
+                            btncolorstr = ' btn-warning" ';
+                        else
+                            btncolorstr = ' btn-success" ';
+                    newhtmloverduerents += '<tr> ' +
+                        '<td>' + (parseInt(i) + 1) + '</td> ' +
+                        '<td> ' + row.building + ' </td>' +
+                        '<td> ' + row.unitNumber + ' </td>' +
+                        '<td> ' + row.tenantName + ' </td>' +
+                        '<td> ' + row.mobile + ' </td>' +
+                        '<td> ' + row.mandoob + ' </td>' +
+                        '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
+                        '<td> ' + numberWithCommas(row.value) + ' </td>' +
+                        '<td> ' + row.collectionDate + ' </td>' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a></td > ' +
+                        '<td>' +
+                        '<a href="/UnitRentContract/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
+                        '</td>' +
+                        '<td>' +
+                        `
+                            <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/UnitRentContract/Details/`+ row.contractID + `">Contract</a>
+                                        <a class="dropdown-item" href="/Legal/Create/`+ row.contractID + `">Legal</a>
+                                        @if (canPay)
+                                        {
+                                            <a class="dropdown-item" href="/UnitRentContract/Payment/`+ row.contractID + `">Payment</a>
+                                        }
+                                        @if ((await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.WritePaymentNote })).Succeeded)
+                                        {
+                                           <a class="dropdown-item" href="/UnitRentContract/Notes/`+ row.contractID +`"> Notes</a>
+                                        }
+                                </div>
+                            </div>
+                        `
+                        //'<a href="/UnitRentContract/Details/' + row.contractID + '" title="Contract" class="btn btn-secondary waves-effect waves-themed">ContractAuf</a>'
+                    '</td>'
+                    '</tr>';
+                });
+                $('#partialPaymentBody').html(newhtmloverduerents);
+                $("#partialPaymentFooter").html('<td></td><td></td><td></td><td></td><td></td><td></td><td class="color-danger-500 font-weight-bold">' + numberWithCommas(data.totalAnnualRent) + '</td><td class="color-danger-500 font-weight-bold">' + numberWithCommas(data.totalRentValue) + '</td><td></td><td></td><td></td><td></td>');
+
+                 if (@((!canPay).ToString().ToLower())) {
+                     $("#partialPaymentBody .pay").removeAttr('href')
+                }
+                $("#partialPaymentTotal").text(numberWithCommas(data.totalValue));
+            });
+        }
+        function getNote(noteID) {
+            if (noteID == 0)
+                return;
+            $.get("/Home/GetNote", { noteID: noteID }, function (result) {
+                $("#noteModalBody").html(result);
+                $("#default-example-modal-lg").modal('show');
+            });
+        }
+        $("#representitveIdSelect").change(function () {
+            var url = '@Url.Content("~")' + window.location.pathname + "?id="+@ViewBag.id+"&representitveId=" + $(this).val();;
+            window.location.href = url;
+        })
+    </script>
+}

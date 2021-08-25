@@ -1,0 +1,194 @@
+﻿@model SmartAdmin.WebUI.Models.CompoundBuildings
+@{
+    ViewData["Title"] = "Add Building";
+    ViewData["PageName"] = "Building " + ViewBag.CompoundName;
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i>Add Building";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+}
+<form asp-action="Create" enctype="multipart/form-data" class="was-validated">
+    <input type="hidden" asp-for="IdCompound" value="@ViewData["IdCompound"].ToString()" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @if (ViewBag.AlertSaveErr != null)
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">
+                    <i class="fal fa-times"></i>
+                </span>
+            </button>
+            <div class="d-flex flex-start w-100">
+                <div class="d-flex flex-fill">
+                    <div class="flex-fill">
+                        <p>  @ViewBag.AlertSaveErr</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (ViewBag.isRentedErrMsg != null)
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">
+                    <i class="fal fa-times"></i>
+                </span>
+            </button>
+            <div class="d-flex flex-start w-100">
+                <div class="d-flex flex-fill">
+                    <div class="flex-fill">
+                        <p>  @ViewBag.isRentedErrMsg</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Create Building
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building Name/Number *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" required autocomplete="off" asp-for="BuildingNumber">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building Value *</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" autocomplete="off" asp-for="BuildingValue" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building Area </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="BuildingArea">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building Year (ex:1995) *</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="BuildingYear" required>
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">For Families</label>
+                                    <div class="custom-control custom-checkbox col-sm-9">
+                                        <label class="col-form-label col-sm-3 text-sm-right form-label" for="defaultUnchecked"></label>
+                                        <input type="checkbox" class="custom-control-input" id="defaultUnchecked" asp-for="ForFamilies">
+
+                                    </div>
+                                </div>*@
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">For Families</label>
+                                <div class="col-sm-9">
+                                    <input type="checkbox" asp-for="ForFamilies" class="form-control" id="customSwitch1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Remarks </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="BuildingNotes">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building Address</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="BuildingAddress">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building Yearly Income *</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="BuildingYearlyIncome" id="WaterPaidAmount" required>
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    GPS url(Link)
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="url" class="form-control" asp-for="GPSLink" id="WaterRemainingAmount">
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Building Picture</label>
+                                <div class="col-sm-9">
+                                    <input type="file" id="example-fileinput" class="form-control-file" name="buildingImageFile">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Water Meter Number
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="MeterWaterNumber">
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Owner *
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IDOwner" class="select2 form-control w-100" asp-items="ViewBag.IDOwner" required>
+                                        <optgroup label="Select Owner">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="form-group  alert alert-primary alert-dismissible text-center">
+                    <button class="btn btn-primary ml-auto waves-effect waves-themed" type="submit">Create Building</button>
+                    <button type="button" class="btn btn-secondary ml-1 waves-effect waves-themed" onclick="back()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</form>
+
+
+
+@section ScriptsBlock{
+    <script>
+        function back() {
+            var fallbackUrl = "/CompoundBuildings/Index?IdCompound=" + $("#IdCompound").val();
+            var prevPage = window.location.href;
+
+            window.history.go(-1);
+
+            setTimeout(function () {
+                if (window.location.href == prevPage) {
+                    window.location.href = fallbackUrl;
+                }
+            }, 500);
+        }
+    </script>
+}

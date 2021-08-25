@@ -1,0 +1,1388 @@
+﻿@model SmartAdmin.WebUI.Controllers.PrintContractDTO
+@section HeadBlock {
+    <link href="~/css/contract_compound_print.css" rel="stylesheet" />
+    <link href="~/css/arabicFont/notokufiarabic.css" rel="stylesheet" />
+}
+<div class="container">
+    <div data-size="A4">
+        <div class="row">
+            <div class="col-sm-12 d-flex">
+                <div class="table-responsive">
+                    <table class="table table-clean table-sm align-self-end">
+
+                        <tr>
+                            <td class="text-center" style="padding-top:210px">
+
+                                <img src="~/img/logo_print.png" />
+                            </td>
+
+
+                        </tr>
+
+
+
+                        <tr>
+                            <td class="text-center fristPage">
+                                Lease Agreement
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fristPage">
+                                @Model.CompoundName
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-center fristPage">
+                                Contract / Serial No: @Model.ContractNumber
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-center fristPage">
+                                VILLA No: @Model.UnitNumber
+                            </td>
+                        </tr>
+
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="page-break"></div>
+
+        <div class="row">
+            <div class="col-sm-12 d-flex">
+                <div class="table-responsive">
+                    <table class="table table-clean table-sm align-self-end">
+
+
+                        <thead>
+                            <tr>
+                                <td>
+                                    <!--place holder for the fixed-position header-->
+                                    <div class="page-header-space"></div>
+                                </td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+
+                            <tr>
+                                <td class="text_en sizeA_en">
+                                    @Model.CompoundName
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar">
+                                    @Model.CompoundName
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en  sizeA_en">
+                                    (Lease Agreement)
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar">
+                                    (عقد إيجار)
+
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td class="text_en">
+                                    LEASE AGREEMENT is made on the Date  <span style="font-weight: bold;">  @Model.CreationDateEN  </span> further to the lease agreement between:
+                                    )
+
+                                </td>
+
+                                <td class="text_ar">
+                                    ابرم هذا العقد بتاريخ<span style="font-weight: bold; " class="fontArabic"> @Model.CreationDateAR </span> إلحاقا بعقد الايجار بين كل من
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    1. AZ Real Estate Development Company Ltd – N.A. 7279 – Al Khobar 34442 - Kingdom of Saudi Arabia – CR 2051221520-KSA – Referred to herein as (Lessor).
+                                </td>
+
+                                <td class="text_ar">
+                                    1. شركة ألف زین للتطوير العقاري المحدودة – عنوان وطني 7279 الخبر 34442 المملكة العربية السعودية، سجل تجاري رقم: 2051221520 المملكة العربية السعودية- ويشار إلها فیما یلي من هذا العقد ب (المؤجر):
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    2. <span style="font-weight: bold;">@Model.TenantNameEN </span>   – Igama ID.  <span style="font-weight: bold;"> @Model.TenantIqamaNo</span> - Kingdom Saudi Arabia - Referred to herein as the (Lessee)
+                                </td>
+
+                                <td class="text_ar">
+                                    2. <span style="font-weight: bold;" class="fontArabic"> @Model.TenantNameAR  </span> – رقم الإقامة. <span style="font-weight: bold;" class="fontArabic">  @Model.TenantIqamaNo </span>
+                                    المملكة العربية السعودية. ويشار اليه فيما يلي من هذا العقد ب (المستأجر)
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    IN CONSIDERATION of the mutual covenants and obligations contained herein, the Lessor and the Lessee hereby agree as follows:
+                                </td>
+
+                                <td class="text_ar">
+                                    اعتبارا للالتزامات المتبادلة بین الطرفين والمتضمنة في هذا العقد اتفق المؤجر والمستأجر كما یلي:
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en sizeA_en">
+
+                                    Art No: (1). Contract Subject:
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar">
+
+                                    البند رقم: (1) موضوع العقد.
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    1-1. Premises.
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    1-1. الوحدة السكنية
+
+
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en">
+                                    The Lessor leases to the Lessee the (Premises <span style="font-weight: bold;">@Model.PropertyType</span> No. <span style="font-weight: bold;">@Model.UnitNumber</span>), including fixtures and those furnishings, described in the attached Inventory, located at <span style="font-weight: bold;">@Model.CompoundName </span> and more particularly described in the attached Letter Agreement as the Premises (@Model.UnitDescriptionEN). Lessee acknowledges that it is Lessor’s policy not to grant requests to transfer tenants from one Villa to another within the <span style="font-weight: bold;"> @Model.CompoundName</span>. Lessee has no right, after taking occupancy of the Premises, to require relocation to another property with the <span style="font-weight: bold;"> @Model.CompoundName</span> because of the expense of upgrading and maintaining villas when they are vacated. Lessor thus has the sole discretion to grant or refuse any request for transfer from one property to another. In the event Lessor grants such a request, Lessee shall pay the reasonable expense of upgrading and maintaining the Premises.
+                                </td>
+
+                                <td class="text_ar">
+                                    یوافق المؤجر على تأجير وحدة سكنية <span style="font-weight: bold;" class="fontArabic">(@Model.PropertyType</span>) رقم: <span style="font-weight: bold;" class="fontArabic">(@Model.UnitNumber)</span> بالمجمع <span style="font-weight: bold;">@Model.CompoundName </span> السكني بالخبر إلى المستأجر بما تشمله من أثاث وتجهيزات والموضحة تفصیلیا في الملحق (قائمة الجرد) المرفق ویشار إلیها فیما یلي بـ (@Model.UnitDescriptionAR).
+                                    ) ويقر المستأجر بسياسة المؤجر في عدم الموافقة على طلب المستأجر للانتقال من وحدة إلى أخرى داخل المجمع السكني نظراً لتكلفة صيانة وتجديد الوحدة السكنية عند إخلائها، وللمؤجر فقط السلطة المطلقة في قبول أو رفض أي طلب للانتقال من شقة إلى أخرى، وفي حالة قبول المؤجر طلب الانتقال بتحمل المستأجر في هذه الحالة كافة مصاريف التجديد والصيانة اللازمة للوحد التي سيتركها.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en  ">
+                                    <span class="text_en  sizeB_en">  1-2. Lease Duration </span> <br />
+                                    <span class="text_en">
+                                        This Lease shall be for <span style="font-weight: bold;">@Model.MonthsEN</span>  (Initial Term) beginning on <span style="font-weight: bold;">@Model.LeaseStartDate</span>  (the Start Date) and ending on <span style="font-weight: bold;">@Model.LeaseEndDate</span>.
+                                    </span>
+
+                                </td>
+
+                                <td class="text_ar">
+
+                                    <span class="text_ar sizeB_ar "> 2-1. مدة الإيجار: </span> </br>
+                                    <span class="text_ar">
+                                        تكـون مـدة الإيجار الأساسية <span style="font-weight: bold;" class="fontArabic">@Model.MonthsAR</span> تبـدأ في <span style="font-weight: bold;" class="fontArabic">@Model.LeaseStartDate </span> (تاريخ البدء) وتنتهي بتاريخ <span style="font-weight: bold;" class="fontArabic">@Model.LeaseEndDate </span>
+                                    </span>
+
+
+                                </td>
+                            </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="text_en  ">
+                                    <span class="text_en  sizeB_en">  1-3. Rent. </span> <br />
+                                    <span class="text_en">
+                                        The Lessee shall pay to the Lessor for Six Month Amount rent of <span style="font-weight: bold;"> @Model.YearlyRent SAR (@Model.YearlyRentEN)</span>  including water and electricity will be paid by the tenant separately. Annual Rent will be paid semi – annual upon the execution of this lease agreement.
+                                    </span>
+
+                                </td>
+
+                                <td class="text_ar">
+
+                                    <span class="text_ar sizeB_ar ">     3-1 القیمة الإیجاریة: </span> </br>
+                                    <span class="text_ar">
+                                        يدفع المستأجر إلى المؤجر إيجارا ستة أشهر مبلغ وقدره <span style="font-weight: bold;" class="fontArabic"> @Model.YearlyRent ريال. (@Model.YearlyRentAR)</span> شامل للماء ويتم دفع استهلاك الكهرباء عن طريق المستاجر. ويتم سداد القيمة الإيجارية السنة الأولى (نصف سنوي) عند التوقيع على هذا العقد.
+                                    </span>
+
+
+                                </td>
+                            </tr>
+
+
+
+
+                            <tr>
+                                <td class="text_en">
+                                </td>
+
+                                <td class="text_ar">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    The Lessee should pay an admin fee of .2,5%. from full rental amount in addition to services fees SR/- <span style="font-weight: bold;">@Model.Commission </span>  SR/- for the ﬁrst year only/
+                                </td>
+
+                                <td class="text_ar">
+                                    كما يلتزم المستأجر بدفع المصاريف الإدارية بنسبة .2,5%. من القيمة الإيجارية للسنة كاملة عند توقيع هذا العقد بالاضافه الى <span style="font-weight: bold;" class="fontArabic">(@Model.Commission) </span>  ريال سعودي مقابل خدمات وذلك للسنة الأولى فقط.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeA_en">
+
+                                    Art No: (2).Deposit and Payments:
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar ">
+                                    البند رقم: (2) - التأميـــــن والسداد:
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    2-1. Deposit:
+
+
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+
+                                    1-2 . التأميــن:
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    In addition, the Lessee shall deposit with the Lessor prior to occupancy of the Premises and maintain during the Term of this Lease or any renewal thereof an amount of <span style="font-weight: bold;">(SR/- @Model.Insurance) @Model.InsuranceEN </span>  of the Annual Rent. This deposit shall be for any amendments or damages or consumptions bills and for misuse, intentionally or unintentionally.
+                                    This Deposit is refundable to the Lessee at the end of the Lease after deducting the required amounts, at the Lessor's discretion, and payment of the outstanding charges and to replace, repair, clean, and return the Premises, including structure, fixtures, fittings, and furnishings to tenantable condition
+                                </td>
+
+                                <td class="text_ar">
+                                    على المستأجر أن يودع لدى المؤجر قبل اشغال الوحدة السكنية مبلغاً بقيمة <span style="font-weight: bold;" class="fontArabic"> (@Model.Insurance ريال) @Model.InsuranceAR </span> كتأمين لمواجهة تعديلات أو تلفيات أو فواتير استهلاك وما ينتج عن سوء استخدام بقصد أو دون قصد.
+                                    ويرد التأمين إلى المستأجر عند نهاية عقد الإيجار بعد حسم المبالغ المطلوبة منه، حسب التقدير المطلق للمؤجر، ودفع رسوم الخدمات غير المسددة والنظافة والاستبدال والإصلاحات المطلوبة بما في ذلك هيكل البناء والتجهيزات والتركيبات والأثاث لإعادة المبنى إلى حالة صالحة للسكن.
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+                                    2.2 Expenses, Charges, and Texes:
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+
+                                    2-2. النفقات، المصروفات، الضرائب:
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    The lessee shall pay all expenses, charges, rates, and taxes of any kind now or hereafter payable in respect of the premises or any part thereof, including without limitation, electricity charges and any municipality taxes, assessed on the Lessee in the absence of direct assessment thereof on the premises to pay the lessor a fair proportion Thereof as determined by the lessor.
+                                </td>
+
+                                <td class="text_ar">
+                                    يدفع المستأجر كافة النفقات والمصروفات والضرائب المطلوب سدادها بكافة أنواعها حاليا أو مستقبليا فيما يتعلق بالوحدة السكنية أو أي جزء منها ويشمل ذلك على سبيل المثال لا الحصر ضرائب البلدية المفروضة على المستأجر وفي حالة عدم تقديرها مباشرة على المبنى من قبل الجهة المختصة فإن على المستأجر ان يدفع الى المؤجر نسبة عادلة منها حسبما يقرر المؤجر.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    In the event of neglecting to pay the agreed on rental value or complying with the payment method, the Lessee shall bear all the expenses incurred by the lessor in filing the claim against the Tenant and all the matters related to the case.
+                                </td>
+
+                                <td class="text_ar">
+                                    في حال عدم سداد المستأجر القيمة الإيجارية المتفق عليها او عدم الالتزام بطريقة السداد يتحمل المستأجر كافة المصاريف التي تترتب على الشركة في رفع الدعوة على المستأجر وكل ما يتعلق بالقضية.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en sizeA_en">
+
+                                    Art No: (3). Renwal Option:
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar ">
+
+
+                                    البند رقم:(3). خیار التجدید:
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+
+                                    3-1. Option:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+
+                                    1-3. الخیار:
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en">
+                                    The Lessee shall give notice of his intent to renew or not to renew the Lease at least two (2) months before the Termination Date. The Lessee shall have the option, subject to written approval and acceptance by the Lessor, to renew this Lease for a period of one (1) year upon two (2) months written notice to the Lessor prior to the Termination Date of the Initial Term of this Lease. If the Lessee does not give notice of intent not to renew within the period described above, this Agreement shall automatically be renewed for an additional Term and the Lessee will not have the right to recover the Deposit in this case.
+                                </td>
+
+                                <td class="text_ar">
+                                    يكون للطرف الثاني الخيار في تجديد عقد الإيجار هذا من عدمه ولمدة سنة واحدة بشرط الموافقة الخطية من المؤجر وذلك بعد تقديمه إخطاراً كتابياً للمؤجر برغبته في تجديد عقده لمدة سنة قبل شهرين (02) من تاريخ انتهاء مدة الإيجار المنصوص عليها في هذا العقد، وفي حالة عدم قيام المستأجر بإخطار المؤجر برغبته بعدم التجديد خلال المدة المحددة أعلاه يعتبر العقد مجدداً تلقائياً لمدة مماثلة ولا يحق للمستأجر استرداد مبلغ التأمين هذه الحالة.
+                                </td>
+                            </tr>
+
+
+
+
+                            <tr>
+                                <td class="text_en  ">
+                                    <span class="text_en  sizeB_en">
+                                        3-2. Rent Upon Renewal:
+                                    </span> <br />
+                                    <span class="text_en">
+                                        Upon renewal of the Annual Rent for the following year pursuant to Paragraph A of this Section shall be agreed between the Lessor and Lessee in regarding to the rent price if there are any changed before (30) days at least at the end of the initial period.
+                                    </span>
+
+                                </td>
+
+                                <td class="text_ar">
+
+                                    <span class="text_ar sizeB_ar ">
+                                        2-3 القيمة الإيجارية عند التجديد:
+                                    </span> </br>
+                                    <span class="text_ar">
+                                        عند تجديد عقد الإيجار تابعا للفقرة السابقة يتم الأتفاق مسبقا بين كل من المؤجر والمستأجر- ذلك قبل نهاية مدة العقد الأساسية بثلاثين يوما على الأقل بشأن القيمة الإيجارية للسنة التالية في حال كان هناك تغيير على القيمة الإيجارية.
+                                    </span>
+
+
+                                </td>
+                            </tr>
+
+
+
+
+                            <tr>
+                                <td class="text_en sizeA_en">
+
+                                    Art No: (4). Possession and Acceptance:
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar ">
+
+
+                                    البند رقم (4) الحيازة والقبول:
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en">
+                                    The execution of this Lease agreement by the Lessee constitutes acceptance of the Premises by the Lessee in a condition acceptable to the Lessee and on the terms and conditions contained herein.
+                                </td>
+
+                                <td class="text_ar">
+                                    یعتبر توقیع المستأجر على هذا العقد اقراراً صریحاً منه بأن العقار بحالة مقبولة للسكن طبقاً للشروط والأحكام الواردة في هذا العقد.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en sizeA_en">
+
+                                    Art No: (5). TERMINATION OF THE LEASE.
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar ">
+
+                                    البند رقم (5) إنهاء العقد                                        :
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    5-1. Termination by the Lessor:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+
+                                    1-5. الإنهاء من جانب المؤجر:
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en">
+                                    Notwithstanding the provisions of Section I.B., herein, the Lessor may terminate this Lease and immediately recover the Premises from the Lessee upon:
+                                </td>
+
+                                <td class="text_ar">
+                                    على الرغم من الشروط الواردة من هذا العقد فان المؤجر یمكنه انهاء هذا العقد واسترداد الوحدة المؤجرة من المستأجر في الحالات التالیة:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    5-2. Default by Lessee:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+
+                                    2-5. التقصير:
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en">
+                                    The Lessee being in default in the payment of any sums required under this Lease or in default of any of the covenants and/or obligations and such default not being within five (5) days of notification of such default by the Lessor to the Lessee.
+                                </td>
+
+                                <td class="text_ar">
+                                    إذا تخلف المستأجر عن سداد أية مبالغ مطلوبة بموجب هذا العقد أو بدر منه أي تقصير في أداء التزاماته وفشل في معالجة هذا القصور خلال خمسة (5) خمسة أیام من إخطاره من قبل الطرف الأول.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    5-3. Bankruptcy or Insolvency:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+
+                                    3-5. الافلاس أو الاعسار
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en">
+                                    The bankruptcy, insolvency, or dissolution of the Lessee
+                                </td>
+
+                                <td class="text_ar">
+                                    فى حالة إفلاس أو إعسار أو تصفية المستأجر.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    5-4. Disruption by Lessee:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+
+                                    4-5 الازعاج من قبل المستأجر
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en">
+                                    Any action by the Lessee or the Lessee’s invitee(s) that violates the terms of this Lease and the rules and regulations of The Daar Residence Compound or which, in the sole opinion of the Lessor, threatens to disrupt, disturb, or otherwise harm The Dar Residence Compound or its tenants or invitees, and such termination shall not allow the Lessee any refund of any sums already paid under the terms of this Lease;
+                                </td>
+
+                                <td class="text_ar">
+                                    أى فعل یُرتَكب من قبل المستأجر أو موظفة المقیم بالوحدة السكنیة أو عائلته بمخالفة شروط عقد الایجار والنظم والقواعد المتبعة بالمجمع السكني، والتي حسب التقدیر الشخصي للمؤجر یرى أنها ستهدد بالإزعاج أو إشاعة الفوضى أو تلحق الضرر بالمجمع السكني والمقیمین فیه . وفي مثل هذا الإنهاء لن یكون للمستأجر الحق في استرداد أي مبالغ نقدیة سبق سدادها بموجب عقد الإیجار.
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en  ">
+                                    <span class="text_en  sizeA_en">
+                                        Art No: (6). Repossession of the Premises or Sale of the Dar Residence Compound:
+                                    </span> <br />
+                                    <span class="text_en">
+                                        Upon the repossession of the Premises, at the sole option of the Lessor, or upon the sale of the property of The Dar Residence Compound, the Lessor or the purchaser shall have the right to terminate this Lease prior to its stated Initial Term or any renewal thereof by delivering notice of such termination to the Lessee two (2) months prior to such early termination date, the Lessee being entitled only to the return of such amounts of Annual Rent already paid for the period of time from the early termination date to the end of the Term.
+                                    </span>
+
+                                </td>
+
+                                <td class="text_ar">
+
+                                    <span class="text_ar sizeA_ar ">
+                                        البند رقم: (6). استرداد حيازة الوحدة السكنية أو بيع المجمع السكني:
+
+                                    </span> </br>
+                                    <span class="text_ar">
+                                        عند استرداد حیازة الوحدة السكنیة بناء على اختیار المؤجر أو عند بیع المجمع السكني فإن المؤجر أو المشتري حسب الحالة یكون له الحق في إنهاء هذا العقد قبل فترته المحددة في الإیجار المبدئي أو المجدد بتسلیم أخطار بالانهاء إلى المستأجر قبل شهرین (2) من تاریخ هذا الإنهاء المبكر ویحق للمستأجر فقط استرداد القیمة الإیجاریة المدفوعة مسبقا عن المدة الزمنیة من وقت الإنهاء المبكر الى نهایة فترة الإیجار.
+                                    </span>
+
+
+                                </td>
+                            </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+
+                                    Termination by the Lessee:
+
+                                </td>
+
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    الانهاء من جانب المستأجر:
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en">
+                                    In case of termination this lease agreement by the lessee before the expiry date of the agreement, security deposit will not refunded to the lessee as penalty of breaking the contact also the lessee shall not have the right to refund any sum of the rent in case payment paid full .
+                                </td>
+
+                                <td class="text_ar">
+                                    في حال إنهاء عقد الأيجار هذا من جانب المستأجر قبل نهاية المدة الأيجاريه المذكوره في العقد فإنه لن يتم إعادة مبلغ التأمين للمستأجر وذلك كغرامه عن خرق العقد . وكذلك لا يحق له إسترجاع اي مبلغ من قيمة العقد في حال كان الدفع عن السنه كامله.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text_en sizeA_en">
+
+                                    Art No: (7). Lessee's Covenants:
+
+
+
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar ">
+
+
+                                    البند رقم (7) تعهدات المستأجر
+
+
+
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en">
+                                    The Lessee hereby covenants to the Lessor to perform those covenants, duties, and obligations more particularly described in Schedule B, attached hereto.
+                                </td>
+
+                                <td class="text_ar">
+                                    يتعهد المستأجر بالالتزام بتنفيذ الواجبات والالتزامات التى يرد شرحها تفصيليا فى الملحق (ب) المرفق بهذا العقد.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="sizeA_en">
+
+                                    Art No: (8). Lessor's Covenants:
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar ">
+
+                                    البند رقم (8) تعهدات المؤجر
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    The Lessor hereby covenants to the Lessee:
+                                </td>
+
+                                <td class="text_ar">
+                                    يتعهد المؤجر الى المستأجر بموجب هذا العقد بما يلي:
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    8-1. Quiet Enjoyment:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    1-8. الاستمتاع الهادئ
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    The Lessee after paying the Annual Rent and all other moneys and observing and performing all the covenants and stipulations of the Lease shall, subject to the terms of this Lease and the regulations of the Lessor, as amended from time to time, peacefully hold and enjoy the Premises during the Initial Term of the Lease and any renewal thereof without interruption by the Lessor or any person acting on his behalf.
+                                </td>
+
+                                <td class="text_ar">
+                                    يحق للمستأجر بعد سداد القيمة الايجارية السنوية وكافة المبالغ الأخرى والتزامه بكافة التعهدات المطلوبة منه بموجب هذا العقد ونظم المؤجر، حسبما يتم تعديله من وقت لآخر، حيازة الوحدة السكنية وأن يستمتع بسكنها بهدوء تام طوال مدة العقد الأولى أو المدد الأخرى المجدده، ودون إعاقة من قبل المؤجر أو من أي شخص ينوب عنه.
+                                </td>
+                            </tr>
+
+
+
+
+
+
+
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    8-2. Services:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    2-8 الخدمات
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    The Lessor shall provide the Services as listed in the contract. In case of negligence, it will be considered as the material breach of this lease agreement and gives the Lessee the right to terminate the contract with immediate effect with only obligation to pay the Lessor the rent amount until the early termination date.
+                                </td>
+
+                                <td class="text_ar">
+                                    يجب على المؤجر تقديم الخدمات كما هي مدرج في هدا العقد. وفي حالة التقصير٬ يعطى المستأجر الحق في إنهاء العقد بأثر فوري، مع الالتزام فقط بدفع مبلغ الإيجار إلى المؤجر حتى تاريخ الإنهاء المبكر.
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en  ">
+                                    <span class="text_en  sizeB_en">
+                                        8-3. Common Areas:
+                                    </span> <br />
+                                    <span class="text_en">
+                                        Management and control of the common parts of DAAR RESIDENCE Compound shall be the exclusive responsibility of the Lessor. The Lessor or its agents may, at any time and without notice, repair, alter, remove, or prohibit the use of portions of the common areas as the Lessor, in its discretion, shall determine without abatement, refund, or adjustment of Annual Rent, or any sum due hereunder as per this contract
+                                    </span>
+
+                                </td>
+
+                                <td class="text_ar">
+
+                                    <span class="text_ar sizeB_ar ">
+                                        3-8. المناطق العامة
+                                    </span> </br>
+                                    <span class="text_ar">
+                                        تكون للمؤجر المسؤولیة الكلیة للإشراف وإدارة المناطق العامة من المجمع السكني الدار ريز دنس ويمكن للمؤجر أو وكلائه في أي وقت ومن حین الى آخر إجراء أیة إصلاحات أو إزالة أو منع استخدام أجزاء معینة من المناطق العامة وفقاً لما یقرره المؤجر دون أن یكون للمستأجر حسم، أسترجاع أو تعدیل في الایجار السنوي، أو رسوم الخدمات أو أي مبالغ مستحقة وفقاً للعقد
+                                    </span>
+
+
+                                </td>
+                            </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    8-4. Assignment:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    4-8. التنازل:
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    The Lessee shall not assign or sublet this Lease or allow use of any or all of the Premises by any third party not mentioned in this Lease without the written consent of the Lessor.
+                                </td>
+
+                                <td class="text_ar">
+                                    لا يحق للمستأجر التنازل عن عقد الإيجار أو الإيجار من الباطن أو السماح باستخدام أي جزء أو كل من الوحدة السكنية لشخص ثالث غير مذكور في هذا العقد دون موافقة المؤجر.
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en sizeB_en ">
+
+                                    8-5. Encumbrances:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    5-8. التكليفات العقارية:
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    This Lease and the Lessee’s rights in it are shall be subject to any liens, mortgages, or encumbrances now or hereafter placed on the Premises or on The Residence Compound.
+                                </td>
+
+                                <td class="text_ar">
+                                    يخضع هذا العقد وكذلك حقوق المستأجر الواردة فيه لأية رهونات أو مديونيات أو تكليفات عقارية مفروضة حالياً او مستقبلاً على المؤجر فيما يتعلق بهذه الوحدة السكنية أو بالمجمع السكني.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    Art No (9). Miscellaneous:
+
+                                </td>
+
+                                <td class="text_ar sizeA_ar ">
+
+                                    البند رقم (9) أحكام عامة
+
+
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    9-1. Notices.
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    1-9. الإخطارات
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    All Notices with respect to this Lease shall be made in writing, and delivered, in the case of Notices to the Lessee, addressed to the Lessee and left at the Premises, and, in the case of the Lessor, delivered by registered mail to the Lessor’s National address 7279, Al Khobar 34442.
+                                </td>
+
+                                <td class="text_ar">
+                                    تكون كافة الإخطارات المتعلقة بهذا العقد وفى حالة الإخطارات الموجهة الى المستأجر فيجب أن ترسل الى المستأجر وتترك بالوحدة السكنية أما فى حالة المؤجر فتسلم على العنوان الوطني 7279 الخبر 34442.
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    9-2. Calendar.
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    2-9. التقویم
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    All dates and periods of time referred to herein shall be determined in accordance with the Gregorian calendar.
+                                </td>
+
+                                <td class="text_ar">
+                                    تحتسب كافة التواريخ والفترات الزمنية المشار إليها في هذا العقد طبقا للتقويم الميلادي.
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en sizeB_en ">
+
+                                    9-3. Schedules.
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    3-9. الملاحق
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    The attached Schedules A, B and Inventory forms an integral part of this Lease and is incorporated herein by reference.
+                                </td>
+
+                                <td class="text_ar">
+                                    تعتبر الملاحق المرفقة أ، ب جزءا لا يتجزأ من هذا العقد. وقد تم دمجها في هذه الوثيقة والإشارة لها فيه.
+                                </td>
+                            </tr>
+
+
+
+
+
+
+
+
+                            <tr>
+                                <td class="text_en sizeB_en ">
+
+                                    9-4. Headings.
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    4-9. العناوین
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    Headings, as used in this Lease and the attached Schedules, shall be descriptive only and shall not affect construction hereof.
+                                </td>
+
+                                <td class="text_ar">
+                                    إن العناوين المستخدمة فى هذا العقد والملاحق المرفقة به لغرض التوضيح فقط ويجب ألا تؤثر على مضمون هذا العقد أو تفسيره.
+                                </td>
+                            </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="text_en  ">
+                                    <span class="text_en  sizeB_en">
+                                        9-5. Choice of Law and Disputes:
+                                    </span> <br />
+                                    <span class="text_en">
+                                        This Lease, the Schedules and all other documents with respect hereto shall be interpreted and construed in accordance with the Laws of the Kingdom of Saudi Arabia. Disputes with respect to this Lease shall be settled by the Lessor and the Lessee amicably, failing which the dispute shall be referred to a local arbitration committee, subject to the rules and practices prevailing in the Kingdom of Saudi Arabia.
+                                        The Tenant shall fully acknowledge that the leased company is not owner but authorized by the owner to manage the residential compound and has the right to confront, complain and plead for owner in accordance with what is referred to in the contract.
+                                    </span>
+
+                                </td>
+
+                                <td class="text_ar">
+
+                                    <span class="text_ar sizeB_ar ">
+                                        5-9. اختيار القانون والنزاعات
+                                    </span> </br>
+                                    <span class="text_ar">
+                                        يخضع ويفسر هذا العقد والملاحق المرفقة به طبقاً لأنظمة وقوانين المملكة العربية السعودية وتحل النزاعات المتعلقة به بين المؤجر والمستأجر بالطرق الودية وفي حالة الإخفاق في ذلك يمكن احالة النزاع الى الجهات القضائية المختصة بالمملكة العربية السعودية أو بناء على رغبة الطرفين يحال النزاع إلى هيئة تحكيم محلية طبقا للأنظمة والأعراف السائدة في المملكة العربية السعودية.
+                                        یقر المستأجر بعلمه أن الشركة المؤجرة لیست المالك الحقیقي للمجمع وإنما هي مفوضة من قبل المالك لإدارة المجمع السكني ولها حق إتخاذ جمیع الإجراءات القضائیة والشكوى والمرافعة نیابة عن المالك وفقاً لما هو مشار إلیه بالعقد.
+                                    </span>
+
+
+                                </td>
+                            </tr>
+
+
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    9-6. Language:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    6-9. اللغة
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    This Lease and the Schedules attached hereto have been collated in English and Arabic language versions. The English version has been provided by the Lessor only for the convenience of the Lessee. The Arabic language version shall be the controlling and prevailing version of the Lease and the Schedules attached hereto for all purposes, including, but not limited to, the purposes of Paragraph E of this Section.
+                                </td>
+
+                                <td class="text_ar">
+                                    تم التوقيع على هذا العقد والملاحق المرفقة به باللغتين العربية والإنجليزية وقد قام المؤجر بتوفير النسخة الانجليزية للمستأجر للاطلاع والمعلومية. وتعتبر النسخة العربية للعقد والملاحق المرفقة به هي المعتمدة لكافة الأغراض ويشمل هذا على سبيل المثال لا الحصر تلك التي وردت بالفقرة (هـ) من هذه المادة.
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    9-7. Amendments and Waivers:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    7-9. التعدیلات والتنازلات
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    Any amendments, modifications, and waivers with respect to this Lease and the Schedules attached hereto shall be in writing and executed on behalf of both the Lessor and the Lessee.
+                                </td>
+
+                                <td class="text_ar">
+                                    إن أية تعديلات أو تنازلات تتعلق بهذا العقد أو الملاحق المرفقة به يجب أن تكون مكتوبة وموقعة من كل من المؤجر والمستأجر.
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en sizeB_en ">
+
+                                    9-8. Severability:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    8-9. القابلية للتجزئة
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    If any provision of this Lease or the application of such provision to any person or circumstance shall be held invalid, the remainder of this Lease shall not be affected thereby.
+                                </td>
+
+                                <td class="text_ar">
+                                    في حالة اعتبار أي من بنود هذا العقد أو تطبيقه على أى شخص أو ظرف باطلاً أو غير ساري المفعول، فإن ذلك لا يؤثر على سريان بقية بنوده الأخرى.
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td class="sizeB_en">
+
+                                    9-9. Additional Documents and Acts:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    9-9. المستندات الإضافية
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    Lessee agrees to execute and deliver such additional documents and instruments and to perform such additional acts as may be necessary or appropriate to effectuate and perform all of the terms included in this Agreement.
+                                </td>
+
+                                <td class="text_ar">
+
+                                    يوافق المستأجر على توقيع وتسليم المستندات الإضافية وتنفيذ الأعمال اللازمة والضرورية لتنفيذ جميع البنود المتضمنة في هذا العقد.
+                                </td>
+                            </tr>
+
+
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    9-10. Multiple Counterparts:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    10-9. تعدد النسخ
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    This Agreement may be executed in counterparts, each of which shall be deemed an original.
+                                </td>
+
+                                <td class="text_ar">
+                                    يجوز توقيع هذا العقد من عدة نسخ متطابقة، وتعتبر كل منها
+                                    نسخة أصلية ومطابقة للأخرى.
+
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    9-11. Time is of the Essence:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    11-9. أهمية التواريخ
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    All dates and times in this Agreement are of the essence.
+                                </td>
+
+                                <td class="text_ar">
+                                    تعتبر جميع التواريخ المضمنة في هذا العقد ذات أهمية لنفاذ هذا العقد.
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td class="text_en  ">
+                                    <span class="text_en  sizeB_en">
+                                        9-12. Remedies Cumulative:
+                                    </span> <br />
+                                    <span class="text_en">
+                                        The remedies under this Agreement are cumulative and shall not exclude any other remedies to which any Party may be lawfully entitled.
+                                    </span>
+
+                                </td>
+
+                                <td class="text_ar">
+
+                                    <span class="text_ar sizeB_ar ">
+                                        12-9.. وسائل التعويض التراكمية
+                                    </span> </br>
+                                    <span class="text_ar">
+                                        تعتبر وسائل التعويض المضمنة في هذا العقد تراكمية ولا تستثني أي تعويض إضافي يخوله النظام لأي من الطرفين
+                                    </span>
+
+
+                                </td>
+                            </tr>
+
+
+
+
+
+
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    9-13. Presumptions:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    13-9. القرائن
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    In the event any claim is made by Lessee relating to any conflict, omission, or ambiguity in this Lease, no presumption or burden of proof or persuasion shall be implied by virtue of the fact that this Lease was prepared by or at the request of Lessor or its counsel.
+                                </td>
+
+                                <td class="text_ar">
+                                    في حالة وجود أي مطالبة من قبل المستأجر بخصوص أي نزاع أو إهمال أو غموض أو التباس في هذا العقد فلا تعتبر كقرينة يقع عبء إثباته على المؤجر باعتبار أن هذا العقد قد تم إعداده من قِبل المؤجر أو من قِبل مستشاريه.
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    9-14. Complete Agreement:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar ">
+
+                                    14-9. كامل الاتفاق
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en">
+                                    This Lease, including the Schedules and Inventory incorporated herein, constitutes the complete agreement of the parties hereto and supersedes all other agreements, written or oral, between the parties and relating to the subject matter hereto.
+                                </td>
+
+                                <td class="text_ar">
+                                    يمثل هذا العقد الملاحق والجداول المرفقة به كامل الاتفاق بين الطرفين، ويحل أو ينسخ جميع الاتفاقات السابقة سواء كانت كتابة أو شفاهية فيما يتعلق بموضوعه.
+                                </td>
+                            </tr>
+
+                            @if (!string.IsNullOrWhiteSpace(Model.AdditionalNotesAR) && !string.IsNullOrWhiteSpace(Model.AdditionalNotesEN))
+                            {
+                                <tr>
+                                    <td class="text_en sizeB_en">
+
+                                        9-15. Additional terms:
+
+                                    </td>
+
+                                    <td class="text_ar sizeB_en ">
+
+                                        15-9. شروط إضافية
+
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="text_en">
+                                        @Model.AdditionalNotesEN
+                                    </td>
+
+                                    <td class="text_ar">
+                                        @Model.AdditionalNotesAR
+                                    </td>
+                                </tr>
+                            }
+
+
+
+                            <tr>
+                                <td class="text_en">
+                                    IN WITNESS WHEREOF, the Lessor and the Lessee have caused this Lease to be executed by their duly appointed representatives the day and year first above written.
+                                </td>
+
+                                <td class="text_ar">
+                                    وإثباتا لما ذكر أعلاه فقد قام المؤجر والمستأجر بتوقيع هذا العقد بواسطة ممثليها المفوضين في الیوم والسنة المشار اليهما اعلاه.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    For and on Behalf of
+                                    AZ Real Estate Development Company Ltd (LESSOR)
+
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar">
+
+                                    عن/
+                                    شركة ألف زین للتطوير العقاري المحدودة (المؤجر)
+
+
+
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    Name: \  Ahmed Zainalabedin
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar">
+
+                                    الاسم: / أحمد زين العابدين
+
+
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    Signature:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar">
+
+                                    التوقيع:
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    For and on Behalf of the Lessee
+
+                                </td>
+                                <td class="text_ar sizeB_ar">
+
+                                    عن المستأجر
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    Name: \ @Model.TenantNameEN
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar">
+
+                                    الاسم: / @Model.TenantNameAR
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+
+                                    Number: \ @Model.TenantMobileNo
+
+                                </td>
+
+                                <td class="text_ar sizeB_en">
+
+                                    رقم الجوال:/ @Model.TenantMobileNo
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en">
+                                    <h4>
+                                        Email:\         @Model.TenantEmail
+                                    </h4>
+                                </td>
+
+                                <td class="text_ar sizeB_ar">
+
+                                    البريد الإلكتروني:/ @Model.TenantEmail
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text_en sizeB_en" style="width:50%">
+
+                                    Signature:
+
+                                </td>
+
+                                <td class="text_ar sizeB_ar" style="width:50%">
+
+                                    التوقيع:
+
+
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td>
+                                    <!--place holder for the fixed-position footer-->
+                                    <div class="page-footer-space">
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="row">
+                <div class="col-sm-12">
+                    <h4 class="py-5 text-primary">
+                        LEASE AGREEMENT
+                        <br>
+                        @Model.CompoundName
+                        <br>
+                        Villa No:@Model.UnitNumber
+                        <br>
+                        SERIAL NO: @Model.ContractNumber
+                    </h4>
+
+                </div>
+            </div>*@
+
+    </div>
+</div>
+@section ScriptsBlock {
+    <script>
+                                            //$(function () {
+                                            //    $(".text_ar").attr("dir", "rtl").css("text-align", "right");
+                                            //});
+    </script>
+}

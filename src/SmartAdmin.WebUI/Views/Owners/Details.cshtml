@@ -1,0 +1,115 @@
+﻿@model SmartAdmin.WebUI.Models.Owners
+
+@{ ViewData["Title"] = "Details Owners";
+    ViewData["PageName"] = "Owners";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Details Owners";
+    ViewData["Category1"] = "Details Owners";
+    ViewData["PageDescription"] = ""; }
+
+
+
+<div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @if (ViewBag.AlertSaveErr != null)
+    {
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
+    <div class="d-flex flex-start w-100">
+        <div class="d-flex flex-fill">
+            <div class="flex-fill">
+                <p>  @ViewBag.AlertSaveErr</p>
+            </div>
+        </div>
+    </div>
+</div>}
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Position Details
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="OwnerName" class="col-form-label col-sm-3 text-sm-right form-label">Owner Name*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="OwnerName">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="OwnerPhone" class="col-form-label col-sm-3 text-sm-right form-label">Owner Phone*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="OwnerPhone">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="OwnerAddress" class="col-form-label col-sm-3 text-sm-right form-label">Owner Address*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="OwnerAddress">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="ContactName" class="col-form-label col-sm-3 text-sm-right form-label">Contact Name*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="ContactName">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="OwnerNnotes" class="col-form-label col-sm-3 text-sm-right form-label">Owner Nnotes*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="OwnerNnotes">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="OwnerMobile" class="col-form-label col-sm-3 text-sm-right form-label">Owner Mobile*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="OwnerMobile">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="Owneremail" class="col-form-label col-sm-3 text-sm-right form-label">Owner Email*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="Owneremail">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="CompanyName" class="col-form-label col-sm-3 text-sm-right form-label">Company Name*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="CompanyName">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="ContactPhone" class="col-form-label col-sm-3 text-sm-right form-label">Contact Phone*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="ContactPhone">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+
+                <div class="form-group  alert alert-primary alert-dismissible text-center">
+                    <a class="btn btn-secondary ml-1 waves-effect waves-themed" asp-action="Index">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'Details of an Owner';
+    </script>
+}

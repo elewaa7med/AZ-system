@@ -1,0 +1,23 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model int
+    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+            <div class="dropdown-menu">
+                    <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@Model>
+                        Details
+                    </a>
+                    <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@Model>
+                        Edit
+                    </a>
+                    <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@Model>
+                        Delete
+                    </a>
+
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,21 @@
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="info-card">
+        <img src="~/img/demo/avatars/@ViewBag.Avatar" class="profile-image rounded-circle">
+        <div class="info-card-text">
+            <a href="#" class="d-flex align-items-center text-white">
+                <span class="text-truncate text-truncate-sm d-inline-block">
+                    @UserManager.GetUserName(User)
+                </span>
+            </a>
+            @{var u = await UserManager.GetUserAsync(User); DateTime dt = (u.LastLoginDateTime == null) ? DateTime.Parse("1990-1-1") : u.LastLoginDateTime.Value; }
+            <span class="d-inline-block text-truncate text-truncate-sm">Last Access: </span><span>@dt.ToString("dd-MM-yyyy HH:mm")</span>
+        </div>
+        <img src="~/img/card-backgrounds/cover-2-lg.png" class="cover" alt="cover">
+        <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
+            <i class="fal fa-angle-down"></i>
+        </a>
+    </div>
+}

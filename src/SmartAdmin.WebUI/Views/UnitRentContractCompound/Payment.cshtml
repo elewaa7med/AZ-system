@@ -1,0 +1,380 @@
+﻿@model SmartAdmin.WebUI.Models.DTO.RentContractPaymentDTO
+@{
+    ViewData["Title"] = "Payment";
+    ViewData["PageName"] = "Compounds Rent Contracts";
+    ViewData["Heading"] = "<i class='fal fa-money-bill text-primary'></i> Payment";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+    var hasPayments = Model.RentContractPaymentList.Any(p => p.Paid || p.PaidAmount > 0);
+    var contractId = ViewBag.ContractId;
+    var canPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MakePayment })).Succeeded;
+    var canPartialPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MakePartialPayment })).Succeeded;
+}
+
+
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="panel-tag">
+                        <h4>
+                            <span class="color-info-800"> Tanenet Name : </span>
+                            <span class="color-fusion-800 ">
+                                @Model.RentContractPaymentList.FirstOrDefault().TenantName
+                            </span>
+                        </h4>
+                        <h4>
+                            <span class="color-info-800">  Bulding Number : </span>
+                            <span class="color-fusion-800 ">
+                                @Model.RentContractPaymentList.FirstOrDefault().BuldingNumber
+                            </span>
+                        </h4>
+                        <h4>
+                            <span class="color-info-800">  Unit Number : </span>
+                            <span class="color-fusion-800 "> @Model.RentContractPaymentList.FirstOrDefault().UnitNumber  </span>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size:150%;">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>
+                    <span class="fw-500  text-primary"> Total Payments :  </span> &nbsp;<span class="color-danger-500" id="paymentTotal"> </span>
+                </h2>
+                <div class="panel-toolbar">
+                    @if (Model.RentContractPaymentList.Sum(x => x.Amount) != Model.RentContractPaymentList.Sum(x => x.PaidAmount))
+                    {
+                        <a class="btn btn-success waves-effect waves-themed" asp-action="PartiallyPay" title="Pay" asp-route-pageid="@ViewBag.id" asp-route-ContractId=@ViewBag.ContractId style="margin:0px 20px;padding:9px 40px;font-weight:bold;">Pay</a>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.WritePaymentNote })).Succeeded)
+                    {
+                        <a asp-action="Notes" title="Notes" asp-route-id=@contractId class="btn btn-info waves-effect waves-themed">
+                            Notes
+                        </a>
+                    }
+                    @if (hasPayments)
+                    {
+                        if ((await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.UndoLastPayment })).Succeeded)
+                        {
+                            <a asp-action="UndoLastPayment" title="Undo last payment" asp-route-contractId=@contractId class="btn btn-danger waves-effect waves-themed ml-2">
+                                Undo last Payment
+                            </a>
+                        }
+                        if ((await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.UndoAllPayments })).Succeeded)
+                        {
+                            <a asp-action="UndoAllPayments" title="undo all payments" asp-route-contractId=@contractId class="btn btn-danger waves-effect waves-themed ml-2">
+                                Undo all Payments
+                            </a>
+                        }
+                    }
+                    <button class="btn btn-panel ml-2" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Due Date </th>
+                                <th>Amount </th>
+                                <th>Remaining Amount </th>
+                                <th>Paid Amount </th>
+                                <th>Last payment Date </th>
+                                <th>User </th>
+                                <th>Comments </th>
+                                @*@if (!partial)
+                                    {
+                                        <th class="noExport">Operations</th>
+                                    }*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.RentContractPaymentList.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @item.value.DueDate.ToShortDateString()
+                                    </td>
+                                    <td class="format">
+                                        @item.value.Amount
+                                    </td>
+                                    <td class="format">
+                                        @item.value.RemainingAmount
+                                    </td>
+                                    <td class="paid format">
+                                        @item.value.PaidAmount
+                                    </td>
+                                    <td>
+                                        @item.value.PaymentDate?.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        @item.value.User
+                                    </td>
+                                    <td title="@(item.value.Note??"")">
+                                        @(item.value.Note?.Length>100? item.value.Note?.Substring(0,100)+"....": item.value?.Note)
+                                    </td>
+                                    @*@if (!partial)
+                                        {
+                                            <td>
+                                                @if (!item.value.Paid)
+                                                {
+                                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                                        <div class="btn-group" role="group">
+                                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                            <div class="dropdown-menu">
+                                                                @if (canPay)
+                                                                {
+                                                                    <a class="dropdown-item" asp-action="PartiallyPay" title="Pay" asp-route-id=@item.value.ID asp-route-pageid="@ViewBag.id" asp-route-fullPay="true">Pay</a>
+                                                                }
+                                                                @if (canPartialPay)
+                                                                {
+                                                                    <a class="dropdown-item" asp-action="PartiallyPay" title="Partially Pay" asp-route-pageid="@ViewBag.id" asp-route-id=@item.value.ID>Partially Pay</a>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </td>
+                                        }*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.InvoicesList != null && Model.InvoicesList.Count() > 0)
+    {
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2 style="font-size:150%;">
+                        <span class="icon-stack icon-stack-lg">
+                            <i class="base-2 icon-stack-3x color-primary-400"></i>
+                            <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                            <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                        </span>
+                        <span class="fw-500  text-primary"> Invoices </span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel ml-2" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <!-- datatable start -->
+                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                            <thead class="bg-primary-600">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Invoice Id</th>
+                                    <th>Payment Date</th>
+                                    <th>Paid Amount  </th>
+                                    <th>Payment Method</th>
+                                    <th>Operation </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.InvoicesList.Select((value, i) => new { i, value }))
+                                {
+                                    <tr>
+                                        <td>
+                                            @(item.i + 1 )
+                                        </td>
+                                        <td>
+                                            @("E-" + item.value.InvoiceId)
+                                        </td>
+                                        <td>
+                                            @item.value.PaymentDate.ToShortDateString()
+                                        </td>
+                                        <td class="format">
+                                            @item.value.Payment
+                                        </td>
+                                        <td>
+                                            @Enum.GetName(typeof(Enums.PaymentMehtod), item.value.PaymentMehtod)
+                                        </td>
+
+                                        <td>
+                                            <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                                <div class="btn-group" role="group">
+                                                    <a class="btn btn-success" asp-action="Invoice" title="Show Invoice" asp-route-InvoiceId=@item.value.Id>show Invoice</a>
+                                                    @*<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                        <div class="dropdown-menu">
+                                                            @if (canPay)
+                                                            {
+                                                                <a class="dropdown-item" asp-action="PartiallyPay" title="Pay" asp-route-id=@item.value.ID asp-route-pageid="@ViewBag.id" asp-route-fullPay="true">Pay</a>
+                                                            }
+
+                                                        </div>*@
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <!-- datatable end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section ScriptsBlock{
+    <script>
+        $(function () {
+            calculateTotal('paid', 'paymentTotal');
+            columnNumberWithCommas('format');
+        })
+        function fillDueRent() {
+           var id = $("#compundID").val();
+            var newhtmlduerents = "";
+            var url = '@Url.Content("~/")' + 'Home/GetCompoundsDue';
+            $.getJSON(url, { compoundID: id }, function (data) {
+                $.each(data.due, function (i, row) {
+                        if (row.totalDays <= 0)
+                            btncolorstr = ' btn-danger" ';
+                        else
+                            if (row.totalDays <= 14)
+                                btncolorstr = ' btn-warning" ';
+                            else
+                                btncolorstr = ' btn-success" ';
+
+                    newhtmlduerents += '<tr> ' +
+                        '<td>' + (parseInt(i) + 1) + '</td> ' +
+                        '<td> ' + row.unitNumber + ' </td>' +
+                        '<td> ' + row.tenantName + ' </td>' +
+                        '<td> ' + row.mobile + ' </td>' +
+                        '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
+                        '<td>' + row.remainingRents + '</td>' +
+                        '<td> ' + numberWithCommas(row.value) + ' </td>' +
+                        '<td> ' + row.collectionDate + ' </td>' +
+                        '<td> ' + row.expiryDate + ' </td>' +
+                        '<td>' +
+                        '<a href="/UnitRentContractCompound/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed ' + btncolorstr + '">' + row.totalDays + ' </a>' +
+                        '</td>' +
+                        '<td>' +
+                        '<a href="/UnitRentContractCompound/Details/' + row.contractID + '" title="Contract" class="btn btn-secondary waves-effect waves-themed">Contract</a>'
+                        '</td>'
+                         '</tr>';
+                });
+                $('#dueRentBody').html(newhtmlduerents);
+                $("#dueTotal").text(numberWithCommas(data.totalValue));
+                initializeDataTable("#dueRentTable");
+                //$("#dueRentTable").dataTable().page.len(10).draw();
+            });
+        }
+        function fillOverDueRent() {
+            var id = $("#compundID").val();
+            var newhtmloverduerents = "";
+            var url = '@Url.Content("~/")' + 'Home/GetCompoundsDueOver60';
+            $.getJSON(url, { compoundID: id }, function (data) {
+                $.each(data.due, function (i, row) {
+                    if (row.totalDays <= 0)
+                        btncolorstr = ' btn-danger" ';
+                    else
+                        if (row.totalDays <= 14)
+                            btncolorstr = ' btn-warning" ';
+                        else
+                            btncolorstr = ' btn-success" ';
+                    newhtmloverduerents += '<tr> ' +
+                        '<td>' + (parseInt(i) + 1) + '</td> ' +
+                        '<td> ' + row.unitNumber + ' </td>' +
+                        '<td> ' + row.tenantName + ' </td>' +
+                        '<td> ' + row.mobile + ' </td>' +
+                        '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
+                        '<td>' + row.remainingRents + '</td>' +
+                        '<td> ' + numberWithCommas(row.value) + ' </td>' +
+                        '<td> ' + row.collectionDate + ' </td>' +
+                        '<td> ' + row.expiryDate + ' </td>' +
+                        '<td>' +
+                        '<a href="/UnitRentContractCompound/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed ' + btncolorstr + '">' + row.totalDays + ' </a>' +
+                        '</td>' +
+                        '<td>' +
+                        '<a href="/UnitRentContractCompound/Details/' + row.contractID + '" title="Contract" class="btn btn-secondary waves-effect waves-themed">Contract</a>'
+                    '</td>'
+                    '</tr>';
+                });
+                $('#overDueRentBody').html(newhtmloverduerents);
+                $("#overDueTotal").text(numberWithCommas(data.totalValue));
+                initializeDataTable("#overDueRentTable");
+                //$("#overDueRentTable").dataTable().page.len(10).draw();
+
+            });
+        }
+        function fillContractExpiry() {
+            var id = $("#compundID").val();
+             var htmlcontexp = "";
+            var url = '@Url.Content("~/")' + 'Home/getContractExpiryPerCompound';
+            $.getJSON(url, { IdCompound: id }, function (data) {
+                $.each(data, function (i, row) {
+                        if (row.itemArray[5] <= 0)
+                            btncolorstr = ' btn-danger" ';
+                        else
+                            if (row.itemArray[5] <= 14)
+                                btncolorstr = ' btn-warning" ';
+                            else
+                                btncolorstr = ' btn-success" ';
+                    htmlcontexp += '<tr> ' +
+                        '<td><a href="/UnitRentContractCompound/Details/' + row.itemArray[11] + '"  title="Go To Contract"><b> ' + row.itemArray[6] + '</b> </a> </td> ' +
+                        '<td> ' + row.itemArray[0] + ' </td>' +
+                        '<td> ' + row.itemArray[1] + ' </td>' +
+                        '<td > ' + row.itemArray[2] + ' </td>' +
+                        '<td class="">' + numberWithCommas(row.itemArray[3]) + '<span class="expiryMonth" style="display:none">' + row.itemArray[12] + '</span>' + '<span class="expiryYear" style="display:none">' + row.itemArray[3] + '</span>' +' </td>' +
+                        '<td> ' + row.itemArray[4] + ' </td>' +
+                        '<td><a class="btn waves-effect waves-themed ' + btncolorstr + '">' + row.itemArray[5] + ' </a></td>' +
+                        '<td><div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">'+
+
+                        '<div class="btn-group" role = "group">'+
+                            '<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>'+
+                        '<div class="dropdown-menu">' +
+                                '<a class="dropdown-item" href="/UnitRentContractCompound/Details/' + row.itemArray[11] + '">Details</a>' +
+                                '<a class="dropdown-item" href="/UnitRentContractCompound/Edit/' + row.itemArray[11] +'">Edit</a>'+
+                                '<a class="dropdown-item" href="/UnitRentContractCompound/Renew/' + row.itemArray[11] + '">Renew</a>' +
+                        '<a class="dropdown-item" onclick="return confirm (\'Are you sure ?\')" href="/UnitRentContractCompound/Archive/' + row.itemArray[11] + '">Archive</a>' +
+                        '<a class="dropdown-item" href="/UnitRentContractCompound/Delete/' + row.itemArray[11] + '">Delete</a>' +
+                            '</div>'+
+                            '</div>'+
+                        '</div></td>'+
+                            '</tr>';
+                });
+                $('#contractExpiryBody').html(htmlcontexp);
+
+                calculateTotal('expiryYear', 'yearExpiryTotal');
+                initializeDataTable("#contractExpiryTable");
+                //$("#contractExpiryTable").dataTable().page.len(10).draw();
+            })
+        }
+    </script>
+}
+

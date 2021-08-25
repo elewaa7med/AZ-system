@@ -1,0 +1,288 @@
+﻿@model SmartAdmin.WebUI.Models.UnitKeys
+
+@{ ViewData["Title"] = $"Unit Key Edit";
+    ViewData["PageName"] = "Keys " + ViewBag.id;
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Unit Key Edit";
+    ViewData["Category1"] = "Unit Key Edit";
+    ViewData["PageDescription"] = ""; }
+
+
+<form asp-action="Edit" asp-route-pageid="@ViewBag.id" enctype="multipart/form-data" class="was-validated">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="IdUnitKeys" />
+    <input type="hidden" id="isTheKeyAvailable" asp-for="isTheKeyAvailable" />
+    @if (ViewBag.AlertSaveErr != null)
+    {
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
+    <div class="d-flex flex-start w-100">
+        <div class="d-flex flex-fill">
+            <div class="flex-fill">
+                <p>  @ViewBag.AlertSaveErr</p>
+            </div>
+        </div>
+    </div>
+</div>}
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Edit Unit Key
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building County *</label>
+                                <div class="col-sm-9">
+                                    <select asp-for="@Model.mUnit.mBuilding.mDistrict.mCity.mBuildingCountry.IdCountry" class="select2 form-control w-100" asp-items="ViewBag.IdCountry" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building City *</label>
+                                <div class="col-sm-9">
+                                    <select asp-for="@Model.mUnit.mBuilding.mDistrict.mCity.IdCity" class="select2 form-control w-100" asp-items="ViewBag.IdCity" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Distict *</label>
+                                <div class="col-sm-9">
+                                    <select asp-for="@Model.mUnit.mBuilding.mDistrict.IdDistrict" class="select2 form-control w-100" asp-items="ViewBag.IdDistrict" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building *</label>
+                                <div class="col-sm-9">
+                                    <select asp-for="@Model.mUnit.mBuilding.IdBuilding" class="select2 form-control w-100" asp-items="ViewBag.IdBuilding" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Unit *</label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdUnit" class="select2 form-control w-100" asp-items="ViewBag.IdUnit" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Mandoob *</label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdMandoob" class="select2 form-control w-100" asp-items="ViewBag.IdMandoob" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Date Taken *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="dtTaken" required>
+                                    <span asp-validation-for="dtTaken" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Date Back *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="dtBack" required>
+                                    <span asp-validation-for="dtBack" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+
+                <div class="form-group  alert alert-primary alert-dismissible text-center">
+                    <button class="btn btn-primary ml-auto waves-effect waves-themed" type="submit">Edit Unit Key</button>
+                    <a class="btn btn-secondary ml-1 waves-effect waves-themed" asp-action="Index" asp-route-id="@ViewBag.id">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#IdCountry, #IdCity, #IdDistrict, #IdMandoob').select2();
+            $('#dtTaken , #dtBack').datepicker({ format: 'dd-mm-yyyy', autoclose: true  });
+
+        if ($("#isTheKeyAvailable").val() == "true") {
+            //$("#IdMandoob").prop("disabled", false);
+            $("#dtTaken").prop("readOnly", false);
+            $("#dtBack").prop("readOnly", true);
+        }
+        else
+            if ($("#isTheKeyAvailable").val()=="false")
+            {
+            //$("#IdMandoob").prop("disabled", true);
+            $("#dtTaken").prop("readOnly", true);
+            $("#dtBack").prop("readOnly", false);
+            }
+            pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'Create/ Edit The Unit Key holder';
+            $('#IdUnit').trigger('change');
+    });
+    $("#IdCountry").change(function () {
+
+        var url = '@Url.Content("~/")' + 'UnitKeys/getCitiesByCountries';
+
+        $.getJSON(url, { IdCountry: $("#IdCountry").val() }, function (data) {
+        var items;
+        $('#IdCity').empty();
+        $.each(data, function (i, row) {
+        items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+        }
+        );
+        if (items != null) items = "<Option>Select a city </Option>" + items;
+        $('#IdCity').html(items);
+        $("#IdDistrict").empty();
+        $("#IdBuilding").empty();
+        $('#IdUnit').empty();
+        }
+        )
+        });
+
+        $("#IdCity").change(function () {
+        var url = '@Url.Content("~/")' + 'UnitKeys/getDistrictsByCities';
+
+        $.getJSON(url, { IdCity: $("#IdCity").val() }, function (data) {
+
+        var items;
+        $('#IdDistrict').empty();
+        $.each(data, function (i, row) {
+        items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+        }
+        );
+        if (items != null) items = "<Option>Select a district </Option>" + items;
+        $('#IdDistrict').html(items);
+        $("#IdBuilding").empty();
+        $('#IdUnit').empty();
+        }
+        )
+        });
+        $("#IdDistrict").change(function () {
+        var url = '@Url.Content("~/")' + 'UnitKeys/getBuildingsByDistricts';
+
+        $.getJSON(url, { IdDistrict: $("#IdDistrict").val() }, function (data) {
+
+        var items;
+        $('#IdBuilding').empty();
+        $.each(data, function (i, row) {
+        items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+        }
+        );
+        if (items != null) items = "<Option>Select a Building </Option>" + items;
+        $('#IdBuilding').html(items);
+        $('#IdUnit').empty();
+        }
+        )
+        });
+        $("#IdBuilding").change(function () {
+        var url = '@Url.Content("~/")' + 'UnitKeys/getUnitsByBuildings';
+
+        $.getJSON(url, { IdBuilding: $("#IdBuilding").val() }, function (data) {
+
+        var items;
+        $('#IdUnit').empty();
+        $.each(data, function (i, row) {
+        items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+        }
+        );
+        if (items != null) items = "<Option>Select a unit </Option>" + items;
+        $('#IdUnit').html(items);
+        }
+        )
+        });
+
+        $("#IdUnit").change(function () {
+        var url = '@Url.Content("~/")' + 'UnitKeys/getUnitKeyInfo';
+
+        $.getJSON(url, { IdUnit: $("#IdUnit").val() }, function (data) {
+        if (data != null) {
+        if (data.isTheKeyAvailable == null || data.isTheKeyAvailable == true) {
+        $("#infoDiv").empty();
+        $("#infoDiv").append("<span style=\"color: green; font-weight:bold;\"> The Unit Key is Available.</span> ");
+        $("#isTheKeyAvailable").val("true");
+
+        $("#dtTaken").prop("readOnly", false);
+        $("#dtBack").prop("readOnly", true);
+
+        fillAllMandoobs();
+        }
+        else {
+        $("#infoDiv").empty();
+        $("#infoDiv").append("<span><em style=\"color:red; font-weight:bold;\">The Unit Key is NOT Available.</em></span><br />");
+        $("#infoDiv").append("<span> It is out with the Sales Representative <em style=\"color: maroon; font-weight:bold;\">" + data.mandoobName + "</em></span> <br\>");
+        $("#infoDiv").append("<span> He took it on  <em style=\"color: maroon; font-weight:bold;\">" + data.dtTaken + "</em></span> <br\>");
+
+    //write the dttaken and disable it.
+    $("#isTheKeyAvailable").val("false");
+
+    var myDate = new Date(data.dtTaken);
+    var str = myDate.getFullYear().toString() + "-" + ("0" + (myDate.getMonth() + 1).toString()).slice(-2) + "-" + ("0" + myDate.getDate().toString()).slice(-2);
+    $("#dtTaken").val(str);
+
+
+    $("#dtTaken").prop("readOnly", true);
+    $("#dtBack").prop("readOnly", false);
+
+    fillOneMandoob(data.idMandoob);
+
+    }
+    }
+    else {
+    }
+    });
+
+    });
+    fillAllMandoobs = function () {
+    if ($('#IdMandoob').length > 1)
+    return;
+    var url = '@Url.Content("~/")' + 'UnitKeys/geMandoobs';
+
+    $.getJSON(url, { IdMandoob: 0 }, function (data) {
+
+    var items;
+    $('#IdMandoob').empty();
+    $.each(data, function (i, row) {
+    items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+    }
+    );
+    if (items != null) items = "<Option>Select an item </Option>" + items;
+    $('#IdMandoob').html(items);
+    }
+    )
+    }
+    fillOneMandoob = function (IDMandoob) {
+    var url = '@Url.Content("~/")' + 'UnitKeys/geMandoobs';
+
+    $.getJSON(url, { IdMandoob: IDMandoob }, function (data) {
+
+    var items;
+    $('#IdMandoob').empty();
+    $.each(data, function (i, row) {
+    items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+    }
+    );
+
+    $('#IdMandoob').html(items);
+    }
+    )
+    }
+    </script>
+}
+

@@ -1,0 +1,104 @@
+﻿@model List<SmartAdmin.WebUI.Controllers.Tenant>
+@{
+    var isBuilding = Model.Any(t => !string.IsNullOrEmpty(t.BuildingNumber));
+    ViewData["Title"] = ViewBag.CompoundName;
+    ViewData["PageName"] = ViewBag.id !=0 ? "Building Tenants " + ViewBag.id : "Not Tenants page";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> {ViewBag.CompoundName}";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+}
+
+<div id="panel-1" class="panel">
+    <div class="panel-hdr">
+        <h2 style="font-size: 150%; ">
+            <span class="icon-stack icon-stack-lg">
+                <i class="base-2 icon-stack-3x color-primary-400"></i>
+                <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+            </span>   <span class="fw-500  text-primary"> Tenants </span>
+            @*<span> &nbsp; &nbsp;  -  &nbsp; &nbsp; </span>
+                <span class="fw-500  text-primary"> Total Due Rent	:  </span> &nbsp;<span class="color-danger-500"><span id="monthExpiryTotal">0</span> SAR  </span>*@
+        </h2>
+        <div class="panel-toolbar" id="selectContainer">
+        </div>
+        <div class="panel-toolbar">
+            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+        </div>
+    </div>
+    <div class="panel-container show">
+        <div class="panel-content">
+
+            <!-- datatable start -->
+            <table id="contractExpiryTable" class="table table-bordered az-datatable table-hover table-striped w-100">
+                <thead class="bg-primary-600">
+                    <tr>
+                        @if (isBuilding)
+                        {
+                            <th>Building</th>
+                        }
+                        <th>Unit</th>
+                        <th>Tenant</th>
+                        <th>Mobile </th>
+                        <th>Email</th>
+                        <th>Emergency number</th>
+                        <th class="noExport">Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            @if (isBuilding)
+                            {
+                                <td>@item.BuildingNumber</td>
+                            }
+                            <td>@item.UnitNumber</td>
+                            <td>@item.Name</td>
+                            <td>@item.MobileNumber</td>
+                            <td>@item.Email</td>
+                            <td>@item.EmergencyContact</td>
+                            <td>
+                                <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-action="Details" asp-controller="Tenants" title="Details" asp-route-id=@item.ID asp-route-pageid="@(ViewBag.id == 0?null:ViewBag.id)">Details</a>
+                                            <a class="dropdown-item" asp-action="Edit" asp-controller="Tenants" title="Edit" asp-route-id=@item.ID asp-route-pageid="@(ViewBag.id == 0?null:ViewBag.id)">Edit</a>
+                                            @if (!string.IsNullOrEmpty(item.Email))
+                                            {
+                                                <a class="dropdown-item" onclick="sendEmail(@item.ContractID)">Send Electricity Data</a>
+                                            }
+                                            <a class="dropdown-item" asp-action="Details" asp-controller="@(isBuilding?"UnitRentContract":"UnitRentContractCompound")" title="Contract" asp-route-id=@item.ContractID>Contract</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <!-- datatable end -->
+        </div>
+    </div>
+</div>
+<script>
+    function sendEmail(contractID) {
+        $.blockUI({
+            css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }
+        });
+        $.get("@Url.Action("SendEmailToTenant", "Tenants")", { contractID: contractID }, function (result) {
+            toastr.success('Email Sent successfully', 'Success');
+            $.unblockUI();
+        });
+    }
+</script>

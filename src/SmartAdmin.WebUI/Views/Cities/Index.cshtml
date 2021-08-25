@@ -1,0 +1,90 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.Cities>
+
+@{ 
+    ViewData["Title"] = "Cities";
+    ViewData["PageName"] = "Cities";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Cities";
+    ViewData["Category1"] = "Cities";
+    }
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel-tag">
+            <p>
+                @Html.Partial("_CreateNewPartial")
+            </p>
+        </div>
+
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Cities :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+                </h2>
+                <div class="panel-toolbar" id="selectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                            <tr>
+                                <th>#</th>
+                                <th>@Html.DisplayNameFor(model => model.CityName) <span class="column-sorter "></span></th>
+                                <th>@Html.DisplayNameFor(model => model.mBuildingCountry) <span class="column-sorter"></span></th>
+                                <th>Operations </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                <tr>
+                    <td>
+                        @(item.i + 1 )
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.value.CityName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.value.mBuildingCountry.CountryName)</td>
+                    <td>@Html.Partial("_TableButtonsPartial", item.value.IdCity)</td>
+                </tr>}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteConfirmModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fontello-icon-cancel-1"></i></button>
+        <h4 id="myModalLabel"><i class="fontello-icon-popup"></i> Confirmation </h4>
+    </div>
+    <div class="modal-body">
+        <h4 class="text-center">Are you sure you want to Delete this record? </h4>
+        <p>
+
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-red btn-ok" id="deleteConfirmOk" asp-controller="Cities" asp-action="Delete" asp-route-id="1" onclick="return true;"> Yes Delete</button>
+        <button class="btn btn-green" id="deleteConfirmCancel" data-dismiss="modal"> Cancel</button>
+    </div>
+
+</div>
+@*<script src="/js/lib/jquery.js"></script>*@
+@section Scripts{
+    <script>
+        pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'List of Cities ';
+
+    </script>
+}

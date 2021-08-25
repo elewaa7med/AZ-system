@@ -1,0 +1,90 @@
+﻿@model SmartAdmin.WebUI.Controllers.InsuranceViewModel
+@{
+    ViewData["Title"] = $"{Model.Name.Trim()} Insurance";
+    ViewData["PageName"] = $"{Model.Name.Trim()} Insurance " + ViewBag.id;
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> {Model.Name} Insurance";
+    ViewData["PageDescription"] = "";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>
+                    <span class="fw-500  text-primary"> Total Insurance:  </span> &nbsp;<span class="color-danger-500"> <span id="TotalInsuranceAmount" class="formatNumber">@Model.Total</span> SAR  </span>
+                </h2>
+                <div class="panel-toolbar" id="selectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table class="table az-datatable table-bordered table-hover table-striped w-100">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Building</th>
+                                <th>Unit</th>
+                                <th>Insurance</th>
+                                <th>Rental due date</th>
+                                <th>Rent due after</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 1; i <= Model.Items.Count; i++)
+                            {
+                                var item = Model.Items[i - 1];
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@item.Building</td>
+                                    <td>
+                                        @item.UnitNumber
+                                    </td>
+                                    <td class="">
+                                        <span class="badge @(item.Value>0?"badge-success":"badge-danger")">
+                                            @item.Value
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @item.ExpiryDate
+                                    </td>
+                                    <td>
+                                        <span class="badge @(item.TotalDays>=30?"badge-success":item.TotalDays>0?"badge-warning":"badge-danger")">
+                                            @item.TotalDays
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Total Insurance</th>
+                                <th class="formatNumber" id="total">@Model.Total</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsBlock{
+    <script>
+        $(document).ready(function () {
+            columnNumberWithCommas('formatNumber');
+        });
+    </script>
+}

@@ -1,0 +1,219 @@
+﻿
+
+@{
+    ViewData["Title"] = "Electric_mile";
+    ViewData["PageName"] = "page_invoice";
+    ViewData["Heading"] = "<i class='subheader-icon fal fa-plus-circle'></i>  Electric mile";
+    ViewData["PageDescription"] = "Printable Invoice Page";
+    ViewData["Category1"] = "Page Views";
+}
+@section HeadBlock {
+
+
+
+
+    <link href="~/css/Receipt.css" rel="stylesheet" />
+    <link href="~/css/arabicFont/notokufiarabic.css" rel="stylesheet" />
+
+}
+
+
+<div class="container">
+    <div data-size="A4">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="d-flex align-items-center mb-5">
+                    <h1 class="keep-print-font fw-500 mb-0 text-primary flex-1 position-relative">
+                        Meadow Park Garden
+
+
+
+                        <img src="~/img/logo_print.png" class="position-absolute pos-top pos-right max-height-reset mt-1 " />
+
+
+
+                    </h1>
+                </div>
+
+
+
+
+
+
+                @*<div class="text-dark fw-700 h1 mb-g keep-print-font">
+                    Unit 1
+                </div>*@
+            </div>
+        </div>
+        <hr style="height:50px" />
+
+        <div class="row">
+            <div class="col-sm-12 d-flex">
+                <div class="table-responsive">
+                    <table class="table table-clean table-sm align-self-end">
+                        <tbody>
+
+
+                            <tr>
+                                <td colspan="2">
+                                    <h1 class="fw-300  fw-300 display-5 color-primary-600 keep-print-font pt-1 l-h-n m-0  ">
+                                        Electricity meter data
+                                    </h1>
+                                </td>
+                                <td colspan="2">
+                                    <h1 class="fw-300  fw-300 display-5 color-primary-600 keep-print-font pt-1 l-h-n m-0 fontArabic text-right ">
+                                        بيانات عداد الكهرباء
+                                    </h1>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="titleTable_en">
+                                    Compound
+                                </td>
+
+                                <td class="ResultTable_en">
+                                    Meadow Park Garden
+                                </td>
+
+
+                                <td class="ResultTable_ar">
+                                    ميدو بارك
+                                </td>
+
+                                <td class="titleTable_ar">
+                                    مجمع
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="titleTable_en">
+                                    Building
+                                </td>
+
+                                <td class="ResultTable_en">
+                                    48
+                                </td>
+
+
+                                <td class="ResultTable_ar">
+                                    48
+                                </td>
+
+                                <td class="titleTable_ar">
+                                    بناية رقم
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="titleTable_en">
+                                    Unit Number
+                                </td>
+
+                                <td class="ResultTable_en">
+                                    45
+                                </td>
+
+
+                                <td class="ResultTable_ar">
+                                    45
+                                </td>
+
+                                <td class="titleTable_ar">
+                                    رقم الوحدة
+                                </td>
+
+                            </tr>
+
+
+
+                            <tr>
+                                <td class="titleTable_en">
+                                    Electricity meter Number
+                                </td>
+
+                                <td class="ResultTable_en">
+                                    XYZ41645646564456
+                                </td>
+
+
+                                <td class="ResultTable_ar">
+                                    XYZ41645646564456
+
+                                </td>
+
+                                <td class="titleTable_ar">
+                                    رقم عداد الكهرباء
+
+                                </td>
+
+                            </tr>
+
+
+
+
+                            <tr>
+                                <td class="titleTable_en">
+                                    Payment number
+
+                                </td>
+
+                                <td class="ResultTable_en">
+                                    554545
+                                </td>
+
+
+                                <td class="ResultTable_ar">
+                                    554545
+
+                                </td>
+
+                                <td class="titleTable_ar">
+                                    رقم حساب سداد
+
+                                </td>
+
+                            </tr>
+
+
+
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <hr style="margin-top:720px" />
+        <hr class="border-top-0 table-scale-border-bottom" style="width:100%; padding:0px; margin:0px" />
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <p class="mt-2 text-muted mb-0 fontArabic" style="text-align:center ">
+                    7249 الأمير حمود بن عبد العزيز - الخبر 34442 - 3972 المملكة العربية السعودية - ت : 00966138020059 س.ت : 2051221520
+                </p>
+                <p class="mt-2 text-muted mb-0" style="text-align:center">
+                    7279 Prince Hamoud bin Abdulaziz St. Al Khobar 34442 KSA. T: 00966138020059. CR. 2051221520, www.az-ltd.com
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@section ScriptsBlock {
+}

@@ -1,0 +1,42 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" media="screen, print" href="@($"~/css/vendors.bundle.css")">
+    <link rel="stylesheet" media="screen, print" href="@($"~/css/app.bundle.css")">
+    <link rel="stylesheet" media="screen, print" href="@($"~/css/themes/cust-theme-3.css")" />
+    <link href="@($"~/css/datagrid/datatables/datatables.bundle.css")" rel="stylesheet" media="screen, print" />
+    <link href="~/css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css" rel="stylesheet" media="screen, print" />
+    <link href="~/css/formplugins/select2/select2.bundle.css" rel="stylesheet" media="screen, print">
+    <link href="~/css/formplugins/dropzone/dropzone.css" rel="stylesheet" media="screen, print">
+    @RenderSection("HeadBlock", required: false)
+</head>
+<body class="mod-bg-1 @ViewBag.PreemptiveClass " style="height:100%;padding:10px;">
+    <div class="page-wrapper">
+        <div class="page-inner">
+            <div class="page-content-wrapper">
+                <main id="js-page-content" role="main" class="page-content h-100">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+    <partial name="_ScriptsBasePlugins" />
+    @*Start Js for shart*@
+    <script src="~/js/statistics/peity/peity.bundle.js"></script>
+    <script src="~/js/statistics/flot/flot.bundle.js"></script>
+    <script src="~/js/statistics/easypiechart/easypiechart.bundle.js"></script>
+
+    @*End Js for shart*@
+
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/formplugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/formplugins/dropzone/dropzone.js"></script>
+    <script src="~/js/custom.js"></script>
+    @*<script src="~/js/customx.js"></script>*@
+    @RenderSection("ScriptsBlock", required: false)
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

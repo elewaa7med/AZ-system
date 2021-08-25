@@ -1,0 +1,58 @@
+﻿@model LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewBag.Title = "Sign In";
+    Layout = "~/Areas/Identity/Pages/_Layout.cshtml";
+}
+@section PageHeading {
+    <div class="col-xl-12">
+        <h2 class="fs-xxl fw-500 text-white text-center">
+            Welcome to AZ System
+            <small class="h3 fw-300 mt-2 mb-5 text-white opacity-60 hidden-sm-down">
+                Sign in with your Username
+            </small>
+        </h2>
+    </div>
+}
+
+<div class="col-xl-6 ml-auto mr-auto">
+    <div class="card p-4 rounded-plus bg-faded">
+        <form method="post" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="UserName">Username</label>
+                <input type="text" asp-for="UserName" class="form-control" placeholder="Username" required />
+                <span class="invalid-feedback" asp-validation-for="UserName">Sorry, you missed this one.</span>
+                @*<div class="help-block">The email address you registered with</div>*@
+            </div>
+            <div class="form-group">
+                <label class="form-label" asp-for="Password">Password</label>
+                <input type="password" asp-for="Password" class="form-control" placeholder="Your password" />
+                <span class="invalid-feedback" asp-validation-for="Password">Sorry, you missed this one.</span>
+                @*<div class="help-block">The password you specified during registration</div>*@
+            </div>
+            <div class="form-group text-left">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" asp-for="RememberMe" />
+                    <label class="custom-control-label" asp-for="RememberMe">Remember me</label>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-md-4 ml-auto text-left">
+                    <a asp-action="ForgotPassword" class="opacity-90">Forgot your password?</a>
+                </div>
+                <div class="col-md-4 ml-auto text-right">
+                    <button type="submit" class="btn btn-dark btn-block">Sign In</button>
+                </div>
+
+            </div>
+            <div class="text-center">
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

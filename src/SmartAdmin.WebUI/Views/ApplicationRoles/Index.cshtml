@@ -1,0 +1,85 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.ApplicationRole>
+@{
+    ViewData["Title"] = "Roles";
+    ViewData["PageName"] = "Roles";
+    ViewData["Heading"] = "<i class='fal fa-user text-primary'></i> Roles";
+    ViewData["Category1"] = "Roles";
+    ViewData["PageDescription"] = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-xl-12">
+        @*<div class="panel-tag">
+                <p>
+                    <a asp-action="Create" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                        <span>Add New Role</span>
+                    </a>
+                </p>
+            </div>*@
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>
+                    <span class="fw-500  text-primary"> Total Roles :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Name </th>
+                                <th>Description </th>
+                                <th>Created </th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @item.value.Name
+                                    </td>
+                                    <td>
+                                        @item.value.Description
+                                    </td>
+                                    <td>
+                                        @item.value.dtCreated
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a asp-action="Edit" class="dropdown-item" asp-route-id="@item.value.Id">Edit</a>
+                                                    <a asp-action="Details" class="dropdown-item" asp-route-id="@item.value.Id">Details</a>
+                                                    <a asp-action="Delete" class="dropdown-item" asp-route-id="@item.value.Id">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

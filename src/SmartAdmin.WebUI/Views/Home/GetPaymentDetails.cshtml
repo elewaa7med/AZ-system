@@ -1,0 +1,77 @@
+﻿@model SmartAdmin.WebUI.Controllers.PaymentLogViewModel
+@{
+    ViewData["Title"] = $"{Model.Name.Trim()} Payments";
+    ViewData["PageName"] = $"Dashboards";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> {Model.Name} Payments";
+    ViewData["PageDescription"] = "";
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    
+                </h2>
+                <div class="panel-toolbar" id="selectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table class="table az-datatable table-bordered table-hover table-striped w-100">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Building</th>
+                                <th>Unit</th>
+                                <th>Contract Number</th>
+                                <th>Paid Amount</th>
+                                <th>Paid By</th>
+                                <th>Payment Date</th>
+                                <th>Representative</th>
+                                <th class="noExport">Contract</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 1; i <= Model.PaymentLogs.Count; i++)
+                            {
+                                var item = Model.PaymentLogs[i - 1];
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@item.Building</td>
+                                    <td>@item.Unit</td>
+                                    <td>@item.ContractNumber</td>
+                                    <td class="formatNumber">
+                                        @item.PaidAmount
+                                    </td>
+                                    <td>
+                                        @item.PaidBy
+                                    </td>
+                                    <td>
+                                        @item.PaymentDate
+                                    </td>
+                                    <td>
+                                        @item.Mandoob
+                                    </td>
+                                    <td>
+                                        <a href="/@(item.IsBuilding? "UnitRentContract":"UnitRentContractCompound")/Details/@item.ContractID" title="Contract" class="btn btn-secondary waves-effect waves-themed">Contract</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsBlock{
+    <script>
+        $(document).ready(function () {
+            columnNumberWithCommas('formatNumber');
+        });
+    </script>
+}

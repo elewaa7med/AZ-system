@@ -1,0 +1,178 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.UnitRentContract>
+@{
+    ViewData["Title"] = $"{ViewBag.CompoundName} Archived Contracts";
+    ViewData["PageName"] = $"{ViewBag.CompoundName} Archived Contracts";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> {ViewBag.CompoundName} Archived Contracts";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+    var canDelete = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DeleteContract })).Succeeded;
+}
+@if (TempData["AlertSaveErr"] != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["AlertSaveErr"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["success"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-xl-12">
+        @if (ViewBag.Representatives != null)
+        {
+            <input hidden id="representitveId" value="@ViewBag.RepresentitveId" />
+
+            <div class="alert alert-primary">
+                <div class="d-flex flex-start w-100">
+                    <div class="mr-2 hidden-md-down">
+                        <span class="icon-stack icon-stack-lg">
+                            <i class="base-2 icon-stack-3x color-primary-400"></i>
+                            <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                            <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                        </span>
+                    </div>
+                    <div class="d-flex flex-fill">
+                        <div class="flex-fill">
+                            <span class="h5">Select Representitve</span>
+                            <div class="form-group">
+                                <select class="select2 form-control w-100" id="representitveIdSelect" data-select2-id="single-default" tabindex="-1" asp-items="ViewBag.Representatives" aria-hidden="true">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>
+                    <span class="fw-500  text-primary"> Total :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+                </h2>
+                <div class="panel-toolbar" id="selectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Contract No. </th>
+                                <th>Building </th>
+                                <th>Unit </th>
+                                <th>Tenant </th>
+                                <th>Representative </th>
+                                <th>Leas start Date </th>
+                                <th>Lease Rent in Months </th>
+                                <th>Lease end Date </th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @item.value.contractNumber
+                                    </td>
+                                    <td>
+                                        @item.value.mCompoundUnits?.mCompoundBuilding?.BuildingNumber
+                                    </td>
+                                    <td>
+                                        @item.value.mCompoundUnits?.UnitNumber
+                                    </td>
+                                    <td>
+                                        @item.value.mTenant?.tenantName
+                                    </td>
+                                    <td>
+                                        @item.value.Mandoob?.fullName
+                                    </td>
+                                    <td>
+                                        @item.value.dtLeaseStart.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        @item.value.leasePeriodInMonthes
+                                    </td>
+                                    <td>
+                                        @item.value.dtLeaseEnd.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.IdRentContract>Details</a>
+                                                    <a class="dropdown-item" asp-action="UnArchive" title="UnArchive" asp-route-id=@item.value.IdRentContract>Unarchive</a>
+                                                    @if (canDelete)
+                                                    {
+                                                        <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdRentContract>Delete</a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsBlock
+{
+    <script>
+       $(function () {
+            if (!$("#representitveId").val())
+                $("#representitveIdSelect").val(null);
+        })
+       $("#representitveIdSelect").change(function () {
+            var url = '@Url.Content("~")' + window.location.pathname + "?compoundID="+'@ViewBag.CompoundID'+"&representitveId=" + $(this).val();;
+            window.location.href = url;
+        })
+    </script>
+}

@@ -1,0 +1,46 @@
+﻿@model SmartAdmin.WebUI.Models.BuildingFloors
+<style>
+    .dl-horizontal > dd:after {
+        display: table;
+        content: "";
+        clear: both;
+    }
+</style>
+@{
+    ViewData["Title"] = "Details";
+}
+<h4 style="color:red;">Delete this Floor. Are you Sure?</h4>
+
+<div>
+    <h4>BuildingFloors</h4>
+    <hr />
+    @if (ViewBag.AlertSaveErr != null)
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            @ViewBag.AlertSaveErr
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PropertyFloorName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PropertyFloorName)
+        </dd>
+    </dl>
+</div>
+<form asp-action="Delete" class="btn-group form-actions">
+    <input type="hidden" asp-for="IdBuildingFloor" />
+    <input type="submit" class="btn btn-red" value="Delete" />
+    <a class="btn btn-blue" asp-action="Index">Back to List</a>
+</form>
+
+
+@section Scripts{
+    <script>
+        pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'Delete of a Floor ';
+    </script>
+}

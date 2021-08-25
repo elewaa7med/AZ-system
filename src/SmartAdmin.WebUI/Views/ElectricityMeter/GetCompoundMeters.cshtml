@@ -1,0 +1,195 @@
+﻿@model List<SmartAdmin.WebUI.Models.ElectricityMeter>
+@{
+    ViewData["Title"] = "Electricity";
+    ViewData["PageName"] = $"{(ViewBag.CompoundName as string).Trim()} Electricity";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Electricity";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="row">
+            @if (ViewBag.Representatives != null)
+            {
+                <input hidden id="representitveId" value="@ViewBag.RepresentitveId" />
+                <div class="col-xl-12">
+                    <div class="alert alert-primary">
+                        <div class="d-flex flex-start w-100">
+                            <div class="mr-2 hidden-md-down">
+                                <span class="icon-stack icon-stack-lg">
+                                    <i class="base-2 icon-stack-3x color-primary-400"></i>
+                                    <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                                    <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                                </span>
+                            </div>
+                            <div class="d-flex flex-fill">
+                                <div class="flex-fill">
+                                    <span class="h5"> Sort by Representitve  </span>
+                                    <div class="form-group">
+                                        <select class="select2 form-control w-100" id="representitveIdSelect" asp-items="ViewBag.Representatives ">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-xl-6">
+                        <div class="panel-tag">
+                            <p>
+                                <a asp-action="Create" asp-route-compoundID="@ViewBag.CompoundID" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                                    <span>Add Unit Electricity Meter</span>
+                                </a>
+                        </div>
+                    </div>*@
+            }
+            else
+            {
+                <div class="col-xl-12">
+                    <div class="panel-tag">
+                        <p>
+                            <a asp-action="Create" asp-route-compoundID="@ViewBag.CompoundID" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                                <span>Add Unit Electricity Meter</span>
+                            </a>
+                    </div>
+                </div>
+            }
+        </div>
+        <h1>
+            <span class="fw-900">  @ViewBag.CompoundName </span>
+        </h1>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span>Transfer the account to the Tenant</span>&nbsp;<span class="badge badge-success">@Model.Count(s => s.TransferTheAccountToTenant)</span> &nbsp;
+                    <span class="badge badge-danger ">@Model.Count(s => !s.TransferTheAccountToTenant)</span>&nbsp;
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Building</th>
+                                <th>Unit</th>
+                                <th>Type </th>
+                                <th>Representitve</th>
+                                <th>Rented / Non Rented</th>
+                                <th>Transfer the account to the tenant</th>
+                                <th>Electricity meter number </th>
+                                <th>Payment number </th>
+                                <th>The start of the meter reading for the tenant</th>
+                                <th class="noExport"> Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1;}
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@item.CompoundUnit.mCompoundBuilding.BuildingNumber</td>
+                                    <td>@item.CompoundUnit.UnitNumber</td>
+                                    <td>@item.CompoundUnit?.mPropertyType?.PropertyTypeName</td>
+                                    <td>@item.CompoundUnit.UnitRentContract?.Mandoob?.fullName</td>
+                                    <td>
+                                        @if (item.CompoundUnit.UnitRentContractID.HasValue)
+                                        {
+                                            <span class="badge badge-success ">Rented</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger ">Non Rented</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (item.TransferTheAccountToTenant)
+                                        {
+                                            <span class="badge badge-success ">Yes</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger ">No</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(item.ElectricityMeterNumber))
+                                        {
+                                            <span class="badge badge-danger ">0</span>
+                                        }
+                                        else
+                                        {
+                                            @item.ElectricityMeterNumber
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(item.PaymentNumber))
+                                        {
+                                            <span class="badge badge-danger ">0</span>
+                                        }
+                                        else
+                                        {
+                                            @item.PaymentNumber
+                                        }
+                                    </td>
+                                    <td>@item.StartOfMeter</td>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="Details" asp-route-id="@item.ID">Details</a>
+                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                                                    <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+@section ScriptsBlock
+{
+    <script>
+        $(function () {
+            if (!$("#representitveId").val())
+                $("#representitveIdSelect").val(null);
+        })
+          $("#representitveIdSelect").change(function () {
+            var url = '@Url.Content("~")' + window.location.pathname +'?compoundID='+'@ViewBag.CompoundID' + "&representitveId=" + $(this).val();;
+            window.location.href = url;
+        })
+    </script>
+}

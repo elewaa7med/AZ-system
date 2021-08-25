@@ -1,0 +1,151 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.Units>
+
+@{ ViewData["Title"] = $"Units Key";
+    ViewData["PageName"] = "Keys " + ViewBag.id;
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Units Keys";
+    ViewData["Category1"] = "Units Keys";
+    ViewData["PageDescription"] = "";
+    int counter = 0;
+    }
+
+@if (TempData["AlertSaveErr"] != null)
+{
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
+    <div class="d-flex flex-start w-100">
+        <div class="d-flex flex-fill">
+            <div class="flex-fill">
+                <p>  @TempData["AlertSaveErr"]</p>
+            </div>
+        </div>
+    </div>
+</div>
+}
+@if (TempData["success"] != null)
+{
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
+    <div class="d-flex flex-start w-100">
+        <div class="d-flex flex-fill">
+            <div class="flex-fill">
+                <p>  @TempData["success"]</p>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel-tag">
+            <p>
+                <a asp-action="Create" asp-route-pageid="@ViewBag.id" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                    <span>Add New Unit Key</span>
+                </a>
+            </p>
+        </div>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Units :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>@Html.DisplayNameFor(model => model.mUnitKey.First().dtTaken)</th>
+                                <th>@Html.DisplayNameFor(model => model.mUnitKey.First().dtBack)</th>
+                                <th>@Html.DisplayNameFor(model => model.mUnitKey.First().mMandoob)</th>
+                                <th>@Html.DisplayNameFor(model => model.UnitNumber)</th>
+                                <th>Building</th>
+                                <th>Operations </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                        <tr>
+                            <td>@{counter++;} @counter</td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.dtTaken)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.dtBack)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.mMandoob.mandoobName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UnitNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.mBuilding.BuildingName)
+                            </td>
+                            <td>
+                                @if (item.IdUnitKey != null)
+                                {
+                                <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.IdUnitKey asp-route-pageid=@ViewBag.id>
+                                                Details
+                                            </a>
+                                            <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.IdUnitKey asp-route-pageid=@ViewBag.id>
+                                                Edit
+                                            </a>
+                                            <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.IdUnitKey asp-route-pageid=@ViewBag.id>
+                                                Delete
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                }else
+                                {
+                                    <div class="btn-group">
+                                        <a class="btn btn-success disabled" asp-action="Details" title="Details" asp-route-id=@item.IdUnitKey asp-route-pageid=@ViewBag.id>
+                                            Details
+                                        </a>
+                                        <a class="btn btn-warning disabled" asp-action="Edit" title="Edit" asp-route-id=@item.IdUnitKey asp-route-pageid=@ViewBag.id>
+                                            Edit
+                                        </a>
+                                        <a class="btn btn-danger disabled" asp-action="Delete" title="Delete" asp-route-id=@item.IdUnitKey asp-route-pageid=@ViewBag.id>
+                                            Delete
+                                        </a>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+}
+                        </tbody>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

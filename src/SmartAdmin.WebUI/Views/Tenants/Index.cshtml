@@ -1,0 +1,121 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.Tenants>
+@{
+    ViewData["Title"] = "Tenants";
+    ViewData["PageName"] = "Not Tenants page";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Tenants";
+    ViewData["Category1"] = "Tenants";
+    ViewData["PageDescription"] = "";
+    bool hasEmail = false;
+}
+@if (TempData["AlertSaveErr"] != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["AlertSaveErr"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["success"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel-tag">
+            <p>
+                <a asp-action="Create" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                    <span>Add New Tenant</span>
+                </a>
+            </p>
+        </div>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+
+                    @*<span class="fw-500  text-primary"> Total Buildings :  </span> &nbsp;<span class="color-danger-500"> 554  </span>*@
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Tenant Name</th>
+                                <th>Tenant Email</th>
+                                <th>Has Contract</th>
+                                <th>Mobile</th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                hasEmail = !string.IsNullOrEmpty(item.value.tenantEmail);
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @item.value.tenantName
+                                    </td>
+                                    <td>
+                                        <span class="badge  @(hasEmail?"badge-success":"badge-danger")">@(hasEmail? item.value.tenantEmail:"     ")</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge  @(item.value.HasContract?"badge-success":"badge-danger")">@(item.value.HasContract?"Rented":"Non Rented")</span>
+                                    </td>
+                                    <td>
+                                        @item.value.tenantMobile
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.IdTenant>Details</a>
+                                                    <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.value.IdTenant>Edit</a>
+                                                    <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdTenant>Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

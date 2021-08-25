@@ -1,0 +1,140 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.EmployeeVM.EmployeeTbl>
+@{
+    ViewData["Title"] = "Employees";
+    ViewData["PageName"] = "Employees page";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Employees";
+    ViewData["Category1"] = "Employees";
+    ViewData["PageDescription"] = "";
+}
+@if (TempData["AlertSaveErr"] != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["AlertSaveErr"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["success"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel-tag">
+            <p>
+                <a asp-action="Create" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                    <span>Add New Employee</span>
+                </a>
+            </p>
+        </div>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Status </th>
+                                <th>Iqama Number </th>
+                                <th>Employee Name</th>
+                                <th>Nationality </th>
+                                <th>Job Title </th>
+                                <th>Passport No</th>
+                                <th>Company Kafala</th>
+                                <th>Iqama Expiry Date  </th>
+                                <th>Workplace </th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    @if (item.value.remaining_days < 15)
+                                    {
+                                        <td> <a class="btn waves-effect waves-themed btn-danger"> @item.value.remaining_days </a> </td>
+                                    }
+                                    @if (item.value.remaining_days >= 15 && item.value.remaining_days < 30)
+                                    {
+                                        <td> <a class="btn waves-effect waves-themed btn-warning"> @item.value.remaining_days </a> </td>
+                                    }
+                                    @if (item.value.remaining_days >= 30)
+                                    {
+                                        <td> <a class="btn waves-effect waves-themed btn-success"> @item.value.remaining_days </a> </td>
+                                    }
+                                    <td> @item.value.iqamaNumber </td>
+                                    <td> @item.value.fullName </td>
+                                    <td> @item.value.CountryName </td>
+                                    <td> @item.value.jobTitle </td>
+                                    <td> @item.value.passportNumber</td>
+                                    <td>
+                                        @if (item.value.IsCompanykafala)
+                                        {
+                                            <span class="badge badge-success"> Yes </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger"> No </span>
+                                        }
+                                    </td>
+                                    <td> @item.value.dtIqamaExpiryDate </td>
+                                    <td> @item.value.workplace </td>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.IdEmployee>Details</a>
+                                                    <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.value.IdEmployee>Edit</a>
+                                                    <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdEmployee>Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

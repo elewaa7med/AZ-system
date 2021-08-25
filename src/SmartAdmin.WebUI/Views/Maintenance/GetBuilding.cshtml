@@ -1,0 +1,115 @@
+﻿@model List<SmartAdmin.WebUI.Models.Maintenance>
+@{ ViewData["Title"] = "Maintenance";
+                ViewData["PageName"] = $"Building Maintenance " + ViewBag.id;
+                ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Maintenance";
+                ViewData["Category1"] = "Building";
+                ViewData["PageDescription"] = ""; }
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="panel-tag">
+                    <p>
+                        <a asp-action="Create" asp-route-id="@ViewBag.id" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                            <span>Add Unit Maintenance</span>
+                        </a>
+                </div>
+            </div>
+        </div>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    Building Maintenance
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Building</th>
+                                <th>Unit</th>
+                                <th>Responsible</th>
+                                <th>Days to end</th>
+                                <th>Cost</th>
+                                <th class="noExport"> Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1;}
+                            @foreach (var item in Model)
+                            {
+                <tr>
+                    <td>@i</td>
+                    <td>@item.Unit.mBuilding.BuildingName</td>
+                    <td>@item.Unit.UnitNumber</td>
+                    <td>@item.User?.fullName</td>
+                    @{ var daysToEnd = item.MaintenanceEndDate.Subtract(DateTime.Now).Days;
+                                        var cssClass = daysToEnd > 0 ? "badge badge-success" : "badge badge-danger"; }
+                    <td>
+                        <span class="@cssClass">@daysToEnd</span>
+                    </td>
+                    <td class="formatNumber">
+                        @item.Cost
+                    </td>
+                    <td>
+                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-action="Details" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Details</a>
+                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Edit</a>
+                                    <a class="dropdown-item" asp-action="Print" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Print</a>
+                                    <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>i++;
+                            }
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th class="formatNumber"> @Model.Sum(x => x.Cost)</th>
+                                <th> </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+@section ScriptsBlock{
+    <script>
+        var first = false;
+        $(document).ajaxStop(function () {
+            setTimeout(function () {
+                if (first)
+                    return;
+                columnNumberWithCommas('formatNumber');
+                first = true;
+            }, 1000);
+        });
+        $(document).ready(function () {
+            $(".formatNumber").each(function (val) {
+                console.log($(this).text());
+                $(this).text(numberWithCommas($(this).text()));
+            });
+        });
+    </script>
+}

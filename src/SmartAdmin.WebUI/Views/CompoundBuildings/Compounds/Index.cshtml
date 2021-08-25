@@ -1,0 +1,135 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.Compounds>
+@{
+    ViewData["Title"] = "Compounds";
+    ViewData["PageName"] = "Building unit compound page";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Compounds";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+}
+@if (TempData["AlertSaveErr"] != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["AlertSaveErr"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["success"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel-tag">
+            <p>
+                <a asp-action="Create" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                    <span>Add New Compound</span>
+                </a>
+            </p>
+        </div>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Buildings :  </span> &nbsp;<span class="color-danger-500"> 554  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Compound Name</th>
+                                <th>Notes </th>
+                                <th>District </th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @item.value.compoundName
+                                    </td>
+                                    <td>
+                                        @item.value.Notes
+                                    </td>
+                                    <td>
+                                        @item.value.mDistrict.DistrictName
+                                    </td>
+                                    <td>
+                                        @*<div class="btn-group">
+                                                <a class="btn btn-default" asp-action="Payment" asp-controller="UnitRentContractCompound" title="Payment" asp-route-id=@item.value.IdRentContract>
+                                                    Payment
+                                                </a>
+
+                                                <a class="btn btn-default" asp-action="Renew" title="Renew" asp-route-id=@item.value.IdRentContract>
+                                                    Renew
+                                                </a>
+                                                <a class="btn btn-danger" onclick="return confirm ('Are you sure ?')" asp-action="Archive" title="Archive" asp-route-id=@item.value.IdRentContract>
+                                                    Archive
+                                                </a>
+                                            </div>*@
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.IdCompound>Details</a>
+                                                    <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.value.IdCompound>Edit</a>
+                                                    <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdCompound>Delete</a>
+                                                    <a class="dropdown-item" asp-controller="CompoundBuildings" asp-action="Index" title="Compound Buildings" asp-route-IdCompound=@item.value.IdCompound>Compound Buildings</a>
+                                                    <a class="dropdown-item" asp-controller="CompoundUnits" asp-action="Index" title="Compound Units" asp-route-IdCompound=@item.value.IdCompound>Compound Units</a>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

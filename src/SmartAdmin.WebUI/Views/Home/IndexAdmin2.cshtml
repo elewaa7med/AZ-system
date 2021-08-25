@@ -1,0 +1,450 @@
+﻿@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Home Page";
+    ViewData["PageName"] = "Dashboard of Dues";
+    var canPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ShowPayment })).Succeeded;
+
+    var authenticatedUser = SignInManager.IsSignedIn(User);
+    var user = UserManager.GetUserAsync(User).Result;
+
+    var isAdmin = UserManager.IsInRoleAsync(user, "Admin").Result;
+    var isAccountantManager = UserManager.IsInRoleAsync(user, "AccountantManager").Result;
+    var isAccountant = UserManager.IsInRoleAsync(user, "Accountant").Result;
+    var isBuildingMandoob = UserManager.IsInRoleAsync(user, "Mandoob").Result;
+    var isCompoundMandoob = UserManager.IsInRoleAsync(user, "Mandoob").Result;
+
+    var hasBuildingAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingAccountant })).Succeeded);
+    var hasMeadowParkAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MeadowParkGarden })).Succeeded);
+    var hasDesertRoseAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertRose })).Succeeded);
+    var hasDaarResidenceAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DaarResidence })).Succeeded);
+    var hasVilla24Access = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Villa24 })).Succeeded);
+
+}
+
+@if (authenticatedUser)
+{
+    if (hasBuildingAccess)
+    {
+        <div class="row">
+            <div class="col-xl-12">
+                <h1>
+                    <span class="fw-900">Building Dues </span>
+                </h1>
+                <div id="panel-1" class="panel">
+                    <div class="panel-hdr">
+                        <h2 style="font-size: 150%; ">
+                            <span class="icon-stack icon-stack-lg">
+                                <i class="base-2 icon-stack-3x color-primary-400"></i>
+                                <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                                <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                            </span>   <span class="fw-500  text-primary"> Total Due Rent Payments :  </span> &nbsp;<span class="color-danger-500"><span id="dueTotal">0 </span> SAR </span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <!-- datatable start -->
+                            <table id="dueRentTable" class="table  table-bordered table-hover table-striped w-100">
+                                <thead class="bg-primary-600">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Bld</th>
+                                        <th>Unit</th>
+                                        <th>Tenant</th>
+                                        <th>Mobile </th>
+                                        <th>Representative </th>
+                                        <th>Annual Rent</th>
+                                        <th> Rent Value</th>
+                                        <th>Rent Due Date</th>
+                                        <th>Contract Expiry</th>
+                                        <th>Rent due after</th>
+                                        <th class="noExport">Contract</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dueRentBody">
+                                </tbody>
+                                <tfoot class="thead-themed">
+                                    <tr id="dueRentFooter">
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <!-- datatable end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    if (hasMeadowParkAccess)
+    {
+        <div class="row">
+            <div class="col-xl-12">
+                <h1>
+                    <span class="fw-900">   Meadow Park Garden Dues </span>
+                </h1>
+                <div id="panel-1" class="panel">
+                    <div class="panel-hdr">
+                        <h2 style="font-size: 150%; ">
+                            <span class="icon-stack icon-stack-lg">
+                                <i class="base-2 icon-stack-3x color-primary-400"></i>
+                                <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                                <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                            </span>   <span class="fw-500  text-primary"> Total Due Rent Payments :  </span> &nbsp;<span class="color-danger-500"><span id="meadowTotal">0 </span> SAR  </span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <!-- datatable start -->
+                            <table id="meadowTable" class="table table-bordered table-hover table-striped w-100">
+                                <thead class="bg-primary-600">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Unit</th>
+                                        <th>Tenant</th>
+                                        <th>Mobile </th>
+                                        <th>Annual Rent</th>
+                                        <th> Remaining Rents</th>
+                                        <th> Rent Value</th>
+                                        <th>Rental due date</th>
+                                        <th>Contract Expiry</th>
+                                        <th>Rent due after</th>
+                                        <th class="noExport">Contract</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="meadowBody">
+                                </tbody>
+                                <tfoot class="thead-themed">
+                                    <tr id="meadowFooter">
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <!-- datatable end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    if (hasDesertRoseAccess)
+    {
+        <div class="row">
+            <div class="col-xl-12">
+                <h1>
+                    <span class="fw-900">
+                        Desert rose Dues
+                    </span>
+                </h1>
+                <div id="panel-1" class="panel">
+                    <div class="panel-hdr">
+                        <h2 style="font-size: 150%; ">
+                            <span class="icon-stack icon-stack-lg">
+                                <i class="base-2 icon-stack-3x color-primary-400"></i>
+                                <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                                <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                            </span>   <span class="fw-500  text-primary"> Total Due Rent Payments :  </span> &nbsp;<span class="color-danger-500"><span id="desertTotal">0 </span> SAR  </span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <!-- datatable start -->
+                            <table id="desertTable" class="table  table-bordered table-hover table-striped w-100">
+                                <thead class="bg-primary-600">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Unit</th>
+                                        <th>Tenant</th>
+                                        <th>Mobile </th>
+                                        <th>Annual Rent</th>
+                                        <th> Remaining Rents</th>
+                                        <th> Rent Value</th>
+                                        <th>Rental due date</th>
+                                        <th>Contract Expiry</th>
+                                        <th>Rent due after</th>
+                                        <th class="noExport">Contract</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="desertBody">
+                                </tbody>
+                                <tfoot class="thead-themed">
+                                    <tr id="desertFooter">
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <!-- datatable end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    if (hasDaarResidenceAccess)
+    {
+        <div class="row">
+            <div class="col-xl-12">
+                <h1>
+                    <span class="fw-900">
+                        Daar Resident Dues
+                    </span>
+                </h1>
+                <div id="panel-1" class="panel">
+                    <div class="panel-hdr">
+                        <h2 style="font-size: 150%; ">
+                            <span class="icon-stack icon-stack-lg">
+                                <i class="base-2 icon-stack-3x color-primary-400"></i>
+                                <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                                <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                            </span>   <span class="fw-500  text-primary"> Total Due Rent Payments :  </span> &nbsp;<span class="color-danger-500"><span id="daarTotal">0 </span> SAR  </span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <!-- datatable start -->
+                            <table id="daarTable" class="table  table-bordered table-hover table-striped w-100">
+                                <thead class="bg-primary-600">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Unit</th>
+                                        <th>Tenant</th>
+                                        <th>Mobile </th>
+                                        <th>Annual Rent</th>
+                                        <th> Remaining Rents</th>
+                                        <th> Rent Value</th>
+                                        <th>Rental due date</th>
+                                        <th>Contract Expiry</th>
+                                        <th>Rent due after</th>
+                                        <th class="noExport">Contract</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="daarBody">
+                                </tbody>
+                                <tfoot class="thead-themed">
+                                    <tr id="daarFooter">
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <!-- datatable end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    if (hasVilla24Access)
+    {
+        <div class="row">
+            <div class="col-xl-12">
+                <h1>
+                    <span class="fw-900">
+                        24 Villa Dues
+                    </span>
+                </h1>
+                <div id="panel-1" class="panel">
+                    <div class="panel-hdr">
+                        <h2 style="font-size: 150%; ">
+                            <span class="icon-stack icon-stack-lg">
+                                <i class="base-2 icon-stack-3x color-primary-400"></i>
+                                <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                                <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                            </span>   <span class="fw-500  text-primary"> Total Due Rent Payments :  </span> &nbsp;<span class="color-danger-500"><span id="villa24Total">0 </span> SAR  </span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <!-- datatable start -->
+                            <table id="villa24Table" class="table  table-bordered table-hover table-striped w-100">
+                                <thead class="bg-primary-600">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Unit</th>
+                                        <th>Tenant</th>
+                                        <th>Mobile </th>
+                                        <th>Annual Rent</th>
+                                        <th> Remaining Rents</th>
+                                        <th> Rent Value</th>
+                                        <th>Rental due date</th>
+                                        <th>Contract Expiry</th>
+                                        <th>Rent due after</th>
+                                        <th class="noExport">Contract</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="villa24Body">
+                                </tbody>
+                                <tfoot class="thead-themed">
+                                    <tr id="villa24Footer">
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <!-- datatable end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+@section ScriptsBlock{
+    <script>
+        $(document).ajaxStop(function () {
+            setTimeout(function () {
+                if ("@hasBuildingAccess" =="True") {
+                    initializeDataTable("#dueRentTable");
+                }
+                if ("@hasMeadowParkAccess" == "True") {
+                    initializeDataTable("#meadowTable");
+                }
+                if ("@hasDesertRoseAccess" == "True") {
+                    initializeDataTable("#desertTable");
+                }
+                if ("@hasVilla24Access" == "True") {
+                    initializeDataTable("#villa24Table");
+                }
+                if ("@hasDaarResidenceAccess" == "True") {
+
+                    initializeDataTable("#daarTable");
+                }
+            }, 1000);
+        });
+        $(function () {
+            if ("@hasBuildingAccess" == "True") {
+                  fillBuildingsDues();
+                }
+            fillCompoundsDues();
+        })
+        /////////////////////////////////////////////////////////////////////
+        //Fill Buildings Dues
+        /////////////////////////////////////////////////////////////////////
+        var fillBuildingsDues = function () {
+            var bldhtml = "";
+            var btncolorstr = '';
+            var url = '/' + 'Home/GetBuildingsDue?id=1';  // this is building dues less than or equal 30 DAYS
+            $.getJSON(url, function (data) {
+                $.each(data.due, function (i, row) {
+                    if (row.totalDays <= 15)
+                        btncolorstr = 'btn-danger';
+                    else btncolorstr = 'btn-warning';
+                    //bldhtml += '<tr> ' +
+                    //    '<td>' + row.itemArray[10] + ' </td> ' +
+                    //    '<td> ' + row.itemArray[0] + ' </td>' +
+                    //    '<td> ' + row.itemArray[1] + ' </td>' +
+                    //    '<td> ' + row.itemArray[2] + ' </td>' +
+                    //    '<td> ' + row.itemArray[3] + ' </td>' +
+                    //    '<td> ' + row.itemArray[12] + ' </td>' +
+                    //    '<td> ' + numberWithCommas(row.itemArray[4]) + '  </td>' +
+                    //    '<td> <span class="buildingMonthly" style="display:none"> ' + row.itemArray[6] +'</span>' + numberWithCommas(row.itemArray[6]) + ' </td>' +
+                    //    '<td> ' + row.itemArray[7] + ' </td>' +
+                    //    '<td> ' + row.itemArray[8] + ' </td>' +
+                    //    '<td>' +
+                    //    '<a href="/UnitRentContract/Payment?id=' + row.itemArray[16] + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '>' + row.itemArray[9] + ' </a>' +
+                    //    '</td>' +
+                    //    '<td><a class="btn btn-secondary waves-effect waves-themed" href="/UnitRentContract/Details/' + row.itemArray[16] + '" title="Go To Contract">Contract</a> </td> ' +
+                    //    '</tr>';
+                    bldhtml += '<tr> ' +
+                        '<td>' + (parseInt(i) + 1) + '</td> ' +
+                        '<td> ' + row.building + ' </td>' +
+                        '<td> ' + row.unitNumber + ' </td>' +
+                        '<td> ' + row.tenantName + ' </td>' +
+                        '<td> ' + row.mobile + ' </td>' +
+                        '<td> ' + row.mandoob + ' </td>' +
+                        '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
+                        '<td>'+ numberWithCommas(row.value) + ' </td>' +
+                        //'<td>  <span style="display:none" class="buildingMonthly">' + row.value + '</span>' + numberWithCommas(row.value) + ' </td>' +
+                        '<td> ' + row.collectionDate + ' </td>' +
+                        '<td> ' + row.expiryDate + ' </td>' +
+                        '<td>' +
+                        '<a href="/UnitRentContract/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
+                        '</td>' +
+                        '<td>' +
+                        '<a href="/UnitRentContract/Details/' + row.contractID + '" title="Contract" class="btn btn-secondary waves-effect waves-themed">Contract</a>'
+                    '</td>'
+                    '</tr>';
+                });
+
+                $('#dueRentBody').html(bldhtml);
+                $("#dueRentFooter").html('<td colspan="3">Total Due Value</td><td colspan="3">' + numberWithCommas(data.totalRentValue) + '</td><td colspan="3">Total Annual Rent</td><td colspan="3">' + numberWithCommas(data.totalAnnualRent) + '</td>');
+
+                  if (@((!canPay).ToString().ToLower())) {
+                      $("#dueRentBody .pay").removeAttr('href')
+                }
+                //calculateTotal('buildingMonthly', 'dueTotal')
+                $("#dueTotal").text(numberWithCommas(data.totalRentValue) );
+                //initializeDataTable("#dueRentTable");
+            });
+        }
+        /////////////////////////////////////////////////////////////////////
+        //Fill Compounds Dues
+        /////////////////////////////////////////////////////////////////////
+        var fillCompoundsDues = function () {
+            if ("@hasMeadowParkAccess" == "True") {
+                fillDueRent(2, 'meadowTable', 'meadowBody', 'cmpdhtml2', 'meadowTotal','meadowFooter');
+            }
+            if ("@hasDesertRoseAccess" == "True") {
+                fillDueRent(3, 'desertTable', 'desertBody', 'cmpdhtml3', 'desertTotal','desertFooter');
+            }
+            if ("@hasDaarResidenceAccess" == "True") {
+                fillDueRent(4, 'daarTable', 'daarBody', 'cmpdhtml4', 'daarTotal','daarFooter');
+            }
+            if ("@hasVilla24Access" == "True") {
+                fillDueRent(5, 'villa24Table', 'villa24Body', 'cmpdhtml5', 'villa24Total','villa24Footer');
+            }
+        }
+        function fillDueRent(id, tblName,tblBody,sumElement,controlToReplace,tblFooter) {
+            var newhtmlduerents = "";
+            var url = '@Url.Content("~/")' + 'Home/GetCompoundsDue';
+            $.getJSON(url, { compoundID: id }, function (data) {
+                $.each(data.due, function (i, row) {
+                    if (row.totalDays <= 15)
+                        btncolorstr = 'btn-danger';
+                    else btncolorstr = 'btn-warning';
+                    newhtmlduerents += '<tr> ' +
+                        '<td>' + (parseInt(i) + 1) + '</td> ' +
+                        '<td> ' + row.unitNumber + ' </td>' +
+                        '<td> ' + row.tenantName + ' </td>' +
+                        '<td> ' + row.mobile + ' </td>' +
+                        '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
+                        '<td>' + row.remainingRents + '</td>' +
+                        '<td>' + numberWithCommas(row.value) + ' </td>' +
+                        //'<td>  <span style="display:none" class="' + sumElement + '">' + row.value+'</span>' + numberWithCommas(row.value) + ' </td>' +
+                        '<td> ' + row.collectionDate + ' </td>' +
+                        '<td> ' + row.expiryDate + ' </td>' +
+                        '<td>' +
+                        '<a href="/UnitRentContractCompound/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
+                        '</td>' +
+                        '<td>' +
+                        '<a href="/UnitRentContractCompound/Details/' + row.contractID + '" title="Contract" class="btn btn-secondary waves-effect waves-themed">Contract</a>'
+                        '</td>'
+                        '</tr>';
+                });
+                $('#' + tblBody).html(newhtmlduerents);
+                $("#" + tblFooter).html('<td colspan="3">Total Due Value</td><td colspan="2">' + numberWithCommas(data.totalRentValue) + '</td><td colspan="3">Total Annual Rent</td><td colspan="3">' + numberWithCommas(data.totalAnnualRent) + '</td>');
+
+                if (@((!canPay).ToString().ToLower())) {
+                    $("#" + tblBody + " .pay").removeAttr('href')
+                }
+                //calculateTotal(sumElement, controlToReplace);
+                $("#" + controlToReplace).text(numberWithCommas(data.totalRentValue));
+            });
+        }
+    </script>
+}
+

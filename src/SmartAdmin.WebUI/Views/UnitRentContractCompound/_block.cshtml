@@ -1,0 +1,40 @@
+﻿@model SmartAdmin.WebUI.Controllers.BlockContractDTO
+<div class="modal-header">
+    <h4 class="modal-title">
+        Block
+    </h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true"><i class="fal fa-times"></i></span>
+    </button>
+</div>
+<form asp-action="Block" id="formToSubmit">
+    <div class="modal-body">
+        <div class="col-sm-12">
+            <input type="hidden" asp-for="ContractID" />
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Reason</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" autocomplete="off" asp-for="Reason">
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary waves-effect waves-themed" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary waves-effect waves-themed" onclick="submitForm()">Block</button>
+    </div>
+</form>
+<script>
+    function submitForm() {
+        var $form = $("#formToSubmit");
+        var data = getFormData($form);
+        $.post('@Url.Action("Block")', data, function (result) {
+            toastr.success('Saved successfully', 'Success');
+            $("#block-" + data.ContractID).hide();
+            $("#unblock-" + data.ContractID).show();
+            unblockUI();
+            $("#default-example-modal").modal('hide');
+        });
+    }
+</script>

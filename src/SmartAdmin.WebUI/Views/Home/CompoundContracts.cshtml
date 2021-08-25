@@ -1,0 +1,56 @@
+﻿@model SmartAdmin.WebUI.Models.DTO.CompoundDTO
+@{
+    ViewData["Title"] = $"{Model.CompoundName} Contracts";
+    ViewData["PageName"] = $"{Model.CompoundName} Contracts";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> {Model.CompoundName} Contracts";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+}
+
+
+<input hidden id="compundID" value="@Model.CompoundID" />
+<div class="row mb-3">
+    <div class="col">
+        @if ((await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.CreateContract })).Succeeded)
+        {
+            <div class="panel-tag">
+                <p>
+                    <a asp-action="Create" asp-controller="UnitRentContractCompound" asp-route-compoundID="@Model.CompoundID" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                        <span>Add New Contract</span>
+                    </a>
+                </p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12" id="compoundContracts">
+    </div>
+</div>
+
+<div class="modal fade" id="default-example-modal" role="dialog" tabindex="-1" style="display: none;" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="modal-content">
+
+        </div>
+    </div>
+</div>
+@section ScriptsBlock{
+    <script>
+        var initialize = true;
+        $(document).ajaxStop(function () {
+            if (initialize) {
+                setTimeout(function () {
+                    initializeFilteredDataTable("#allContractsTable", 6, "#selectContainer");
+                    columnNumberWithCommas('formatNumber');
+                    initialize = false;
+                }, 500);
+            }
+        });
+        $(function () {
+            var url = '@Url.Content("~/")' + 'UnitRentContractCompound/LoadCompound?id=' + $("#compundID").val();
+            $("#compoundContracts").load(url);
+        })
+    </script>
+}

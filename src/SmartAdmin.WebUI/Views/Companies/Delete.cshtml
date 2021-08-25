@@ -1,0 +1,77 @@
+﻿@model SmartAdmin.WebUI.Models.Companies
+
+@{ ViewData["Title"] = "Delete Companies";
+    ViewData["PageName"] = "Companies";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Companies";
+    ViewData["Category1"] = "Companies";
+    ViewData["PageDescription"] = ""; }
+
+<div>
+    @if (ViewBag.AlertSaveErr != null)
+    {
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
+    <div class="d-flex flex-start w-100">
+        <div class="d-flex flex-fill">
+            <div class="flex-fill">
+                <p>  @ViewBag.AlertSaveErr</p>
+            </div>
+        </div>
+    </div>
+</div>}
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Delete Companies
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="companyName" class="col-form-label col-sm-3 text-sm-right form-label">company Name*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="companyName">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="companyAddress" class="col-form-label col-sm-3 text-sm-right form-label">company Address*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="companyAddress">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="compayPhone" class="col-form-label col-sm-3 text-sm-right form-label">company Phone*</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="compayPhone">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <form asp-action="Delete" class="form-group  alert alert-primary alert-dismissible text-center">
+                    <input type="hidden" asp-for="IdCompany" />
+                    <button class="btn btn-danger ml-auto waves-effect waves-themed" type="submit">Delete</button>
+                    <a class="btn btn-secondary ml-1 waves-effect waves-themed" asp-action="Index">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'Delete of a Company ';
+    </script>
+}

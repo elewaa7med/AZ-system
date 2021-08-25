@@ -1,0 +1,98 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.UnitRentContractAllPaymentLogs>
+@{
+    ViewData["Title"] = $"Payment Logs";
+    ViewData["PageName"] = "Payment logs";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Payment logs";
+    ViewData["Category1"] = "Payment logs";
+    ViewData["PageDescription"] = "";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel-tag">
+            <p>
+                <a asp-action="Create" asp-route-id="@ViewBag.id" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                    <span>Add New Building</span>
+                </a>
+            </p>
+        </div>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Buildings :  </span> &nbsp;<span  class="color-danger-500">@Model.Count()</span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Contract #</th>
+                                <th>Unit</th>
+                                <th>Payment</th>
+                                <th>Action</th>
+                                <th>Compund/Building</th>
+                                <th>By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @*@(item.i + 1 )*@
+                                    </td>
+                                    <td>
+                                        @item.value.UnitRentContract.contractNumber
+                                    </td>
+                                    <td>
+                                        @(item.value.UnitRentContract.IdUnitCompound ?? item.value.UnitRentContract.IdUnit)
+                                    </td>
+                                    <td>
+                                        @item.value.AllPaidAmount
+                                    </td>
+                                    <td>
+                                        @item.value.Action
+                                    </td>
+                                    <td>
+                                        @(item.value.UnitRentContract.IdUnitCompound == null ? "Building" : "Compound")
+                                    </td>
+                                    <td>
+                                      @item.value.User.UserName
+                                    </td>
+                                    @*<td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.IdBuilding>Details</a>
+                                                    <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.value.IdBuilding>Edit</a>
+                                                    <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdBuilding>Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>*@
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

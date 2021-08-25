@@ -1,0 +1,36 @@
+﻿@model SmartAdmin.WebUI.Models.BuildingFloors
+<style>
+    .dl-horizontal > dd:after {
+        display: table;
+        content: "";
+        clear: both;
+    }
+</style>
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>BuildingFloors</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PropertyFloorName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PropertyFloorName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.IdBuildingFloor">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts{
+    <script>
+        pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'Details of a Floor ';
+    </script>
+}

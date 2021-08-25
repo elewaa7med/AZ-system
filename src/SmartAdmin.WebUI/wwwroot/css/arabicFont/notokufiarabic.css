@@ -1,0 +1,19 @@
+﻿@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-style: normal;
+  font-weight: 400;
+  src: url(NotoKufiArabic-Regular.eot);
+  src: url(NotoKufiArabic-Regular.eot?#iefix) format('embedded-opentype'),
+       url(NotoKufiArabic-Regular.woff2) format('woff2'),
+       url(NotoKufiArabic-Regular.woff) format('woff'),
+       url(NotoKufiArabic-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-style: normal;
+  font-weight: 700;
+  src: url(NotoKufiArabic-Bold.eot);
+  src: url(NotoKufiArabic-Bold.eot?#iefix) format('embedded-opentype'),
+       url(NotoKufiArabic-Bold.woff2) format('woff2'),
+       url(NotoKufiArabic-Bold.woff) format('woff'),
+       url(NotoKufiArabic-Bold.ttf) format('truetype');

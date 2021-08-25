@@ -1,0 +1,204 @@
+﻿@model SmartAdmin.WebUI.Models.CompoundUnits
+@{
+    ViewData["Title"] = "Unit Details";
+    ViewData["PageName"] = $"unit {ViewData["CompoundName"].ToString()}";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i>Unit Details";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+}
+<div class="was-validated">
+    <input type="hidden" value="@ViewData["IdCompound"]" id="IdCompound" />
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Unit Details
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Owner
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="UnitOwner" class="select2 form-control w-100" asp-items="ViewBag.IdOwner" disabled>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Building
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdBuilding" class="select2 form-control w-100" asp-items="ViewBag.IdBuilding" disabled>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Unit Number</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="UnitNumber">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Property Type
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdPropertyType" class="select2 form-control w-100" asp-items="ViewBag.IdPropertyType" disabled>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Floor
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdFloor" class="select2 form-control w-100" asp-items="ViewBag.IdFloor" disabled>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Unit Area </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" autocomplete="off" asp-for="UnitArea" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">For Families</label>
+                                <div class="col-sm-9">
+                                    <input type="checkbox" asp-for="Forfamilies" disabled class="form-control" id="customSwitch1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Unit Condition
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="unitCondition" class="select2 form-control w-100" disabled>
+                                        <option value="1" selected="selected">Good Condition</option>
+                                        <option value="2">Requires Work (Bad Condition)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Notes </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="Notes" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Number of Rooms </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="NUmberofRooms" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">English Unit Description</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control " disabled asp-for="Description"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Arabic Unit Description</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control " disabled asp-for="DescriptionAR"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Number of Living </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="NuberofLivings" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Number of Bathes </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="NoOfBaths" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Number of Majlis </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="NumberofMajlis" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Rent Rate </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="RentRate" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Electricity meter Number
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control " asp-for="ElectricityMeterNumber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Payment number
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control " asp-for="ElectricityPaymentNumber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Transfer the account to the tenant?
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="frame-wrap">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" class="custom-control-input" id="defaultInline1Radio" asp-for="TransferToTenanat" value="true" disabled>
+                                            <label class="custom-control-label" for="defaultInline1Radio">Yes</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline" style="padding-top:5px">
+                                            <input type="radio" class="custom-control-input" id="defaultInline2Radio" asp-for="TransferToTenanat" value="false" disabled>
+                                            <label class="custom-control-label" for="defaultInline2Radio">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group  alert alert-primary alert-dismissible text-center">
+                    <button type="button" class="btn btn-secondary ml-1 waves-effect waves-themed" onclick="back()">Back to list</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+@section ScriptsBlock{
+    <script>
+        function back() {
+            var fallbackUrl = "/CompoundUnits/Index?IdCompound=" + $("#IdCompound").val();
+            var prevPage = window.location.href;
+            window.history.go(-1);
+            setTimeout(function () {
+                if (window.location.href == prevPage) {
+                    window.location.href = fallbackUrl;
+                }
+            }, 500);
+        }
+    </script>
+}

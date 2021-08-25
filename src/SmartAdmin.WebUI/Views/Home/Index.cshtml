@@ -1,0 +1,243 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    ViewBag.PageName = "Dashboard of Dues";
+}
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <section>
+        <div class="row-fluid margin-top20">
+            <div class="span8 grider">
+                <div class="widget widget-simple">
+                    <div class="widget-header">
+                        <h4 class="pull-left"><i class="fontello-icon-chart"></i> Statistics</h4>
+
+                        <!-- // widget tabs-->
+                    </div>
+                    <!-- // widget-head-->
+                    <!-- ? Content-inner - content without adding padding border - Adds padding content without border - for any content -->
+                    <div class="widget-content">
+                        <div class="well well-impressed bg-green-light">
+                            <!-- Use Bootstrap list - thumbnails -->
+                            <ul class="thumbnails no-margin">
+                                <li class="span4">
+                                    <h5 class="simple-header"><i class="fontello-icon-dollar" id="hRevenue"></i> Total Units</h5>
+                                    <div class="well well-nice bg-green-strong ">
+                                        <h5 class="text-left text-size padding-left2" id="totalUnits"></h5>
+                                    </div>
+                                </li>
+
+                                <li class="span4">
+                                    <h5 class="simple-header"><i class="fontello-icon-home" id="hnonRentedunits"></i> Non-Rented Units</h5>
+                                    <div class="well well-nice bg-green-strong ">
+                                        <h5 class="text-left text-size padding-left2" id="nonRented"></h5>
+                                    </div>
+                                </li>
+                                <li class="span4">
+                                    <h5 class="simple-header"><i class="fontello-icon-list-alt" id="hnonRentedVillas"></i> Rented Units</h5>
+                                    <div class="well well-nice bg-green-strong ">
+                                        <h5 class="text-left text-size padding-left2" id="rented"></h5>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- // Info to daily sales -->
+                    </div>
+                </div>
+                <!-- // Widget -->
+
+                <div class="widget widget-box">
+
+
+                    <table id="exampleDTC" class="table table-striped table-content table-condensed boo-table table-hover bg-blue-light">
+                        <caption class="caption-m">
+                            Contracts to expire in 60 days (Buildings)
+                        </caption>
+                        <thead>
+                            <tr id="HeadersRow0">
+                                <th scope="col">Building <span class="column-sorter"></span></th>
+                                <th scope="col">Unit <span class="column-sorter"></span></th>
+                                <th scope="col">Contracts No <span class="column-sorter"></span></th>
+                                <th scope="col"> Tenant Name<span class="column-sorter"></span></th>
+                                <th scope="col">Expiry date <span class="column-sorter"></span></th>
+                                <th scope="col">Expire Contracts <span class=""></span></th>
+                                <th scope="col">Insurance  <span class="column-sorter"></span></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr id="FootersRow0" class="total">
+                                <th>Total sum</th>
+                                <th></th>
+                                <th class="hidden-phone"></th>
+                                <th class="hidden-phone"></th>
+                                <th class="hidden-phone hidden-tablet"></th>
+                                <th></th>
+                                <th class="text-right"></th>
+                            </tr>
+                        </tfoot>
+                        <tbody id="tblexpirybld">
+                        </tbody>
+                    </table>
+
+                    <table id="exampleDTC" class="table table-striped table-content table-condensed boo-table table-hover bg-blue-light">
+                        <caption class="caption-m">
+                            Contracts to expire in 60 days (Compounds)
+                        </caption>
+                        <thead>
+                            <tr id="HeadersRow0">
+                                <th scope="col">Building <span class="column-sorter"></span></th>
+                                <th scope="col">Unit <span class="column-sorter"></span></th>
+                                <th scope="col">Compound <span class=""></span></th>
+                                <th scope="col">Contracts No <span class="column-sorter"></span></th>
+                                <th scope="col"> Tenant Name<span class="column-sorter"></span></th>
+                                <th scope="col">Expiry date <span class="column-sorter"></span></th>
+                                <th scope="col">Insurance  <span class="column-sorter"></span></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr id="FootersRow0" class="total">
+                                <th>Total sum</th>
+                                <th></th>
+                                <th class="hidden-phone"></th>
+                                <th class="hidden-phone"></th>
+                                <th class="hidden-phone hidden-tablet"></th>
+                                <th></th>
+                                <th class="text-right"></th>
+                            </tr>
+                        </tfoot>
+                        <tbody id="tblexpirycompound">
+                        </tbody>
+                    </table>
+
+                    <!-- // Tabable -->
+                </div>
+                <!-- // Widget -->
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+            <!-- // Column -->
+
+            <div class="span4 grider">
+                @if (SignInManager.IsSignedIn(User) && (User.IsInRole("Admin")))
+                {
+                    <div class="statistic-box well well-black">
+                        <div class="section-title">
+                            <h4><i class="fontello-icon-back-in-time"></i> Total Sales</h4>
+                        </div>
+                        <div class="section-content">
+                            <h4 class="statistic-values" id="totalSales"></h4>
+                            <span class="info-block">Total Sales Previous 30 days</span>
+                        </div>
+                    </div>
+                }
+                <!-- // Statistic Box -->
+                @*<div class="statistic-box well well-black">
+                        <div class="section-title">
+                            <h6>
+                                <i class="fontello-icon-back-in-time"></i> Total Insurance
+                            </h6>
+                        </div>
+                        <div class="section-content">
+                            <h2 class="statistic-values" id="totalInsurance"></h2>
+                        </div>
+                    </div>*@
+                <div class="statistic-box well well-black">
+                    <div class="section-title">
+                        <h6>
+                            <i class="fontello-icon-back-in-time"></i> Total Sales for @UserManager.GetUserName(User)
+                        </h6>
+                    </div>
+                    <div class="section-content">
+                        <h4 class="statistic-values" id="totalSalesforUser"></h4>
+                        <span class="info-block">Total Sales Previous 30 days</span>
+                    </div>
+                </div>
+                <!-- // Statistic Box -->
+                <!-- // Widget -->
+                <!-- // Widget -->
+                <!-- // Widget -->
+
+
+
+            </div>
+        </div>
+        <!-- // Example row -->
+
+    </section>
+
+}
+@section ScriptsBlock
+    {
+    <script>
+        $(function () {
+            //pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'Dashboard';
+
+
+            var url = '@Url.Content("~/")' + 'Home/getStats';
+            $.getJSON(url, function (data) {
+                var totalUnits = data.itemArray[3] + data.itemArray[4];
+
+                var a = (totalUnits - data.itemArray[0]);
+                var b = data.itemArray[3] - data.itemArray[2];
+                var c = data.itemArray[4] - data.itemArray[1];
+
+                $('#totalUnits').html("Total  : " + totalUnits + "<br />Appts.: " + data.itemArray[3] + "<br />Villas : " + data.itemArray[4]);
+                $('#nonRented').html("Total:" + a + "<br />Appts.: " + b + "<br />Villas.:" + c);
+                $('#rented').html("Total:" + data.itemArray[0] + "<br />Appts.: " + data.itemArray[2] + "<br />Villas.:" + data.itemArray[1]);
+                ///Because we removed the INsurance box from the html
+                //$('#totalInsurance').html("SR. " + new Intl.NumberFormat().format(data.itemArray[6]) + "<br/>");
+                $('#totalSales').html(data.itemArray[5]);
+                $('#totalSalesforUser').text(data.itemArray[7]);
+            });
+
+
+
+            /////////////////////////////////////////////////////////////////////
+            ///Get soon to expire contracts.
+            var htmlbld = "";
+            var htmlcompound = "";
+             var url = '@Url.Content("~/")' + 'Home/getContractExpiry';
+            $.getJSON(url, function (data) {
+
+
+                $.each(data, function (i, row) {
+                    if (row.itemArray[7] == 0) {
+                        htmlbld += "  <tr > <td>" + row.itemArray[4] + "</td > <td>" + row.itemArray[3] + "</td> <td>" + row.itemArray[0] + "</td> <td>" + row.itemArray[2] + "</td> <td>" + row.itemArray[1] + "</td> <td> <div class='progress progress-danger progress-medium filled5'>  <div class='filler'> ";
+                        htmlbld += " <div class='bar' style='width:30%'> </div> </div> </div> </td> <td>" + row.itemArray[5] + "</td> </tr >";
+
+                    }
+                    else {
+                        htmlcompound += "  <tr > <td>" + row.itemArray[4] + "</td > <td>" + row.itemArray[3] + "</td> <td > " + row.itemArray[6] + " </td>  <td>" + row.itemArray[0] + "</td> <td>" + row.itemArray[2] + "</td> <td>" + row.itemArray[1] ;
+                        htmlcompound += "  </td> <td>" + row.itemArray[5] + "</td> </tr >";
+
+                    }
+
+
+                });
+                $('#tblexpirybld').html(htmlbld);
+                $('#tblexpirycompound').html(htmlcompound);
+            });
+
+
+            /////////////////////////////////////////////////////////////////////////////
+            ////Due Installment
+              var url = '@Url.Content("~/")' + 'Home/getDueInstallment';
+            $.getJSON(url, function (data) {
+
+            });
+
+        })
+    </script>
+}
+

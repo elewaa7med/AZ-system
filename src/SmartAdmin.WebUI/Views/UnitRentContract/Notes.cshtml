@@ -1,0 +1,107 @@
+﻿@model List<SmartAdmin.WebUI.Models.DTO.RentContractNoteDTO>
+@{
+    ViewData["Title"] = "Unit Rent Contract Payment Notes";
+    ViewData["PageName"] = "Unit rent contracts " + Model.Select(x=>x.pageid).FirstOrDefault();
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i>  Unit Rent Contract Payment Notes";
+    ViewData["Category1"] = "Notes";
+    ViewData["PageDescription"] = "";
+
+}
+<div id="unit-info-container">
+
+</div>
+<div class="row">
+    <div class="panel-tag col-xl-12">
+        <div class="row">
+
+            @if ((await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DeleteNote })).Succeeded)
+            {
+                <div class="col-md-4">
+                    <a asp-action="AddNote" asp-route-id="@ViewBag.ContractId" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                        <span>Add New Note</span>
+                    </a>
+                </div>
+                <div class="col-xl-4">
+                    <a asp-action="DeleteLastNote" asp-route-contractId="@ViewBag.ContractId" class="btn btn-danger btn-lg btn-block waves-effect waves-themed">
+                        <span>Delete Last Note</span>
+                    </a>
+                </div>
+                <div class="col-xl-4">
+                    <a asp-action="DeleteAllNotes" asp-route-contractId="@ViewBag.ContractId" class="btn btn-danger btn-lg btn-block waves-effect waves-themed">
+                        <span>Delete All Notes</span>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-12">
+                    <a asp-action="AddNote" asp-route-id="@ViewBag.ContractId" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                        <span>Add New Note</span>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="row js-list-filter" id="js-contacts">
+    @foreach (var note in Model.Select((value, index) => new { value, index }))
+    {
+        <div class="col-xl-12">
+            <div id="@note.index" class="card border shadow-0 shadow-sm-hover mb-1" data-filter-tags="@note.value.User">
+                <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="info-card-text flex-1">
+                            <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
+                                @note.value.User
+
+                            </a>
+                            <span class="text-truncate text-truncate-xl">@note.value.CreatedOn</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0" style="">
+                    <div class="p-3">
+                        <span class="mt-1 d-block fs-sm fw-400 text-dark">
+                            @note.value.Note
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+<div class="form-group  alert alert-dismissible text-center">
+    <button type="button" class="btn btn-secondary ml-1 waves-effect waves-themed" onclick="back()">Back</button>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+
+            var currentUrl = window.location.pathname;
+            var id = currentUrl.substring(currentUrl.lastIndexOf('/') + 1);
+
+            var url = "@Url.Action("GetUnitInfoByContractId", "Home")";
+            $.get(url, { contractId: id }, function (data) {
+                $("#unit-info-container").html(data);
+            })
+        });
+        function back() {
+            //goBackTo set at AddNote Page
+            var goBackTo = sessionStorage.getItem('goBackTo');
+            if (goBackTo) {
+
+                //-1 got to not edit , -2 got to same page , -3 go to index
+                window.history.go(goBackTo);
+                // Remove saved data from sessionStorage
+                sessionStorage.removeItem('goBackTo');
+
+            } else {
+                window.history.go(-1);
+            }
+        }
+    </script>
+}

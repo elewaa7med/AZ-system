@@ -1,0 +1,157 @@
+﻿@model SmartAdmin.WebUI.Models.ViewModels.LegalListViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    ViewData["PageName"] = "Legal " + ViewBag.page;
+}
+
+    <div id="unit-info-container">
+
+    </div>
+
+<div class="was-validated">
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Legal Details
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label asp-for="TenentName" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="TenentName">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="TenentNationality" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="TenentNationality">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="BuldingNumber" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="BuldingNumber">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="UnitNumber" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="UnitNumber">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="ContractDate" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="ContractDate">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="DueDate" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="DueDate">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="DelayedRent" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="DelayedRent">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="ElectricityBill" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="ElectricityBill">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label asp-for="WaterBill" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="WaterBill">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label asp-for="TotalDuePay" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="TotalDuePay">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="MandoobName" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="MandoobName">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="RequestSubmitDate" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="RequestSubmitDate">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="RequestRaiseDate" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="RequestRaiseDate">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="Note" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="Note">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="MandoobName" class="col-form-label col-sm-3 text-sm-right form-label"> </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" disabled autocomplete="off" asp-for="MandoobName">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+                <div class="form-group  alert alert-primary alert-dismissible text-center">
+                    <button type="button" class="btn btn-secondary ml-1 waves-effect waves-themed" onclick="back()">Back to list</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+
+           var id = "@Model.RentContractId";
+
+            var url = "@Url.Action("GetUnitInfoByContractId", "Home")";
+            $.get(url, { contractId: id }, function (data) {
+                $("#unit-info-container").html(data);
+            })
+        });
+        function back() {
+            var fallbackUrl = "/legal?id=" + @ViewBag.id;
+            var prevPage = window.location.href;
+            window.history.go(-1);
+            setTimeout(function () {
+                if (window.location.href == prevPage) {
+                    window.location.href = fallbackUrl;
+                }
+            }, 500);
+        }
+    </script>
+}

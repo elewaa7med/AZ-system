@@ -1,0 +1,43 @@
+﻿@model SmartAdmin.WebUI.Models.DTO.CompoundDTO
+@{
+    ViewData["Title"] = $"{Model.CompoundName} Non Rented Units";
+    ViewData["PageName"] = $"{Model.CompoundName} Non Rented Units";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> {Model.CompoundName} Non Rented Units";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+}
+<input hidden id="compundID" value="@Model.CompoundID" />
+<div class="row">
+    <div class="col-xl-12" id="nonRented">
+
+    </div>
+</div>
+
+@section ScriptsBlock{
+    <script>
+        $(document).ajaxStop(function () {
+            setTimeout(function () {
+                initializeDataTable("#nonRentedTable");
+            }, 500);
+        });
+        $(function () {
+            var url2 = '@Url.Content("~/")' + 'Home/GetComoundNonRentedUnits?compoundID=' + $("#compundID").val();
+            $("#nonRented").load(url2);
+        })
+        var first = false;
+        $(document).ajaxStop(function () {
+            setTimeout(function () {
+                if (first)
+                    return;
+                columnNumberWithCommas('formatNumber');
+                first = true;
+            }, 1000);
+        });
+        $(document).ready(function () {
+            $(".formatNumber").each(function (val) {
+                console.log($(this).text());
+                $(this).text(numberWithCommas($(this).text()));
+            });
+        });
+    </script>
+}

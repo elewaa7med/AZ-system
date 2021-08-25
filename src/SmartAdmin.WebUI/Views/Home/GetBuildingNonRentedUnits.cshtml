@@ -1,0 +1,231 @@
+﻿@model List<SmartAdmin.WebUI.Models.DTO.UnitDTO>
+
+<h1>
+    <span class="fw-900">Non-Rented Units </span>
+</h1>
+
+<div id="panel-1" class="panel">
+    <div class="panel-hdr">
+        <h2 style="font-size: 150%; ">
+            <span class="icon-stack icon-stack-lg">
+                <i class="base-2 icon-stack-3x color-primary-400"></i>
+                <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+            </span>   <span class="fw-500  text-primary"> Non-Rented Units: @Model.Sum(x=>x.AnnualRent) </span>
+        </h2>
+        <div class="panel-toolbar">
+            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+        </div>
+    </div>
+    <div class="panel-container show">
+        <div class="panel-content">
+
+            <!-- datatable start -->
+            <table class="table table-bordered table-hover table-striped w-100" id="nonRentedTable">
+                <thead class="bg-primary-600">
+                    <tr>
+                        <th>#</th>
+                        @*<th>Key</th>*@
+                        <th>Unit</th>
+                        <th>Building </th>
+                        <th>District</th>
+                        <th>City</th>
+                        <th>Annual Rent </th>
+                        @*<th>Due Rent </th>*@
+                        <th>Floor</th>
+                        <th>No. of Rooms</th>
+                        <th>No. of Majils</th>
+                        <th>No. of Baths</th>
+                        <th>Unit Area</th>
+                        <th class="noExport">Operation</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Select((value, index) => new { value, index }))
+                    {
+                    <tr>
+                        <td>@(item.index+1)</td>
+                        @*<td>
+                                <span class="icon-stack icon-stack-lg">
+                                    <i class="base-7 icon-stack-3x color-success-400"></i>
+                                    <i class="base-7 icon-stack-2x color-success-600 opacity-70 "></i>
+                                    <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                </span>
+                            </td>*@
+                        <td>@item.value.Unit</td>
+                        <td>@item.value.Building</td>
+                        <td>@item.value.District</td>
+                        <td>@item.value.City</td>
+                        <td class="formatNumber">@item.value.AnnualRent </td>
+                        @*<th>35,000 </th>*@
+                        <td>@item.value.Floor</td>
+                        <td>@item.value.NumberOfRooms</td>
+                        <td>@item.value.NumberOfMajlis</td>
+                        <td>@item.value.NoOfBaths</td>
+                        <td>@item.value.UnitArea</td>
+                        <td class="">
+                            <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-controller="Units" asp-action="Details" asp-route-id="@item.value.ID">	Details</a>
+                                        <a class="dropdown-item" asp-controller="Units" asp-action="Edit" asp-route-id="@item.value.ID" asp-route-pageid="@ViewBag.id">Edit</a>
+                                        <a class="dropdown-item" asp-controller="Units" asp-action="Delete" asp-route-id="@item.value.ID">Delete</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+
+
+                    @*<tr>
+                            <th>01</th>
+                            <th>
+                                <span class="icon-stack icon-stack-lg">
+                                    <i class="base-7 icon-stack-3x color-success-400"></i>
+                                    <i class="base-7 icon-stack-2x color-success-600 opacity-70 "></i>
+                                    <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                </span>
+                            </th>
+                            <th>45</th>
+                            <th>Akrabia</th>
+                            <th>KHobar</th>
+                            <th>75,000 </th>
+                            <th>35,000 </th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>200</th>
+                            <th>
+                                <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="javascript:void(0)">Create a contract</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">	Details</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+
+
+
+
+
+
+                        </tr>
+
+
+                        <tr>
+                            <th>02</th>
+                            <th>
+                                <span class="icon-stack icon-stack-lg">
+                                    <i class="base-7 icon-stack-3x color-warning-400"></i>
+                                    <i class="base-7 icon-stack-2x color-warning-600 opacity-70 "></i>
+                                    <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                </span>
+                            </th>
+                            <th>45</th>
+                            <th>Akrabia</th>
+                            <th>KHobar</th>
+                            <th>75,000 </th>
+                            <th>35,000 </th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>200</th>
+                            <th>
+                                <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="javascript:void(0)">Create a contract</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">	Details</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+
+
+
+
+
+
+                        </tr>
+
+
+                        <tr>
+                            <th>03</th>
+                            <th>
+                                <span class="icon-stack icon-stack-lg">
+                                    <i class="base-7 icon-stack-3x color-danger-400"></i>
+                                    <i class="base-7 icon-stack-2x color-danger-600 opacity-70 "></i>
+                                    <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                </span>
+                            </th>
+                            <th>45</th>
+                            <th>Akrabia</th>
+                            <th>KHobar</th>
+                            <th>75,000 </th>
+                            <th>35,000 </th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>200</th>
+                            <th>
+                                <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="javascript:void(0)">Create a contract</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">	Details</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>*@
+                </tbody>
+                <tfoot class="thead-themed">
+                    <tr>
+                        <th></th>
+                        @*<th>Key</th>*@
+                        <th></th>
+                        <th> </th>
+                        <th></th>
+                        <th></th>
+                        <th>@Model.Sum(x=>x.AnnualRent)</th>
+                        @*<th>Due Rent </th>*@
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            <!-- datatable end -->
+        </div>
+    </div>
+</div>

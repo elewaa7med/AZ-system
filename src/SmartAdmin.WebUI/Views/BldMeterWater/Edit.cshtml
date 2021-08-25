@@ -1,0 +1,41 @@
+﻿@model SmartAdmin.WebUI.Models.MeterWaterInfo
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>MeterWaterInfo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdMeter" />
+            <div class="form-group">
+                <label asp-for="MeterNumber" class="control-label"></label>
+                <input asp-for="MeterNumber" class="form-control" />
+                <span asp-validation-for="MeterNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdBuilding" class="control-label"></label>
+                <select asp-for="IdBuilding" class="form-control" asp-items="ViewBag.IdBuilding"></select>
+                <span asp-validation-for="IdBuilding" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MeterNotes" class="control-label"></label>
+                <input asp-for="MeterNotes" class="form-control" />
+                <span asp-validation-for="MeterNotes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

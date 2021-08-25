@@ -1,0 +1,185 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.UnitRentContract>
+@{
+    Layout = null;
+    var canEdit = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.EditContract })).Succeeded;
+    var canRenew = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.RenewContract })).Succeeded;
+    var canPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ShowPayment })).Succeeded;
+    var canArchive = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ArchiveContract })).Succeeded;
+    var canDelete = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DeleteContract })).Succeeded;
+    var canLegal = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Legal })).Succeeded;
+    var canWriteNotes = ((await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.WritePaymentNote })).Succeeded);
+}
+<div id="panel-1" class="panel">
+    <div class="panel-hdr">
+        <h2 style="font-size: 150%; ">
+            <span class="icon-stack icon-stack-lg">
+                <i class="base-2 icon-stack-3x color-primary-400"></i>
+                <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+            </span>   <span class="fw-500  text-primary"> Total Contracts :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+        </h2>
+        <div class="panel-toolbar" id="selectContainer">
+        </div>
+        <div class="panel-toolbar">
+            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+        </div>
+    </div>
+    <div class="panel-container show">
+        <div class="panel-content">
+            <!-- datatable start -->
+            <table id="allContractsTable" class="table table-bordered table-hover table-striped w-100">
+                <thead class="bg-primary-600">
+                    <tr>
+                        <th>#</th>
+                        <th>Contract No. </th>
+                        @*<th>Building </th>*@
+                        <th>Unit </th>
+                        <th>Type </th>
+                        <th>Yearly Rent </th>
+                        <th>Tenant </th>
+                        <th>Representative </th>
+                        <th>Leas start Date </th>
+                        <th>Lease Rent in Months </th>
+                        <th>Lease end Date </th>
+                        <th class="noExport">Operations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ string block = "", Unblock = "";}
+                    @foreach (var item in Model.Select((value, i) => new { i, value }))
+                    {
+                        block = item.value.Blocked ? "style=display:none" : "style=display:block";
+                        Unblock = item.value.Blocked ? "style=display:block" : "style=display:none";
+                        <tr>
+                            <td>
+                                @(item.i + 1 )
+                            </td>
+                            <td>
+                                @item.value.contractNumber
+                            </td>
+                            <td>
+                                @item.value.mCompoundUnits?.UnitNumber
+                            </td>
+                            <td>
+                                @item.value.mCompoundUnits?.mPropertyType?.PropertyTypeName
+                            </td>
+                            <td class="formatNumber">
+                                @(item.value.yearlyRent-(item.value.WaterBillAmount??0))
+                            </td>
+                            <td>
+                                @item.value.mTenant?.tenantName
+                            </td>
+                            <td>
+                                @item.value.Mandoob?.fullName
+                            </td>
+                            <td>
+                                @item.value.dtLeaseStart.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.value.leasePeriodInMonthes
+                            </td>
+                            <td>
+                                @item.value.dtLeaseEnd.ToShortDateString()
+                            </td>
+                            <td>
+                                <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.IdRentContract>Details</a>
+                                            @if (canEdit)
+                                            {
+                                                <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.value.IdRentContract>Edit</a>
+                                            }
+                                            @if (canRenew)
+                                            {
+                                                <a class="dropdown-item" asp-action="Renew" title="Renew" asp-route-id=@item.value.IdRentContract>Renew</a>
+                                            }
+                                            @if (canPay)
+                                            {
+                                                <a class="dropdown-item" asp-action="Payment" title="Payment" asp-route-id="@item.value.IdRentContract">Payment</a>
+                                            }
+                                            @if (canArchive)
+                                            {
+                                                <a class="dropdown-item" onclick="return confirm ('Are you sure ?')" asp-action="Archive" title="Archive" asp-route-id=@item.value.IdRentContract>Archive</a>
+                                            }
+                                            @if (canDelete)
+                                            {
+                                                <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdRentContract>Delete</a>
+                                            }
+                                            @if (canLegal)
+                                            {
+                                                <a class="dropdown-item" asp-action="Create" asp-controller="Legal" title="Delete" asp-route-IdRentContract=@item.value.IdRentContract>Legal</a>
+                                            }
+                                            @if (canWriteNotes)
+                                            {
+                                                <a class="dropdown-item" asp-action="Notes" asp-controller="UnitRentContractCompound" asp-route-id=@item.value.IdRentContract> Notes</a>
+                                            }
+                                            <a class="dropdown-item block" @block data-id="@item.value.IdRentContract" id="block-@item.value.IdRentContract" >Block</a>
+                                            <a class="dropdown-item unblock" @Unblock data-id="@item.value.IdRentContract" id="unblock-@item.value.IdRentContract">Un Block</a>
+                                            <a class="dropdown-item" target="_blank" asp-action="ContractPrint" asp-controller="UnitRentContractCompound" asp-route-id=@item.value.IdRentContract> Print</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="formatNumber">@(Model.Sum(x=>x.yearlyRent) - (Model.Sum(x=>x.WaterBillAmount) ?? 0))</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <!-- datatable end -->
+        </div>
+    </div>
+</div>
+<script>
+    $('.block').on('click', function () {
+        getBlock($(this).attr('data-id'));
+    });
+    $('.unblock').on('click', function () {
+        unBlock($(this).attr('data-id'));
+    });
+     function getBlock(contractID) {
+            $.get("@Url.Action("Block","UnitRentContractCompound")", { contractID}, function (result) {
+                $("#modal-content").html(result);
+                $("#default-example-modal").modal('show');
+            });
+        }
+     function unBlock(contractID) {
+            blockUI();
+            $.get("@Url.Action("UnBlock", "UnitRentContractCompound")", { contractID }, function (result) {
+                $("#block-" + contractID).show();
+                $("#unblock-" + contractID).hide();
+                unblockUI();
+            });
+     }
+    var first = false;
+    $(document).ajaxStop(function () {
+        setTimeout(function () {
+            if (first)
+                return;
+            columnNumberWithCommas('formatNumber');
+            first = true;
+        }, 1000);
+    });
+    $(document).ready(function () {
+        $(".formatNumber").each(function (val) {
+            console.log($(this).text());
+            $(this).text(numberWithCommas($(this).text()));
+        });
+    });
+</script>

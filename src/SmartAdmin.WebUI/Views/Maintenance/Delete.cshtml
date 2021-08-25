@@ -1,0 +1,299 @@
+﻿@model SmartAdmin.WebUI.Models.Maintenance
+@{
+    ViewData["Title"] = "Delete";
+    ViewData["PageName"] = ViewBag.CompoundID == null ? "Building Maintenance "+ ViewBag.id : $"{(ViewBag.CompoundName as string).Trim()} Maintenance";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Delete";
+    ViewData["Category1"] = "";
+    ViewData["PageDescription"] = "";
+}
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Unit
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" value="@ViewBag.CompoundID" id="compoundID" name="compoundID" />
+                    @if (ViewBag.AlertSaveErr != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">
+                                    <i class="fal fa-times"></i>
+                                </span>
+                            </button>
+                            <div class="d-flex flex-start w-100">
+                                <div class="d-flex flex-fill">
+                                    <div class="flex-fill">
+                                        <p>  @ViewBag.AlertSaveErr</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Building
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-control w-100" asp-for="BuildingID" disabled asp-items="ViewBag.Buildings">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Unit
+                                </label>
+                                <div class="col-sm-9">
+                                    @if (ViewBag.IsCompound)
+                                    {
+                                        <select class="select2 form-control w-100" asp-for="CompoundUnitID" id="unit" disabled>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="select2 form-control w-100" asp-for="UnitID" id="unit" disabled>
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Description
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label text-info col-sm-3 text-sm-right form-label">
+                                    Description
+                                </label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control  col-sm-12" asp-for="Description" rows="5" disabled></textarea>
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label  col-sm-3 text-sm-right form-label text-info">
+                                    RV. No. / سند قبض رقم
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control  col-sm-12" asp-for="InvoiceNo" disabled>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label  col-sm-3 text-sm-right form-label text-info">
+                                    Responsible
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="UserID" class="select2 form-control w-100" asp-items="ViewBag.Mandoobs" disabled>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label text-info">
+                                    End Date
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" asp-for="MaintenanceEndDate" autocomplete="off" disabled>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label  col-sm-3 text-sm-right form-label text-info">
+                                    Cost
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control " min="1" asp-for="Cost" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Maintenance Department
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label"> Electricity / الكهرباء</label>
+                                <textarea class="form-control col-sm-6" asp-for="ElectricityDesc" disabled rows="1"></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Amount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Electricity" disabled>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label"> Plumbing / السباكة</label>
+                                <textarea class="form-control col-sm-6" asp-for="PlumbingDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Amount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Plumbing" disabled>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label"> Paint / الدهان </label>
+                                <textarea class="form-control col-sm-6" asp-for="PaintDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Amount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Paint" disabled>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label">  Tiles / الارضيات </label>
+                                <textarea class="form-control col-sm-6" asp-for="TilesDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Amount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Tiles" disabled>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label">  Toilet / الحمامات </label>
+                                <textarea class="form-control col-sm-6" asp-for="ToiletDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Amount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Toilet" disabled>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label">  Water Heater / سخان المياه </label>
+                                <textarea class="form-control col-sm-6" asp-for="WaterHeaterDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Amount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="WaterHeater" disabled>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label">  Kitchen  / المطبخ  </label>
+                                <textarea class="form-control col-sm-6" asp-for="KitchenDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Amount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Kitchen" disabled>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label">  A/C  / التكيف  </label>
+                                <textarea class="form-control col-sm-6" asp-for="ConditioningDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Ammount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Conditioning" disabled>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label"> Carpentry  / النجارة  </label>
+                                <textarea class="form-control col-sm-6" asp-for="CarpentryDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Ammount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Carpentry" disabled>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label"> Waste  / السكراب  </label>
+                                <textarea class="form-control col-sm-6" asp-for="WasteDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Ammount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Waste" disabled>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-2 text-sm-right form-label"> Others  / اخرى  </label>
+                                <textarea class="form-control col-sm-6" asp-for="OthersDesc" rows="1" disabled></textarea>
+                                <label for="inputEmail3" class="col-form-label col-sm-1 text-sm-right form-label"> Ammount</label>
+                                <input type="number" class="form-control count col-sm-2" asp-for="Others" disabled>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-9 text-sm-right form-label text-danger font-weight-bold"> Total Amount  </label>
+                                <input type="number" class="form-control  col-sm-2" asp-for="TotalAmount" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group  alert alert-primary alert-dismissible text-center">
+                        <form asp-action="ConfirmDelete" asp-route-pageid="@ViewBag.id">
+                            <input type="hidden" value="@ViewBag.CompoundID" id="compoundID" name="compoundID" />
+                            <input type="hidden" asp-for="ID" />
+                            <button class="btn btn-danger ml-auto waves-effect waves-themed" type="submit">Delete</button>
+                            <button type="button" class="btn btn-secondary ml-auto waves-effect waves-themed" onclick="back()">Back</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsBlock{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var value = '@(Model.CompoundUnitID.HasValue?Model.CompoundUnitID:Model.UnitID)';
+        var action ='@(ViewBag.CompoundID!=null? "/Maintenance/GetCompound?compoundID=" + ViewBag.CompoundID : "/Maintenance/GetBuilding")'
+        $('#BuildingID').on('change', function () {
+            var items;
+            var action = '@(ViewBag.CompoundID!=null? "GetCompoundBuildingUnits" : "GetBuildingUnits")';
+            var url = '@Url.Content("~/")' + 'Maintenance/' + action;
+            $.getJSON(url, { buildingID: $('#BuildingID').val() }, function (data) {
+                    $.each(data, function (i, row) {
+                        items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+                    });
+                    if (items != null) {
+                        items = "<option >Select Apartment/Villa/Shop</option>" + items;
+                    }
+                 $('#unit').val(null).trigger('change');
+                 $('#unit').empty();
+                 $('#unit').html(items);
+                 $('#unit').focus();
+                });
+            })
+        $("#BuildingID").val('@Model.BuildingID').trigger("change");
+        setTimeout(function () { $("#unit").val(value).trigger("change"); }, 1000);
+        function back() {
+            var fallbackUrl = action;
+            var prevPage = window.location.href;
+            window.history.go(-1);
+            setTimeout(function () {
+                if (window.location.href == prevPage) {
+                    window.location.href = fallbackUrl;
+                }
+            }, 500);
+        }
+    </script>
+}

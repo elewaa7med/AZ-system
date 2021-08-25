@@ -1,0 +1,628 @@
+﻿@{
+    ViewData["Title"] = "Compund";
+
+
+    ViewData["PageName"] = "tables_basic";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i>  Compund";
+    ViewData["Category1"] = "html";
+    ViewData["PageDescription"] = "";
+}
+
+
+<div class="row">
+    <div class="col-xl-12">
+
+        <div class="panel-tag">
+            <p>
+                <button type="button" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                    <span>Add New Contract</span>  
+                </button>
+
+
+        </div>
+
+
+        <h1>
+            <span class="fw-900">   Due Rent Payments </span> 
+        </h1>
+
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Due Rent Payments :  </span> &nbsp;<span class="color-danger-500"> 55,789.444 SAR  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Mobile </th>
+                                <th>Annual Rent</th>
+                                <th> Remaining Rents</th>
+                                <th> Due Rent</th>
+                                <th>Rental due date</th>
+                                <th>Contract Expiry</th>
+                                <th>Rent due after</th>
+                                <th>Contract</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>01</th>
+                                <th>07</th>Contracts Expiry
+
+                                <th>ossama bun alsadiq 	</th>
+                                <th>0505431127 </th>
+                                <th>60,000</th>
+                                <td>1</td>
+                                <td>15,000</td>
+                                <th>2020/05/07	</th>
+                                <th>2020/10/06	 </th>
+                                <th>
+                                    <button type="button" class="btn btn-success waves-effect waves-themed">29</button>
+                                </th>
+                                <th>
+                                    <button type="button" class="btn btn-secondary waves-effect waves-themed">Contract</button>
+                                </th>
+                            </tr>
+
+                            <tr>
+                                <th>01</th>
+                                <th>07</th>
+                                <th>ossama bun alsadiq 	</th>
+                                <th>0505431127 </th>
+                                <th>60,000</th>
+                                <td>1</td>
+                                <td>15,000</td>
+                                <th>2020/05/07	</th>
+                                <th>2020/10/06	 </th>
+                                <th>
+                                    <button type="button" class="btn btn-warning waves-effect waves-themed">12</button>
+                                </th>
+                                <th>
+                                    <button type="button" class="btn btn-secondary waves-effect waves-themed">Contract</button>
+                                </th>
+                            </tr>
+
+
+                            <tr>
+                                <th>01</th>
+                                <th>07</th>
+                                <th>ossama bun alsadiq 	</th>
+                                <th>0505431127 </th>
+                                <th>60,000</th>
+                                <td>1</td>
+                                <td>15,000</td>
+                                <th>2020/05/07	</th>
+                                <th>2020/10/06	 </th>
+                                <th>
+                                    <button type="button" class="btn btn-danger waves-effect waves-themed">-25</button>
+                                </th>
+                                <th>
+                                    <button type="button" class="btn btn-secondary waves-effect waves-themed">Contract</button>
+                                </th>
+                            </tr>
+
+
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th>#</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Mobile </th>
+                                <th>Annual Rent</th>
+                                <th> Remaining Rents</th>
+                                <th> Due Rent</th>
+                                <th>Rental due date</th>
+                                <th>Contract Expiry</th>
+                                <th>Rent due after</th>
+                                <th>Contract</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br>
+<div class="row ">
+    <div class="col-xl-12">
+
+
+
+        <h1>
+            <span class="fw-900">   Over Due (Over 30 days) Rent Payments </span>
+        </h1>
+
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Over Due (Over 30 days) Rent Payments:  </span>&nbsp;<span class="color-danger-500"> 55,789.444 SAR  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Mobile </th>
+                                <th>Annual Rent</th>
+                                <th> Remaining Rents</th>
+                                <th> Due Rent</th>
+                                <th>Rental due date</th>
+                                <th>Contract Expiry</th>
+                                <th>Rent due after</th>
+                                <th>Contract</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            <tr>
+                                <th>01</th>
+                                <th>07</th>
+                                <th>ossama bun alsadiq 	</th>
+                                <th>0505431127 </th>
+                                <th>60,000</th>
+                                <td>1</td>
+                                <td>15,000</td>
+                                <th>2020/05/07	</th>
+                                <th>2020/10/06	 </th>
+                                <th>
+                                    <button type="button" class="btn btn-danger waves-effect waves-themed">-31</button>
+                                </th>
+                                <th>
+                                    <button type="button" class="btn btn-secondary waves-effect waves-themed">Contract</button>
+                                </th>
+                            </tr>
+
+                            <tr>
+                                <th>01</th>
+                                <th>07</th>
+                                <th>ossama bun alsadiq 	</th>
+                                <th>0505431127 </th>
+                                <th>60,000</th>
+                                <td>1</td>
+                                <td>15,000</td>
+                                <th>2020/05/07	</th>
+                                <th>2020/10/06	 </th>
+                                <th>
+                                    <button type="button" class="btn btn-danger waves-effect waves-themed">-57</button>
+                                </th>
+                                <th>
+                                    <button type="button" class="btn btn-secondary waves-effect waves-themed">Contract</button>
+                                </th>
+                            </tr>
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th>#</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Mobile </th>
+                                <th>Annual Rent</th>
+                                <th> Remaining Rents</th>
+                                <th> Due Rent</th>
+                                <th>Rental due date</th>
+                                <th>Contract Expiry</th>
+                                <th>Rent due after</th>
+                                <th>Contract</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br>
+<div class="row ">
+    <div class="col-xl-12">
+
+
+
+        <h1>
+            <span class="fw-900"> Contracts Expiry </span>
+        </h1>
+
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Annual Rent:  </span> &nbsp;<span class="color-danger-500"> 55,789.444 SAR  </span>
+                    <span> &nbsp; &nbsp;  -  &nbsp; &nbsp; </span>
+                    <span class="fw-500  text-primary"> Total Due Rent	:  </span> &nbsp;<span class="color-danger-500"> 55,789.444 SAR  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Contract No</th>
+                                <th>Mobile </th>
+                                <th>Annual Rent</th>
+                                <th>Contract Expir Date</th>
+                                <th>Contract Expire After</th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            <tr>
+                                <th>01</th>
+                                <th>56</th>
+                                <th>Hisham Madien</th>
+                                <th>345345345345</th>
+                                <th>0508872927 </th>
+                                <th>75000</th>
+                                <th>2020/05/07</th>
+                                <th>
+                                    <button type="button" class="btn btn-danger waves-effect waves-themed">-31</button>
+                                </th>
+                                <th>
+                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="javascript:void(0)">	Details</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Renew</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Archive</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+
+
+                            </tr>
+
+
+                            <tr>
+                                <th>01</th>
+                                <th>56</th>
+                                <th>Hisham Madien</th>
+                                <th>345345345345</th>
+                                <th>0508872927 </th>
+                                <th>75,000</th>
+                                <th>2020/05/07</th>
+                                <th>
+                                    <button type="button" class="btn btn-warning waves-effect waves-themed">-31</button>
+                                </th>
+                                <th>
+                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="javascript:void(0)">	Details</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Renew</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Archive</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+
+
+                            </tr>
+
+
+                            <tr>
+                                <th>01</th>
+                                <th>56</th>
+                                <th>Hisham Madien</th>
+                                <th>345345345345</th>
+                                <th>0508872927 </th>
+                                <th>75,000</th>
+                                <th>2020/05/07</th>
+                                <th>
+                                    <button type="button" class="btn btn-success waves-effect waves-themed">-31</button>
+                                </th>
+                                <th>
+                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="javascript:void(0)">	Details</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Renew</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Archive</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+
+
+                            </tr>
+
+
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th>#</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Contract No</th>
+                                <th>Mobile </th>
+                                <th>Annual Rent</th>
+                                <th>Contract Expir Date</th>
+                                <th>Contract Expire After</th>
+                                <th>Operation</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<br>
+<div class="row ">
+    <div class="col-xl-12">
+
+
+
+        <h1>
+            <span class="fw-900">Non-Rented Units </span>
+        </h1>
+
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Non-Rented Units </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Key</th>
+                                <th>Unit</th>
+                                <th>District</th>
+                                <th>City</th>
+                                <th>Annual Rent </th>
+                                <th>Due Rent </th>
+                                <th>Floor</th>
+                                <th>No. of Rooms</th>
+                                <th>No. of Majils</th>
+                                <th>No. of Baths</th>
+                                <th>Unit Area</th>
+                                <th>Operation</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            <tr>
+                                <th>01</th>
+                                <th>
+                                    <span class="icon-stack icon-stack-lg">
+                                        <i class="base-7 icon-stack-3x color-success-400"></i>
+                                        <i class="base-7 icon-stack-2x color-success-600 opacity-70 "></i>
+                                        <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                    </span>
+                                </th>
+                                <th>45</th>
+                                <th>Akrabia</th>
+                                <th>KHobar</th>
+                                <th>75,000 </th>
+                                <th>35,000 </th>
+                                <th>2</th>
+                                <th>3</th>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>200</th>
+                                <th>
+                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="javascript:void(0)">Create a contract</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">	Details</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+
+
+
+
+
+
+                            </tr>
+
+
+                            <tr>
+                                <th>02</th>
+                                <th>
+                                    <span class="icon-stack icon-stack-lg">
+                                        <i class="base-7 icon-stack-3x color-warning-400"></i>
+                                        <i class="base-7 icon-stack-2x color-warning-600 opacity-70 "></i>
+                                        <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                    </span>
+                                </th>
+                                <th>45</th>
+                                <th>Akrabia</th>
+                                <th>KHobar</th>
+                                <th>75,000 </th>
+                                <th>35,000 </th>
+                                <th>2</th>
+                                <th>3</th>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>200</th>
+                                <th>
+                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="javascript:void(0)">Create a contract</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">	Details</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+
+
+
+
+
+
+                            </tr>
+
+
+                            <tr>
+                                <th>03</th>
+                                <th>
+                                    <span class="icon-stack icon-stack-lg">
+                                        <i class="base-7 icon-stack-3x color-danger-400"></i>
+                                        <i class="base-7 icon-stack-2x color-danger-600 opacity-70 "></i>
+                                        <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                    </span>
+                                </th>
+                                <th>45</th>
+                                <th>Akrabia</th>
+                                <th>KHobar</th>
+                                <th>75,000 </th>
+                                <th>35,000 </th>
+                                <th>2</th>
+                                <th>3</th>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>200</th>
+                                <th>
+                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="javascript:void(0)">Create a contract</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">	Details</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Delet</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+
+
+
+
+
+
+                            </tr>
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th>#</th>
+                                <th>Key</th>
+                                <th>Unit</th>
+                                <th>District</th>
+                                <th>City</th>
+                                <th>Annual Rent </th>
+                                <th>Due Rent </th>
+                                <th>Floor</th>
+                                <th>No. of Rooms</th>
+                                <th>No. of Majils</th>
+                                <th>No. of Baths</th>
+                                <th>Unit Area</th>
+                                <th>Operation</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

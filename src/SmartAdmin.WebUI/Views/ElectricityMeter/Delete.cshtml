@@ -1,0 +1,170 @@
+﻿@model SmartAdmin.WebUI.Models.ElectricityMeter
+@{
+    ViewData["Title"] = "Delete";
+    ViewData["PageName"] = ViewBag.CompoundID == null ? "Building Electricity " + Model.Unit.idMasterBuilding : $"{(ViewBag.CompoundName as string).Trim()} Electricity";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Delete";
+    ViewData["Category1"] = "";
+    ViewData["PageDescription"] = "";
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-6" class="panel ">
+            <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                <h2>
+                    Delete Electricity
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                </div>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.AlertSaveErr != null)
+                {
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">
+                                <i class="fal fa-times"></i>
+                            </span>
+                        </button>
+                        <div class="d-flex flex-start w-100">
+                            <div class="d-flex flex-fill">
+                                <div class="flex-fill">
+                                    <p>  @ViewBag.AlertSaveErr</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-sm-6 ">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                Building
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="select2 form-control w-100" asp-for="BuildingID" asp-items="ViewBag.Buildings" disabled>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                Unit
+                            </label>
+                            <div class="col-sm-9">
+                                @if (ViewBag.IsCompound)
+                                {
+                                    <select class="select2 form-control w-100" asp-for="CompoundUnitID" id="unit" disabled>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="select2 form-control w-100" asp-for="UnitID" id="unit" disabled>
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                Electricity meter Number
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control " asp-for="ElectricityMeterNumber" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                Payment number
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control " asp-for="PaymentNumber" disabled>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                The start of the meter reading for the tenant
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" asp-for="StartOfMeter" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                Note
+                            </label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" asp-for="Note" disabled></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                Transfer the account to the tenant?
+                            </label>
+                            <div class="col-sm-9">
+                                <div class="frame-wrap">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" class="custom-control-input" id="defaultInline1Radio" asp-for="TransferTheAccountToTenant" value="true" disabled>
+                                        <label class="custom-control-label" for="defaultInline1Radio">Yes</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline" style="padding-top:5px">
+                                        <input type="radio" class="custom-control-input" id="defaultInline2Radio" asp-for="TransferTheAccountToTenant" value="false" disabled>
+                                        <label class="custom-control-label" for="defaultInline2Radio">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group  alert alert-primary alert-dismissible text-center">
+                    <form asp-action="ConfirmDelete" asp-route-pageid =" @(ViewBag.CompoundID ?? Model.Unit.idMasterBuilding)">
+                        <input type="hidden" value="@ViewBag.CompoundID" id="compoundID" name="compoundID" />
+                        <input type="hidden" asp-for="ID" />
+                        <button class="btn btn-danger ml-auto waves-effect waves-themed" type="submit" >Delete</button>
+                        <button type="button" class="btn btn-secondary ml-auto waves-effect waves-themed" onclick="back()">Back</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsBlock{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var value = '@(Model.CompoundUnitID.HasValue?Model.CompoundUnitID:Model.UnitID)';
+        var action ='@(ViewBag.CompoundID!=null? "/ElectricityMeter/GetCompoundMeters?compoundID="+ ViewBag.CompoundID : "/ElectricityMeter/GetBuildingMeters?id="+Model.Unit.idMasterBuilding)'
+        $('#BuildingID').on('change', function () {
+            var items;
+            var action = '@(ViewBag.CompoundID!=null? "GetCompoundBuildingUnits" : "GetBuildingUnits")';
+            var url = '@Url.Content("~/")' + 'ElectricityMeter/' + action;
+            $.getJSON(url, { buildingID: $('#BuildingID').val() }, function (data) {
+                    $.each(data, function (i, row) {
+                        items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+                    });
+                    if (items != null) {
+                        items = "<option >Select Apartment/Villa/Shop</option>" + items;
+                    }
+                 $('#unit').val(null).trigger('change');
+                 $('#unit').empty();
+                 $('#unit').html(items);
+                 $('#unit').focus();
+                });
+            })
+        $("#BuildingID").val('@Model.BuildingID').trigger("change");
+        setTimeout(function () { $("#unit").val(value).trigger("change"); }, 1000);
+        function back() {
+            var fallbackUrl = action;
+            var prevPage = window.location.href;
+
+            window.history.go(-1);
+
+            setTimeout(function () {
+                if (window.location.href == prevPage) {
+                    window.location.href = fallbackUrl;
+                }
+            }, 500);
+        }
+    </script>
+}

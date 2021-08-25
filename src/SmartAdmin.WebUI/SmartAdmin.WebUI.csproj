@@ -1,0 +1,103 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <UserSecretsId>aspnet-SmartAdmin.WebUI-43B0AF3F-A49E-4D7C-BB28-013AE593D011</UserSecretsId>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20210208063155_Add-ForignKey-FromMasterBuildings-ToUnits.cs" />
+    <Compile Remove="Migrations\20210208063155_Add-ForignKey-FromMasterBuildings-ToUnits.Designer.cs" />
+    <Compile Remove="Migrations\20210208063400_Add-ForignKey-FromMasterBuildings-ToUnits.cs" />
+    <Compile Remove="Migrations\20210208063400_Add-ForignKey-FromMasterBuildings-ToUnits.Designer.cs" />
+    <Compile Remove="Migrations\20210210024202_testing.cs" />
+    <Compile Remove="Migrations\20210210024202_testing.Designer.cs" />
+    <Compile Remove="Migrations\20210210085943_add-primarykey-table-legal.cs" />
+    <Compile Remove="Migrations\20210210085943_add-primarykey-table-legal.Designer.cs" />
+    <Compile Remove="Migrations\20210210142651_add-forignkey-fromMasterBuildings-toTenants.cs" />
+    <Compile Remove="Migrations\20210210142651_add-forignkey-fromMasterBuildings-toTenants.Designer.cs" />
+    <Compile Remove="Migrations\20210621084325_AddColumnInvoiceId_ToTableInvoice.cs" />
+    <Compile Remove="Migrations\20210621084325_AddColumnInvoiceId_ToTableInvoice.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Districts\Html\Compund.cshtml" />
+    <None Include="wwwroot\css\arabicFont\NotoKufiArabic-Bold.woff2" />
+    <None Include="wwwroot\css\arabicFont\NotoKufiArabic-Regular.woff2" />
+    <None Include="wwwroot\css\notifications\sweetalert2\sweetalert2.bundle.css.map" />
+    <None Include="wwwroot\css\notifications\toastr\toastr.css.map" />
+    <None Include="wwwroot\js\statistics\c3\c3.js" />
+    <None Include="wwwroot\js\statistics\chartist\chartist.js" />
+    <None Include="wwwroot\js\statistics\chartjs\chartjs.bundle.js" />
+    <None Include="wwwroot\js\statistics\d3\d3.js" />
+    <None Include="wwwroot\js\statistics\demo-data\demo-c3.js" />
+    <None Include="wwwroot\js\statistics\demo-data\demo-data-dygraph.js" />
+    <None Include="wwwroot\js\statistics\dygraph\dygraph.js" />
+    <None Include="wwwroot\js\statistics\easypiechart\easypiechart.bundle.js" />
+    <None Include="wwwroot\js\statistics\flot\flot.bundle.js" />
+    <None Include="wwwroot\js\statistics\peity\peity.bundle.js" />
+    <None Include="wwwroot\js\statistics\sparkline\sparkline.bundle.js" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="app.db" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\ElectricityMeterUnitVM\" />
+    <Folder Include="wwwroot\assets\contracts\" />
+    <Folder Include="wwwroot\assets\Buildings\" />
+    <Folder Include="wwwroot\assets\empImages\" />
+    <Folder Include="wwwroot\assets\iqamaImages\" />
+    <Folder Include="wwwroot\assets\passportImages\" />
+    <Folder Include="wwwroot\assets\Tenants\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\TempFiles\test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\v0.12.4\32 bit\libwkhtmltox.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\v0.12.4\32 bit\libwkhtmltox.dylib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\v0.12.4\32 bit\libwkhtmltox.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\v0.12.4\64 bit\libwkhtmltox.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\v0.12.4\64 bit\libwkhtmltox.dylib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\v0.12.4\64 bit\libwkhtmltox.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

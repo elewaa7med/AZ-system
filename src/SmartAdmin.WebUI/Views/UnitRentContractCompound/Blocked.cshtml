@@ -1,0 +1,106 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.UnitRentContract>
+@{
+    ViewData["Title"] = "Blocked";
+    ViewData["PageName"] = $"{(ViewBag.CompoundName as string).Trim()} Blocked";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i>  Compounds Rent Contracts";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Buildings :  </span> &nbsp;<span class="color-danger-500"> 554  </span>
+                </h2>
+                <div class="panel-toolbar" id="selectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Contract No. </th>
+                                <th>Building </th>
+                                <th>Unit </th>
+                                <th>Type </th>
+                                <th>Reason</th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                <tr id="@item.value.IdRentContract">
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @item.value.contractNumber
+                                    </td>
+                                    <td>
+                                        @item.value.mCompoundUnits?.mCompoundBuilding.BuildingNumber
+                                    </td>
+                                    <td>
+                                        @item.value.mCompoundUnits?.UnitNumber
+                                    </td>
+                                    <td>
+                                        @item.value.mCompoundUnits?.mPropertyType?.PropertyTypeName
+                                    </td>
+                                    <td>
+                                        @item.value.BlockReason
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-secondary" onclick=unBlock("@item.value.IdRentContract")>Un block</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="default-example-modal" role="dialog" tabindex="-1" style="display: none;" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="modal-content">
+
+        </div>
+    </div>
+</div>
+@section ScriptsBlock
+{
+    <script>
+        $("#representitveIdSelect").change(function () {
+            var url = '@Url.Content("~")' + window.location.pathname + "?representitveId=" + $(this).val();;
+            window.location.href = url;
+        })
+        function unBlock(contractID) {
+            var oTable = $('table.az-datatable').dataTable();
+            blockUI();
+            $.get("@Url.Action("UnBlock","UnitRentContractCompound")", { contractID }, function (result) {
+                var target_row = $("#" + contractID).get(0); // this line did the trick
+                var aPos = oTable.fnGetPosition(target_row);
+                oTable.fnDeleteRow(aPos);
+                unblockUI();
+            });
+        }
+    </script>
+}

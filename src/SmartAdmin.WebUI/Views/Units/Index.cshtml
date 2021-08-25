@@ -1,0 +1,169 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.Units>
+@{
+    ViewData["Title"] = $"Units";
+    ViewData["PageName"] = "Units page " + ViewBag.id;
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Units";
+    ViewData["Category1"] = "Units";
+    ViewData["PageDescription"] = "";
+}
+@if (TempData["AlertSaveErr"] != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["AlertSaveErr"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["success"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel-tag">
+            <p>
+                <a asp-action="Create" asp-route-id="@ViewBag.id" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                    <span>Add New Unit</span>
+                </a>
+            </p>
+        </div>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Units :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Key</th>
+                                <th>@Html.DisplayNameFor(model => model.mBuilding) </th>
+                                <th>@Html.DisplayNameFor(model => model.UnitNumber) </th>
+                                <th>@Html.DisplayNameFor(model => model.NUmberofRooms)</th>
+                                <th>@Html.DisplayNameFor(model => model.NoOfBaths) </th>
+                                <th>@Html.DisplayNameFor(model => model.NuberofLivings)</th>
+                                <th>@Html.DisplayNameFor(model => model.NumberofMajlis)</th>
+                                <th>@Html.DisplayNameFor(model => model.UnitArea) </th>
+                                <th>@Html.DisplayNameFor(model => model.mFloor) </th>
+                                <th>@Html.DisplayNameFor(model => model.mPropertyType) </th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(item.value.isTheKeyAvailable.ToString()) == true)
+                                        {
+                                            <span class="icon-stack icon-stack-lg">
+                                                <i class="base-7 icon-stack-3x color-success-400"></i>
+                                                <i class="base-7 icon-stack-2x color-success-600 opacity-70 "></i>
+                                                <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                            </span>
+                                        }
+                                        else if ((item.value.isTheKeyAvailable) == true)
+                                        {
+                                            <span class="icon-stack icon-stack-lg">
+                                                <i class="base-7 icon-stack-3x color-success-400"></i>
+                                                <i class="base-7 icon-stack-2x color-success-600 opacity-70 "></i>
+                                                <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="icon-stack icon-stack-lg">
+                                                <i class="base-7 icon-stack-3x color-danger-400"></i>
+                                                <i class="base-7 icon-stack-2x color-danger-600 opacity-70 "></i>
+                                                <i class="fal fa-key icon-stack-1x text-white opacity-90"></i>
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.value.mBuilding.BuildingName
+                                    </td>
+                                    <td>
+                                        @item.value.UnitNumber
+                                    </td>
+                                    <td>
+                                        @item.value.NUmberofRooms
+                                    </td>
+                                    <td>
+                                        @item.value.NoOfBaths
+                                    </td>
+                                    <td>
+                                        @item.value.NuberofLivings
+                                    </td>
+                                    <td>
+                                        @item.value.NumberofMajlis
+                                    </td>
+                                    <td>
+                                        @item.value.UnitArea
+                                    </td>
+                                    <td>
+                                        @item.value.mFloor.PropertyFloorName
+                                    </td>
+                                    <td>
+                                        @item.value.mPropertyType.PropertyTypeName
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.IdUnit>Details</a>
+                                                    <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.value.IdUnit asp-route-pageid="@Model.Select(x=>x.idMasterBuilding).FirstOrDefault()">Edit</a>
+                                                    <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdUnit >Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

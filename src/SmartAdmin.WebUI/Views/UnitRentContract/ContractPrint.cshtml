@@ -1,0 +1,284 @@
+﻿@model SmartAdmin.WebUI.Controllers.PrintUnitContractDTO
+@section HeadBlock {
+    <link href="~/css/contract_Building.css" rel="stylesheet" />
+    <link href="~/css/arabicFont/notokufiarabic.css" rel="stylesheet" />
+}
+<div class="container">
+    <div data-size="A4">
+        <div class="row">
+            <div class="col-sm-12 d-flex">
+                <div class="table-responsive">
+                    <table class="table table-clean table-sm align-self-end">
+
+                        <tr>
+                            <td class="text_ar" style="text-align:left">
+                                <h3 class="fw-300 display-4 fw-500 color-primary-600 keep-print-font ">
+                                    عقد إيجار
+                                </h3>
+                                <p class="display-4 fw-n color-primary-600 keep-print-font l-h-n m-0" style="font-size:20px">
+                                    @Model.ContractNo
+                                </p>
+
+                            </td>
+
+                            <td class="text_ar">
+                                <img src="~/img/logo_print.png" />
+                            </td>
+                        </tr>
+
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12 d-flex">
+                <div class="table-responsive" style="direction:rtl">
+                    <table class="table table-clean table-sm align-self-end">
+
+
+                        <tr>
+
+                            <td class="wTD">
+                                <span class=" ConBTitle  "> إسم المستأجر : </span>  <span class=" ConBwrite"> @Model.TenantName </span>
+                            </td>
+                            <td class="wTD">
+                                <span class=" ConBTitle  "> رقم الإقامة / البطاقة الشخصية : </span>  <span class=" ConBwrite "> @Model.IqamaNumber </span>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="wTD">
+                                <span class=" ConBTitle  "> إسم شركة العمل :  </span>  <span class=" ConBwrite"> @Model.CompanyName </span>
+                            </td>
+                            <td class="wTD">
+                                <span class=" ConBTitle  ">   الجنسية : </span>  <span class=" ConBwrite"> @Model.Nationality </span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="wTD">
+                                <span class=" ConBTitle  ">موقع المأجور : </span>  <span class=" ConBwrite"> @Model.buildingDistrict </span>
+                            </td>
+                            <td class="wTD">
+                                <span class=" ConBTitle  "> رقم العقار  : </span>  <span class=" ConBwrite"> @Model.BuildingNo</span>
+                                <span class=" ConBTitle  "> رقم الوحدة  : </span>  <span class=" ConBwrite"> @Model.UnitNo </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="wTD">
+                                <span class=" ConBTitle  ">مبلغ الإيجار : </span>  <span class=" ConBwrite">@Model.LeaseValue  </span>
+                            </td>
+                            <td class="wTD">
+                                <span class=" ConBTitle  ">  العنوان : </span>  <span class=" ConBwrite"> @Model.BuildingAdress </span>
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="wTD">
+                                <span class=" ConBTitle  ">مدة الإيجار : </span>  <span class=" ConBwrite"> @Model.LeasePeriod </span>
+                            </td>
+                            <td class="wTD">
+                                <span class=" ConBTitle  ">  رقم عداد الكهرباء : </span>  <span class=" ConBwrite"> @Model.ElectricityNo </span>
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="wTD">
+                                <span class=" ConBTitle  "> بدء الإيجار :  يوم</span>  <span class=" ConBwrite"> @Model.LeaseDay  </span>
+                                <span class=" ConBTitle  "> شهر  : </span>  <span class=" ConBwrite"> @Model.LeaseMonth </span>
+                                <span class=" ConBTitle  "> سنة  : </span>  <span class=" ConBwrite"> @Model.LeaseYear </span>
+                            </td>
+                            <td class="wTD">
+                                <span class=" ConBTitle  "> رقم حساب تسديد الكهرباء  : </span>  <span class=" ConBwrite"> @Model.ElectricitySadadNo </span>
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="wTD">
+                                <span class=" ConBTitle  ">مبلغ إستهلاك المياة : </span>  <span class=" ConBwrite"> @Model.WaterCost </span>
+                            </td>
+                            <td class="wTD">
+                                <span class=" ConBTitle  "> رقم جوال المستأجر والمعرف  : </span>  <span class=" ConBwrite"> @Model.TenantMobileNo</span>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 d-flex">
+                <div class="table-responsive" style="direction:rtl">
+                    <table class="table table-clean table-sm align-self-end">
+                        <tr>
+                            <td class="fontArabic">
+                                <h2 class="text-center fontArabic"> الشروط التي تم الاتفاق عليها</h2>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 d-flex">
+                <div class="table-responsive" style="direction:rtl">
+                    <table class="table table-clean table-sm align-self-end">
+                        <tr>
+                            <td style="width:20px">01- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                المستأجر ملزم بإرجاع العين المستأجرة كما إستلمها من المؤجر وملزم بإصلاح كل التلف والصيانة اللازمة خلال فترة سكنة
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="width:20px">02- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                يتهد المستأجر بإستعمال العين المؤجرة بشرط ان يراعيها كما يراعي الانسان ماله الخاص ولا يستعمله الا على حسب الغرض منها وخلاف ذلك يكون هذا العقد لاغي.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:20px">03- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                يلتزم المستأجر بعمل الترميمات التأجيرية للعين المؤجرة وذلك طوال مدة الإيجار وليس للمستأجر الحق فى المطالبة الشركة بقيمة التحسينات والاصلاحات التي أدخلها على العقار.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:20px">04- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                يلتزم المستأجر بدفع قيمة استهلاك المياة والكهرباء والتليفون والضرائب العقارية إن وجد وان يقدم للشركة عند انتهاء مدة  العقد ما يفيد ذلك
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:20px">05- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                يلتزم المستأجر بدفع تغير أي شئ فى العقار أو وضع أي شئ من شأنه ان يلحق الضرر بالعقار أو الجيران ولا يحق له تأجيرها من الباطن سواء كله أو قسماً منه.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:20px">06- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                للمؤجر الحق بإخلاء المستأجر من العقار وإلغاء العقد إذا تأخر عن دفع الإيجار في المواعيد المتفق عليها كذلك فى حال عد المحافظة  على سلامة العقار داخل الوحدة السكنية كذلك فى حال القيام بما هو منافي لقوانين وانظمة الجولة.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:20px">07- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                يدفع الإيجار بموجب سندات قبض صادرة عن المؤجر موقعه من مستلم المبلغ واسمه الصريح.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:20px">08- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                في حال غياب المستأجر عن العين المؤجرة أكثر من شهرين دون علم المؤجر  ودون سداد القيمة الإيجارية المستحقة لمدة شهر للمؤجر عنها الحق في استعادة العين المؤجرة وفق الاجراءات الادارية والقانونية.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:20px">09- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                مبلغ التأمين المحدد أعلاه مقابل حالات التلف والأضرار الحاصلة بالعين المؤجرة ويرد الباقي بعد خصم قيمة الأضرار المحدد قيمتها من قبل المؤجر بحضور المستأجر كذلك في حالة مسح العقد قبل التاريخ المحدد
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:20px">10- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                في حالة رغبة أي من الطرفين فى تجديد العقد فيجب عليه إشعار الطرف الآخر بذلك قبل نهاية مدة العقد بشهر على الاقل علي ان يتضمن الاشعار القيمة الايجارية المقترحة عن المدة المحددة واذا لم يشعره بالتجديد فيعتبر حق المستأجر منتهياً ويجب عليه إخلاء العين المؤجرة واذا تأخر ولم يقم بأخلاء الوحدة يصبح الإيجار مضاعفاً عليه حتى يتم إخلاء الوحدة المؤجرة
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:20px">11- </td>
+                            <td class="txtCB" style="width:auto">
+
+                                يقر الطرفان المتعاقدان أنهما قرءا الإتفاق ويلتزمان بتنفيذ بنوده ويحتفظ كل منهما بنسخة من هذا العقد للرجوع إليه عند الطلب.
+                            </td>
+                        </tr>
+
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <tr>
+                                <td style="width:20px">12- </td>
+                                <td class="txtCB" style="width:auto">
+                                    <span class="txtCB"> شروط إضافية : </span> <span class="txtCB"> @Model.Notes </span>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td style="width:20px"></td>
+                            <td style="width:auto">
+                                <h2 class="txtCB2">
+                                    (تم الإتفاق بين الطرفين وحرر بنسختين من العقد لكلاً منهما)
+                                </h2>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-3  segna">
+
+                توقيع المستأجر
+            </div>
+
+
+            <div class="col-sm-3  segna">
+
+                اسم المستأجر
+            </div>
+
+            <div class="col-sm-6  segna" style="text-align:right;">
+
+                شركة ألف زين للتطوير العقاري المحدودة
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-3  segna">
+                <hr />
+            </div>
+
+
+            <div class="col-sm-3  segna">
+                <hr />
+            </div>
+
+            <div class="col-sm-6  segna" style="text-align:right">
+                <hr style="text-align:right; float:right" />
+
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+@section ScriptsBlock {
+}
+

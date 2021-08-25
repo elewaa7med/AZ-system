@@ -1,0 +1,765 @@
+﻿@model SmartAdmin.WebUI.Models.UnitRentContract
+@{ ViewData["Title"] = "Edit Contract";
+    ViewData["PageName"] = "Unit rent contracts " + Model.mMasterBuilding;
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Edit Contract";
+    ViewData["Category1"] = "Units";
+    ViewData["PageDescription"] = ""; }
+@using System.IO;
+<form asp-action="Edit" enctype="multipart/form-data" class="was-validated">
+    <input type="hidden" asp-for="IdRentContract" />
+    <input type="hidden" asp-for="mMasterBuilding" value="@Model.mMasterBuilding" />
+    <input type="hidden" asp-for="dtCreated" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @if (ViewBag.AlertSaveErr != null)
+    {
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
+    <div class="d-flex flex-start w-100">
+        <div class="d-flex flex-fill">
+            <div class="flex-fill">
+                <p>  @ViewBag.AlertSaveErr</p>
+            </div>
+        </div>
+    </div>
+</div>}
+    @if (ViewBag.isRentedErrMsg != null)
+    {
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
+    <div class="d-flex flex-start w-100">
+        <div class="d-flex flex-fill">
+            <div class="flex-fill">
+                <p>  @ViewBag.isRentedErrMsg</p>
+            </div>
+        </div>
+    </div>
+</div>}
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Unit Rent Contract
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Building (A)
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-select w-100" asp-for="IdBuilding" asp-items="ViewBag.IdBuildingsDDL" required>
+                                        <optgroup label="Select compound">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Unit (B)
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-select w-100" asp-for="IdUnit" asp-items="ViewBag.IdUnit" required>
+                                        <optgroup label="Select Unit">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Tenant (C)
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-select w-100" asp-for="IdTenant" asp-items="ViewBag.IdTenant" required>
+                                        <optgroup label="Select Tenant">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-g">
+        <h4 class="card-header">Unit Information</h4>
+        <div class="card-body">
+            <div class="row ">
+                <div class="col-sm-6 ">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Unit Area</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblArea"></p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblBuilding"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">District City Country</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblDistrictCityCountry"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Owner</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblOwner">
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-g">
+        <h4 class="card-header">Tenant Information</h4>
+        <div class="card-body">
+            <div class="row ">
+                <div class="col-sm-6 ">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Iqama No</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblIqamaNo"> </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Mobile No</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblMobileNo"> </p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label"> Company Phone</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblCompanyPhone"> </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Work</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblWork"> </p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Nationality</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblNationality">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Edit Rent Contract
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button type="button" class="btn btn-default waves-effect waves-themed" data-toggle="modal" data-target="#default-example-modal-lg-center">More Detatils Unit</button>
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Last Contract Remaining Amount</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" asp-for="LastContractRemainingAmount"  value="@(Model.remainingAmount-Model.yearlyRent)" readonly>
+                                    </div>
+                                </div>*@
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Contract Number *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" required autocomplete="off" asp-for="contractNumber">
+                                </div>
+                            </div>
+                              @if (@Model.mMasterBuilding == 4)
+                            {
+                                <div class="form-group row">
+                                    <label for="weeklyRent" class="col-form-label col-sm-3 text-sm-right form-label">Weekly Rent</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" autocomplete="off" id="weeklyRent" required>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Yearly Rent *</label>
+                                <div class="col-sm-9">
+                                     @if (@Model.mMasterBuilding == 4)
+                                    {
+                                       <input type="number" class="form-control" autocomplete="off" asp-for="YearlyRentVm" value="@((Model.yearlyRent) - (Model.WaterBillAmount ?? 0))" required readonly>
+                                     }
+                                     else
+                                     {
+                                         <input type="number" class="form-control" autocomplete="off" asp-for="YearlyRentVm" value="@((Model.yearlyRent) - (Model.WaterBillAmount ?? 0))" required>
+                                     }
+
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Yearly Bill</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="WaterBillAmount" value="@(Model.WaterBillAmount??0)" id="WaterBillAmount">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Total Yearly Rent</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" autocomplete="off" asp-for="yearlyRent" readonly>
+
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Yearly Rent *</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" autocomplete="off" asp-for="YearlyRentVm" value="@((Model.yearlyRent) - (Model.WaterBillAmount ?? 0))" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Yearly Bill</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" asp-for="WaterBillAmount" value="@(Model.WaterBillAmount??0)" id="WaterBillAmount">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Total Yearly Rent</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" autocomplete="off" asp-for="yearlyRent" readonly>
+                                    </div>
+                                </div>*@
+
+
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Paid Amount *</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="paidAmount" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Remaining Amount *</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="remainingAmount" required readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Lease Start Date *</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" asp-for="dtLeaseStart" autocomplete="off" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="dtLeaseStart" class="invalid-feedback">
+                                        Please enter a message in the textarea.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Lease End Date *</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" asp-for="dtLeaseEnd" autocomplete="off" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @*@if (Model.mMasterBuilding == 4)
+                                                    {
+                                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                            Lease Period In Days
+                                        </label> }
+                                    else
+                                    {*@
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Lease Period In Monthes
+                                </label>
+                                @*}*@
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" readonly asp-for="leasePeriodInMonthes">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-9 offset-3" id="PNotes">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Payment Method *
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-control form-select w-100" asp-for="paymentMethod" required>
+                                        <optgroup label="Select payment method">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Insurance *
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="number" asp-for="insurance" autocomplete="off" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Commisssion
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" readonly asp-for="rentCommission" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Contract Of *
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdCreated" class="select2 form-control w-100" asp-items="ViewBag.IdCreated" required>
+                                        <optgroup label="Select contract of">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Representative *
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdMandoob" class="select2 form-control w-100" asp-items="ViewBag.IdCreated" required>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Verified in EJAR</label>
+                                <div class="col-sm-9">
+                                    <input type="checkbox" asp-for="VerifiedFromGovernment" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row ejar" style="@(Model.VerifiedFromGovernment ? "display:none":"")">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Reason</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" autocomplete="off" asp-for="NotVerifiedReason">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Electricity meter Number</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" autocomplete="off" asp-for="ElectricityNumber">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Payment number</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" autocomplete="off" asp-for="PaymentNumber">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    The start of the meter reading for the tenant
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="MeterStart">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Transfer the account to the tenant? *
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="frame-wrap">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="defaultInline1Radio" class="custom-control-input checkbox" asp-for="TransferToTenanat" value="true">
+                                            <label class="custom-control-label" for="defaultInline1Radio">Yes</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline" style="padding-top:5px">
+                                            <input type="radio" id="defaultInline2Radio" class="custom-control-input checkbox" asp-for="TransferToTenanat" value="false">
+                                            <label class="custom-control-label" for="defaultInline2Radio">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Unit Included</label>
+                                <div class="col-sm-9">
+                                    <select class="multiSelect2 select-control" multiple="multiple" asp-for="UnitIncluded" asp-items="ViewBag.Items">
+                                    </select>
+                                    @*<div class="help-block">Write or select a tag and press "enter" or "comma" to add them.</div>*@
+                                </div>
+                            </div>
+
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Yearly Bill</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" asp-for="WaterBillAmount" id="WaterBillAmount">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Paid Amount</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" asp-for="WaterPaidAmount" id="WaterPaidAmount">
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                        Water Remaining Amount
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" asp-for="WaterRemainingAmount" id="WaterRemainingAmount">
+
+                                    </div>
+                                </div>*@
+
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                        Initial Elec. Meter Reading
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control " asp-for="initialElectricityMeterReading">
+
+                                    </div>
+                                </div>*@
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                        Initial Water Meter Reading
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" asp-for="initialWaterMeterReading" id="initialWaterMeterReading">
+
+                                    </div>
+                                </div>*@
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Departure Elec. Meter Reading</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" asp-for="finalElectricityMeterReading" type="number">
+
+                                    </div>
+                                </div>*@
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Departure Water Meter Reading</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control " asp-for="finalWaterMeterReading" type="number">
+
+                                    </div>
+                                </div>*@
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Contract Image</label>
+                                    <div class="custom-file col-sm-9">
+                                        <input type="file" class="custom-file-input" name="contractImageFile">
+                                        <a href="@Model.CurrentImageFile"></a>
+                                        <label class="custom-file-label" for="customControlValidation7"></label>
+                                        @if (!string.IsNullOrWhiteSpace(Model.contractImage))
+                                        {<a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#imgContract"><strog>Image</strog></a>}
+                                    </div>
+                                </div>*@
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Contract Image</label>
+                                <div class="col-sm-5">
+                                    <input type="file" id="example-fileinput" class="form-control-file" name="contractImageFile">
+                                    <input type="hidden" asp-for="contractImage" value="@Model.contractImage">
+                                </div>
+                                @if (!string.IsNullOrWhiteSpace(Model.contractImage))
+                                {
+                    <div class="col-sm-4">
+                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#imgContract"><strog>View Image</strog></a>
+                    </div>}
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Notes</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" asp-for="Notes"></textarea>
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Arabic Notes</label>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control " asp-for="NotesAR"></textarea>
+                                    </div>
+                                </div>*@
+
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="form-group  alert alert-primary alert-dismissible text-center">
+                        <button class="btn btn-primary ml-auto waves-effect waves-themed" type="submit">Save Rent contract</button>
+                        <button type="button" class="btn btn-secondary ml-1 waves-effect waves-themed" onclick="back()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</form>
+<div class="modal fade" id="imgContract">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @*<div class="modal-header">
+                    <div class="alert alert-info" role="alert">
+                        <a href="#" data-dismiss="modal" class="close">&times;</a>
+                        <h3 class="modal-title" >Building Image</h3>
+                    </div>
+                </div>*@
+            <div class="modal-body">
+                <img style="width:100%" src="~/assets/contracts/@Model.contractImage" alt="@Model.contractImage" />
+            </div>
+            @*<div class="modal-footer">
+                    <div class="alert alert-light" role="alert">
+                        <a href="#" data-dismiss="modal" class="close btn btn-default">Close</a>
+                    </div>
+                </div>*@
+        </div>
+
+    </div>
+</div>
+
+
+@section ScriptsBlock{
+    <script>
+        $(function () {
+             SetPaymentMethods();
+            $("#paymentMethod").val('@Model.paymentMethod').trigger('change');
+            $("#IdBuilding").val('@Model.IdBuilding').trigger('change');
+            $("#IdTenant").val('@Model.IdTenant').trigger("change");
+            setTimeout(function () { $("#IdUnit").val('@Model.IdUnit').trigger("change"); }, 2000);
+        });
+         $('#IdBuilding').on('change', function () {
+                var items;
+                var url = '@Url.Content("~/")' + 'UnitRentContract/getBuildingUnits';
+             $.getJSON(url, { IdBuilding: $('#IdBuilding').val(), unitID: $('#IdUnit').val() }, function (data) {
+                    $.each(data, function (i, row) {
+                        items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+                    });
+                    if (items != null) {
+                        items = "<option >Select Apartment/Villa/Shop</option>" + items;
+                    }
+                    $('#IdUnit').val(null).trigger('change');
+                    $('#IdUnit').empty();
+
+                    $('#IdUnit').html(items);
+                    $('#IdUnit').focus();
+
+
+                    $("#lblArea").text("");
+                    $("#lblBuilding").text("");
+                    $("#lblDistrictCityCountry").text("");
+                    $("#lblOwner").text("");
+                });
+            });
+
+        $('#IdUnit').change(function () {
+                var url = '@Url.Content("~/")' + 'UnitRentContract/getUnitInfo';
+
+            $.getJSON(url, { IdUnit: $('#IdUnit').val() }, function (data) {
+                    if (data != null) {
+
+                        $("#lblArea").text(data.unitArea);
+                        $("#lblBuilding").text(data.buildingNo + "-" + data.buildingAddress);
+                        $("#lblDistrictCityCountry").text(data.district + "-" + data.city + "- " + data.country + "- " + data.compoundName);
+                        $("#lblOwner").text(data.owner);
+                        $("#ElectricityNumber").val(data.electricity_meter);
+                        $("#PaymentNumber").val(data.payment_number);
+                        $("#MeterStart").val(data.start_meter);
+                        $('[name ="TransferToTenanat"]')[0].val=data.transfer_tenant;
+                        $('[name ="TransferToTenanat"]')[0].checked = data.transfer_tenant;
+                    }
+                    else {
+                        $("#lblArea").text("");
+                        $("#lblBuilding").text("");
+                        $("#lblDistrictCityCountry").text("");
+                        $("#lblOwner").text("");
+                        $("#ElectricityNumber").val('');
+                        $("#PaymentNumber").val('');
+                        $("#MeterStart").val('');
+                        $("#TransferToTenanat").val('');
+                    }
+
+                });
+            });
+
+         $('#IdTenant').change(function () {
+                var url = '@Url.Content("~/")' + 'UnitRentContract/getTenantInfo';
+
+                $.getJSON(url, { IdTenant: $('#IdTenant').val() }, function (data) {
+                    if (data != null) {
+                        $("#lblIqamaNo").text(data.iqamaId);
+                        $("#lblMobileNo").text(data.mobileNumber);
+                        $("#lblWork").text(data.work) ;
+                        $("#lblCompanyPhone").text(data.companyPhone);
+                        $("#lblNationality").text(data.nationality);
+                    }
+                    else {
+                        $("#lblIqamaNo").text("");
+                        $("#lblMobileNo").text("");
+                        $("#lblWork").text("");
+                        $("#lblCompanyPhone").text("");
+                        $("#lblNationality").text("");
+                    }
+
+                });
+         });
+
+        $('#yearlyRent, #paidAmount, #WaterBillAmount,#YearlyRentVm').change(function () {
+            var yearlyRent = parseFloat($("#yearlyRent").val());
+            var waterBillAmount = parseFloat($("#WaterBillAmount").val());
+            var paidAmount = parseFloat($('#paidAmount').val());
+            var YearlyRentVm = parseFloat($('#YearlyRentVm').val());
+
+            if (isNaN(yearlyRent)) {
+                $("#yearlyRent").val(0)
+                yearlyRent = 0;
+            }
+            if (isNaN(YearlyRentVm)) {
+                $("#YearlyRentVm").val(0)
+                YearlyRentVm = 0;
+            }
+            if (isNaN(waterBillAmount)) {
+                $("#WaterBillAmount").val(0)
+                waterBillAmount = 0;
+            }
+            if (isNaN(paidAmount)) {
+                $("#paidAmount").val(0)
+                paidAmount = 0;
+            }
+
+            $('#remainingAmount').val(YearlyRentVm + waterBillAmount - paidAmount);
+            $("#yearlyRent").val(YearlyRentVm + waterBillAmount);
+            $('#rentCommission').val(YearlyRentVm / 100);
+
+            SetPaymentMethods();
+        });
+        $("#WaterBillAmount").on("click", function () {
+            $("#WaterBillAmount").select()
+        });
+
+        $('#dtLeaseStart, #dtLeaseEnd').change(function () {
+            @*if (@Model.mMasterBuilding == 4) {
+                var fromDate = $('#dtLeaseStart').val();
+                var toDate = $('#dtLeaseEnd').val();
+                if (fromDate != "" && toDate != "") {
+                    var difference_in_Time =  new Date(toDate.slice(6, 10), toDate.slice(3, 5), toDate.slice(0, 2)) - new Date(fromDate.slice(6, 10), fromDate.slice(3, 5), fromDate.slice(0, 2));
+                    var difference_in_days = difference_in_Time / (1000 * 3600 * 24);
+                    $('#leasePeriodInMonthes').val(difference_in_days);
+                }else
+                    $('#leasePeriodInMonthes').val("");
+            } else {*@
+                var fromDate = $('#dtLeaseStart').val().toString();
+                var toDate = $('#dtLeaseEnd').val().toString();
+                if (fromDate.trim() != "" && toDate.trim() != "")
+                    $('#leasePeriodInMonthes').val(monthDiff(new Date(fromDate.slice(6, 10), fromDate.slice(3, 5), fromDate.slice(0, 2)),
+                        new Date(toDate.slice(6, 10), toDate.slice(3, 5), toDate.slice(0, 2))));
+                else
+                    $('#leasePeriodInMonthes').val("");
+            //}
+            SetPaymentMethods();
+
+        });
+
+        $('#WaterBillAmount , #WaterPaidAmount').change(function () {
+            if ($('#WaterBillAmount').val().trim() != "" && $('#WaterPaidAmount').val().trim() != "")
+                $('#WaterRemainingAmount').val($('#WaterBillAmount').val() - $('#WaterPaidAmount').val());
+            else
+                $('#WaterRemainingAmount').val('');
+
+        });
+
+        $('#UnitIncluded').change(function () {
+            if ($('#UnitIncluded').val().includes('1')) {
+                $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').val("");
+                $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').attr('readonly', true)
+            }
+            else {
+                $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').attr('readonly', false)
+            }
+        });
+        $("#VerifiedFromGovernment").change(function () {
+            if (this.checked) {
+                $('.ejar').hide();
+            }
+            else {
+                $('.ejar').show();
+            }
+        });
+        function back() {
+            var fallbackUrl = "/UnitRentContract";
+            var prevPage = window.location.href;
+
+            window.history.go(-1);
+
+            setTimeout(function () {
+                if (window.location.href == prevPage) {
+                    window.location.href = fallbackUrl;
+                }
+            }, 500);
+        }
+        if ($("#YearlyRentVm")) {
+            $("#weeklyRent").val(Math.floor($("#YearlyRentVm").val() / 52))
+        }
+
+        $("#weeklyRent").keyup(function () {
+            $("#YearlyRentVm").val($("#weeklyRent").val() * 52);
+            $("#yearlyRent").val(parseFloat($("#YearlyRentVm").val()) + parseFloat($("#WaterBillAmount").val()));
+        })
+    </script>
+}

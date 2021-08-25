@@ -1,0 +1,780 @@
+﻿@model SmartAdmin.WebUI.Models.UnitRentContract
+@{ ViewData["Title"] = "Contract Details";
+                ViewData["PageName"] = "Unit rent contracts " + Model.mMasterBuilding;
+                ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Contract Details <a href=\"/UnitRentContract/ContractPrint/{Model.IdRentContract}\" class=\"btn btn-primary waves-effect waves-themed\" style=\"float: right;\" target=\"_blank\">Print</a>";
+                ViewData["Category1"] = "Units";
+                var canPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MakePayment })).Succeeded;
+                var canPartialPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MakePartialPayment })).Succeeded;
+    }
+<div class="was-validated">
+    <input type="hidden" asp-for="IdRentContract" />
+    <input type="hidden" asp-for="dtCreated" />
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Unit Rent Contract
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Building (A)
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-select w-100" asp-for="IdBuilding" disabled asp-items="ViewBag.IdBuildingsDDL" required>
+                                        <optgroup label="Select compound">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Unit (B)
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-select w-100" asp-for="IdUnit" disabled asp-items="ViewBag.IdUnit" required>
+                                        <optgroup label="Select Unit">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Tenant (C)
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-select w-100" asp-for="IdTenant" disabled asp-items="ViewBag.IdTenant" required>
+                                        <optgroup label="Select Tenant">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-g">
+        <h4 class="card-header">Unit Information</h4>
+        <div class="card-body">
+            <div class="row ">
+                <div class="col-sm-6 ">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Unit Area</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblArea"></p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Building</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblBuilding"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">District City Country</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblDistrictCityCountry"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Owner</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblOwner">
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*notes*@
+    <div class="card mb-g">
+        <h4 class="card-header">Notes</h4>
+        <div class="card-body">
+            <div class="row ">
+                <div class="col" id="js-contacts">
+                    @foreach (var note in Model.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select((value, index) => new
+                    {
+                        value,
+                        index
+                    }))
+                    {
+        <div class="col-xl-12">
+            <div id="@note.index" class="card border shadow-0 shadow-sm-hover mb-1" data-filter-tags="@note.value.User">
+                <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="info-card-text flex-1">
+                            <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
+                                @note.value.User
+
+                            </a>
+                            <span class="text-truncate text-truncate-xl">@note.value.CreatedOn</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0" style="">
+                    <div class="p-3">
+                        <span class="mt-1 d-block fs-sm fw-400 text-dark">
+                            @note.value.Note
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-g">
+        <h4 class="card-header">
+            Payments
+            @if (Model.UnitRentContractPayments.Sum(x => x.Amount) != Model.UnitRentContractPayments.Sum(x => x.PaidAmount))
+            {
+                <a class="btn btn-success waves-effect waves-themed float-right" asp-action="PartiallyPay" title="Pay" asp-route-pageid="@ViewBag.id" asp-route-ContractId=@ViewBag.ContractId style="margin:0px 20px;padding:9px 40px;font-weight:bold;">Pay</a>            
+            }
+        </h4>
+        <div class="card-body">
+            <div class="row ">
+                <div class="col">
+                    <div class="col">
+                        <!-- datatable start -->
+                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                            <thead class="bg-primary-600">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Due Date </th>
+                                    <th>Amount </th>
+                                    <th>Remaining Amount </th>
+                                    <th>Paid Amount </th>
+                                    <th>Last payment Date </th>
+                                    <th>User </th>
+                                    <th>Comments </th>
+                                    @*<th>Actions </th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.UnitRentContractPayments.Select((value, i) => new { i, value }))
+                                {
+                    <tr>
+                        <td>
+                            @(item.i + 1 )
+                        </td>
+                        <td>
+                            @item.value.DueDate.ToShortDateString()
+                        </td>
+                        <td class="format formatNumber">
+                            @item.value.Amount
+                        </td>
+                        <td class="format formatNumber">
+                            @item.value.RemainingAmount
+                        </td>
+                        <td class="paid format formatNumber">
+                            @item.value.PaidAmount
+                        </td>
+                        <td>
+                            @item.value.PaymentDate?.ToShortDateString()
+                        </td>
+                        <td>
+                            @item.value.User?.fullName
+                        </td>
+                        <td title="@(item.value.Note??"")">
+                            @(item.value.Note?.Length>100? item.value.Note?.Substring(0,100)+"....": item.value?.Note)
+                        </td>
+                        @*<td>
+                                @if (!item.value.Paid)
+                                {
+                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                            <div class="dropdown-menu">
+                                                @if (canPay)
+                                                {
+                                                    <a class="dropdown-item" asp-action="PartiallyPay" title="Pay" asp-route-id=@item.value.ID asp-route-fullPay="true">Pay</a>
+                                                }
+                                                @if (canPartialPay)
+                                                {
+                                                    <a class="dropdown-item" asp-action="PartiallyPay" title="Partially Pay" asp-route-id=@item.value.ID>Partially Pay</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </td>*@
+                    </tr>
+}
+                            </tbody>
+                        </table>
+                        <!-- datatable end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*end payments*@
+    <div class="card mb-g">
+        <h4 class="card-header">Tenant Information</h4>
+        <div class="card-body">
+            <div class="row ">
+                <div class="col-sm-6 ">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Iqama No</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblIqamaNo"> </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Mobile No</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblMobileNo"> </p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label"> Company Phone</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblCompanyPhone"> </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Work</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblWork"> </p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Nationality</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label col-sm-9 text-sm-left" id="lblNationality">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Rent Contract
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button type="button" class="btn btn-default waves-effect waves-themed" data-toggle="modal" data-target="#default-example-modal-lg-center">More Detatils Unit</button>
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Last Contract Remaining Amount</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" asp-for="LastContractRemainingAmount" value="@(Model.remainingAmount-Model.yearlyRent)" readonly>
+                                    </div>
+                                </div>*@
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Contract Number </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" required autocomplete="off" disabled asp-for="contractNumber">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Yearly Rent *</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" autocomplete="off" asp-for="YearlyRentVm" value="@((Model.yearlyRent) - (Model.WaterBillAmount ?? 0))" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Yearly Bill</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="WaterBillAmount" value="@(Model.WaterBillAmount??0)" id="WaterBillAmount" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Total Yearly Rent</label>
+                                <div class="col-sm-9">
+                                    @*<input type="number" class="form-control" id="TotalYearlyBill" readonly>*@
+                                    <input type="number" class="form-control" autocomplete="off" asp-for="yearlyRent" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Paid Amount </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" disabled asp-for="paidAmount" required readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Remaining Amount </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" disabled asp-for="remainingAmount" required readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Lease Start Date </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" disabled asp-for="dtLeaseStart" autocomplete="off" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="dtLeaseStart" class="invalid-feedback">
+                                        Please enter a message in the textarea.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Lease End Date </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" disabled asp-for="dtLeaseEnd" autocomplete="off" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @if (Model.mMasterBuilding == 4)
+                                {
+                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                        Lease Period In Days
+                    </label> }
+                else
+                {
+    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+        Lease Period In Monthes
+    </label>}
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" disabled asp-for="leasePeriodInMonthes">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Payment Method
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="select2 form-control form-select w-100" disabled asp-for="paymentMethod" required>
+                                        <optgroup label="Select payment method">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Insurance
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="number" asp-for="insurance" disabled autocomplete="off" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Commisssion
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" disabled asp-for="rentCommission" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Contract Of
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdCreated" disabled class="select2 form-control w-100" asp-items="ViewBag.IdCreated" required>
+                                        <optgroup label="Select contract of">
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Representative
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdMandoob" class="select2 form-control w-100" asp-items="ViewBag.IdCreated" disabled>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Verified in EJAR</label>
+                                <div class="col-sm-9">
+                                    <input type="checkbox" asp-for="VerifiedFromGovernment" class="form-control" disabled>
+                                </div>
+                            </div>
+                            @if (!Model.VerifiedFromGovernment)
+                            {
+                <div class="form-group row ejar">
+                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Reason</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" autocomplete="off" asp-for="NotVerifiedReason" disabled>
+                    </div>
+                </div>}
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Electricity meter Number</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" autocomplete="off" asp-for="ElectricityNumber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Payment number</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" autocomplete="off" asp-for="PaymentNumber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    The start of the meter reading for the tenant
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" asp-for="MeterStart" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Transfer the account to the tenant?
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="frame-wrap">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="defaultInline1Radio" class="custom-control-input checkbox" asp-for="TransferToTenanat" value="true" disabled>
+                                            <label class="custom-control-label" for="defaultInline1Radio">Yes</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline" style="padding-top:5px">
+                                            <input type="radio" id="defaultInline2Radio" class="custom-control-input checkbox" asp-for="TransferToTenanat" value="false" disabled>
+                                            <label class="custom-control-label" for="defaultInline2Radio">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Unit Included</label>
+                                <div class="col-sm-9">
+                                    <select class="multiSelect2 select-control" disabled multiple="multiple" asp-for="UnitIncluded" asp-items="ViewBag.Items">
+                                    </select>
+                                    @*<div class="help-block">Write or select a tag and press "enter" or "comma" to add them.</div>*@
+                                </div>
+                            </div>
+
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Yearly Bill</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" disabled asp-for="WaterBillAmount" id="WaterBillAmount">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Paid Amount</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" disabled asp-for="WaterPaidAmount" id="WaterPaidAmount">
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                        Water Remaining Amount
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" disabled asp-for="WaterRemainingAmount" id="WaterRemainingAmount">
+
+                                    </div>
+                                </div>*@
+
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                        Initial Elec. Meter Reading
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control " disabled asp-for="initialElectricityMeterReading">
+
+                                    </div>
+                                </div>*@
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                        Initial Water Meter Reading
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" disabled asp-for="initialWaterMeterReading" id="initialWaterMeterReading">
+
+                                    </div>
+                                </div>*@
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Departure Elec. Meter Reading</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" disabled asp-for="finalElectricityMeterReading" type="number">
+
+                                    </div>
+                                </div>*@
+
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Departure Water Meter Reading</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control " disabled asp-for="finalWaterMeterReading" type="number">
+
+                                    </div>
+                                </div>*@
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Contract Image</label>
+                                <div class="custom-file col-sm-9">
+                                    @if (!string.IsNullOrWhiteSpace(Model.contractImage))
+                                    {
+                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#imgContract"><strog>View Image</strog></a> }
+                    else
+                    {
+        <a href="#" class="btn btn-default"><strog>No Image</strog></a>}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Notes</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control " asp-for="Notes" disabled></textarea>
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Arabic Notes</label>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control " asp-for="NotesAR" disabled></textarea>
+                                    </div>
+                                </div>*@
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group  alert alert-primary alert-dismissible text-center">
+                        <button class="btn btn-primary ml-auto waves-effect waves-themed" onclick="back()">Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="imgContract">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @*<div class="modal-header">
+                    <div class="alert alert-info" role="alert">
+                        <a href="#" data-dismiss="modal" class="close">&times;</a>
+                        <h3 class="modal-title" >Building Image</h3>
+                    </div>
+                </div>*@
+            <div class="modal-body">
+                <img style="width:100%" src="~/assets/contracts/@Model.contractImage" alt="@Model.contractImage" />
+            </div>
+            @*<div class="modal-footer">
+                    <div class="alert alert-light" role="alert">
+                        <a href="#" data-dismiss="modal" class="close btn btn-default">Close</a>
+                    </div>
+                </div>*@
+        </div>
+
+    </div>
+</div>
+@section ScriptsBlock{
+    <script>
+        $(function () {
+            SetPaymentMethods(@Model.mMasterBuilding);
+            $("#paymentMethod").val('@Model.paymentMethod').trigger('change');
+            $("#IdBuilding").val('@Model.IdBuilding').trigger('change');
+            $("#IdTenant").val('@Model.IdTenant').trigger("change");
+            setTimeout(function () { $("#IdUnit").val('@Model.IdUnit').trigger("change"); }, 1000);
+        });
+         $('#IdBuilding').on('change', function () {
+                var items;
+             var url = '@Url.Content("~/")' + 'UnitRentContract/getBuildingUnits';
+             $.getJSON(url, { IdBuilding: $('#IdBuilding').val(), unitID: $('#IdUnit').val() }, function (data) {
+                    $.each(data, function (i, row) {
+                        items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+                    });
+                    if (items != null) {
+                        items = "<option >Select Apartment/Villa/Shop</option>" + items;
+                    }
+                    $('#IdUnit').val(null).trigger('change');
+                    $('#IdUnit').empty();
+
+                    $('#IdUnit').html(items);
+                    $('#IdUnit').focus();
+
+                    $("#lblArea").text("");
+                    $("#lblBuilding").text("");
+                    $("#lblDistrictCityCountry").text("");
+                    $("#lblOwner").text("");
+                });
+            });
+
+        $('#IdUnit').change(function () {
+           var url = '@Url.Content("~/")' + 'UnitRentContract/getUnitInfo';
+
+            $.getJSON(url, { IdUnit: $('#IdUnit').val() }, function (data) {
+                if (data != null) {
+
+                    $("#lblArea").text(data.unitArea);
+                    $("#lblBuilding").text(data.buildingNo + "-" + data.buildingAddress);
+                    $("#lblDistrictCityCountry").text(data.district + "-" + data.city + "- " + data.country + "- " + data.compoundName);
+                    $("#lblOwner").text(data.owner);
+                    $("#ElectricityNumber").val(data.electricity_meter);
+                    $("#PaymentNumber").val(data.payment_number);
+                    $("#MeterStart").val(data.start_meter);
+                    $('[name ="TransferToTenanat"]')[0].val = data.transfer_tenant;
+                    $('[name ="TransferToTenanat"]')[0].checked = data.transfer_tenant;
+                }
+                else {
+                    $("#lblArea").text("");
+                    $("#lblBuilding").text("");
+                    $("#lblDistrictCityCountry").text("");
+                    $("#lblOwner").text("");
+                    $("#ElectricityNumber").val('');
+                    $("#PaymentNumber").val('');
+                    $("#MeterStart").val('');
+                    $("#TransferToTenanat").val('');
+                }
+
+                });
+            });
+
+         $('#IdTenant').change(function () {
+                var url = '@Url.Content("~/")' + 'UnitRentContract/getTenantInfo';
+
+                $.getJSON(url, { IdTenant: $('#IdTenant').val() }, function (data) {
+                    if (data != null) {
+                        $("#lblIqamaNo").text(data.iqamaId);
+                        $("#lblMobileNo").text(data.mobileNumber);
+                        $("#lblWork").text(data.work) ;
+                        $("#lblCompanyPhone").text(data.companyPhone);
+                        $("#lblNationality").text(data.nationality);
+                    }
+                    else {
+                        $("#lblIqamaNo").text("");
+                        $("#lblMobileNo").text("");
+                        $("#lblWork").text("");
+                        $("#lblCompanyPhone").text("");
+                        $("#lblNationality").text("");
+                    }
+
+                });
+         });
+
+         $('#yearlyRent').change(function () {
+            if ($('#yearlyRent').val().trim() != "")
+                $('#rentCommission').val($('#yearlyRent').val() / 100);
+            else
+                $('#rentCommission').val('0');
+
+            if ($('#yearlyRent').val().trim() != "" && $('#paidAmount').val().trim() != "")
+                $('#remainingAmount').val($('#yearlyRent').val() - $('#paidAmount').val());
+            else
+                $('#remainingAmount').val('');
+
+            SetPaymentMethods(@Model.mMasterBuilding);
+        });
+
+         $('#dtLeaseStart, #dtLeaseEnd').change(function () {
+
+          if (@Model.mMasterBuilding == 4) {
+                var fromDate = $('#dtLeaseStart').val();
+                var toDate = $('#dtLeaseEnd').val();
+                if (fromDate != "" && toDate != "") {
+                    var difference_in_Time =  new Date(toDate.slice(6, 10), toDate.slice(3, 5), toDate.slice(0, 2)) - new Date(fromDate.slice(6, 10), fromDate.slice(3, 5), fromDate.slice(0, 2));
+                    var difference_in_days = difference_in_Time / (1000 * 3600 * 24);
+                    $('#leasePeriodInMonthes').val(difference_in_days);
+                }else
+                    $('#leasePeriodInMonthes').val("");
+            } else {
+                var fromDate = $('#dtLeaseStart').val().toString();
+                var toDate = $('#dtLeaseEnd').val().toString();
+                if (fromDate.trim() != "" && toDate.trim() != "")
+                    $('#leasePeriodInMonthes').val(monthDiff(new Date(fromDate.slice(6, 10), fromDate.slice(3, 5), fromDate.slice(0, 2)),
+                        new Date(toDate.slice(6, 10), toDate.slice(3, 5), toDate.slice(0, 2))));
+                else
+                    $('#leasePeriodInMonthes').val("");
+            }
+            SetPaymentMethods(@Model.mMasterBuilding);
+        });
+
+        $('#WaterBillAmount , #WaterPaidAmount').change(function () {
+            if ($('#WaterBillAmount').val().trim() != "" && $('#WaterPaidAmount').val().trim() != "")
+                $('#WaterRemainingAmount').val($('#WaterBillAmount').val() - $('#WaterPaidAmount').val());
+            else
+                $('#WaterRemainingAmount').val('');
+
+        });
+
+        $('#UnitIncluded').change(function () {
+            if ($('#UnitIncluded').val().includes('1')) {
+                $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').val("");
+                $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').attr('readonly', true)
+            }
+            else {
+                $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').attr('readonly', false)
+            }
+        });
+
+        function back() {
+            var fallbackUrl = "/UnitRentContract?id="+@Model.mMasterBuilding;
+            var prevPage = window.location.href;
+
+            window.history.go(-1);
+
+            setTimeout(function () {
+                if (window.location.href == prevPage) {
+                    window.location.href = fallbackUrl;
+                }
+            }, 500);
+        }
+        var first = false;
+        $(document).ajaxStop(function () {
+            setTimeout(function () {
+                if (first)
+                    return;
+                columnNumberWithCommas('formatNumber');
+                first = true;
+            }, 1000);
+        });
+        $(document).ready(function () {
+            $(".formatNumber").each(function (val) {
+                console.log($(this).text());
+                $(this).text(numberWithCommas($(this).text()));
+            });
+        });
+    </script>
+}

@@ -1,0 +1,108 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Non-Rented Units";
+    ViewData["PageName"] = "Non-Rented Units "+ViewBag.id;
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Non-Rented Units";
+    ViewData["Category1"] = "Buildings";
+    ViewData["PageDescription"] = "";
+    var canPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ShowPayment })).Succeeded;
+    var canEdit = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.EditContract })).Succeeded;
+    var canRenew = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.RenewContract })).Succeeded;
+    var canDelete = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DeleteContract })).Succeeded;
+    var canArchive = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ArchiveContract })).Succeeded;
+    var canNote = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.WritePaymentNote })).Succeeded;
+    var canLegal = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Legal })).Succeeded;
+}
+
+
+<input hidden id="representitveId" value="@Model" />
+<div class="row">
+    <div class="col-xl-12">
+        @if (ViewBag.Representatives != null)
+        {
+            <div class="alert alert-primary">
+                <div class="d-flex flex-start w-100">
+                    <div class="mr-2 hidden-md-down">
+                        <span class="icon-stack icon-stack-lg">
+                            <i class="base-2 icon-stack-3x color-primary-400"></i>
+                            <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                            <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                        </span>
+                    </div>
+                    <div class="d-flex flex-fill">
+                        <div class="flex-fill">
+                            <span class="h5"> Select Representitve  </span>
+                            <div class="form-group">
+                                <select class="select2 form-control w-100" id="representitveIdSelect" data-select2-id="single-default" tabindex="-1" asp-items="ViewBag.Representatives" aria-hidden="true">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+<div class="row ">
+    <div class="col-xl-12" id="nonRented">
+    </div>
+</div>
+
+<div class="modal fade" id="default-example-modal-lg" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div id="noteModalBody">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect waves-themed" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section ScriptsBlock{
+    <script>
+        var representitveId = $("#representitveId").val();
+        var first = false;
+        $(document).ajaxStop(function () {
+            cutText('.note');
+            setTimeout(function () {
+                if (first)
+                    return;
+                columnNumberWithCommas('formatNumber');
+                initializeDataTable("#nonRentedTable");
+                first = true;
+            }, 1000);
+        });
+        $(function () {
+            if (!$("#representitveId").val())
+                $("#representitveIdSelect").val(null);
+            var url2 = '@Url.Content("~/")' + 'Home/GetBuildingNonRentedUnits?id=' + @ViewBag.id;
+           $("#nonRented").load(url2);
+        })
+  
+        function getNote(noteID) {
+            if (noteID == 0)
+                return;
+            $.get("/Home/GetNote", { noteID: noteID }, function (result) {
+                $("#noteModalBody").html(result);
+                $("#default-example-modal-lg").modal('show');
+            });
+        }
+        $("#representitveIdSelect").change(function () {
+            var url = '@Url.Content("~")' + window.location.pathname + "?id=" + @ViewBag.id+"&representitveId=" + $(this).val();;
+            window.location.href = url;
+        })
+    </script>
+}

@@ -1,0 +1,344 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.ViewModels.LegalListViewModel>
+@{
+    ViewData["Title"] = "Legal";
+    ViewData["PageName"] = "Legal " + ViewBag.page;
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Legal";
+    ViewData["Category1"] = "Legal";
+    ViewData["PageDescription"] = "";
+    ViewData["Title"] = "List All Legal";
+    int count = 0;
+    var canNote = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.WritePaymentNote })).Succeeded;
+}
+
+@if (TempData["AlertSaveErr"] != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["AlertSaveErr"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
+        <div class="d-flex flex-start w-100">
+            <div class="d-flex flex-fill">
+                <div class="flex-fill">
+                    <p>  @TempData["success"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="alert alert-primary">
+            <div class="d-flex flex-start w-100">
+                <div class="mr-2 hidden-md-down">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>
+                </div>
+                <div class="d-flex flex-fill">
+                    <div class="flex-fill">
+                        <span class="h5"> Select Building  </span>
+                        <div class="form-group">
+                            <select class="select2 form-control w-100" id="bulding-select" data-select2-id="single-default" tabindex="-1" aria-hidden="true">
+                                <option value="All">All</option>
+                                @foreach (var item in Model.OrderByDescending(e => e.BuldingNumber))
+                                {
+                                    <option value="@item.BuldingNumber">@item.BuldingNumber</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12">
+
+        @*<div class="panel-tag">
+            <p>
+                <select class="form-control">
+                    <option value="value">text</option>
+                </select>
+            </p>
+            </div>*@
+
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Legal Due Pay :  </span> &nbsp;<span class="color-danger-500"> @Model.Sum(e => e.TotalDuePay) </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Id)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TenentName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TenentNationality)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.BuldingNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.UnitNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ContractDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DueDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DelayedRent)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ElectricityBill)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.WaterBill)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TotalDuePay)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.MandoobName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.RequestSubmitDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.RequestRaiseDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Note)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                count++;
+                                <tr>
+                                    <td>
+                                        @count
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TenentName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TenentNationality)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BuldingNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UnitNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ContractDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DueDate)
+                                    </td>
+                                    <td class="formatNumber">
+                                        @Html.DisplayFor(modelItem => item.DelayedRent)
+                                    </td>
+                                    <td class="formatNumber">
+                                        @Html.DisplayFor(modelItem => item.ElectricityBill)
+                                    </td>
+                                    <td class="formatNumber">
+                                        @Html.DisplayFor(modelItem => item.WaterBill)
+                                    </td>
+                                    <td class="formatNumber">
+                                        @Html.DisplayFor(modelItem => item.TotalDuePay)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MandoobName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RequestSubmitDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RequestRaiseDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Note)
+                                        <a class="note" title="@item.Note" onClick="getNote(@item.NoteId)">@item.Note</a>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-Id=@item.Id asp-route-pageid=@ViewBag.page>Edit</a>
+                                                    <a class="dropdown-item" asp-action="Details" title="Details" asp-route-Id=@item.Id asp-route-pageid=@ViewBag.page>Details</a>
+                                                    <a class="dropdown-item" asp-action="UndoLegal" title="Undo Legal" asp-route-Id=@item.Id asp-route-pageid=@ViewBag.page onclick="return confirm('Are you sure you want to Undo Legal for this item?');">Undo Legal</a>
+                                                    <a class="dropdown-item" asp-action="Delete" title="Delete Legal And Contract" asp-route-pageid=@Model.Select(x=>x.pageId).FirstOrDefault() asp-route-Id=@item.Id onclick="return confirm('Are you sure you want to Delete Legal and Contract?');">Delete</a>
+                                                    @if (item.IsBulding)
+                                                    {
+                                                        <a class="dropdown-item" asp-action="Details" asp-controller="UnitRentContract" title="Contract" asp-route-Id=@item.RentContractId>Contract</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="dropdown-item" asp-action="Details" asp-controller="UnitRentContractCompound" title="Contract" asp-route-Id=@item.RentContractId>Contract</a>
+                                                    }
+                                                    @if (canNote)
+                                                    {
+                                                        if (item.IsBulding)
+                                                        {
+                                                            <a class="dropdown-item" title="Notes" href="/UnitRentContract/Notes/@item.RentContractId"> Notes</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="dropdown-item" title="Notes" href="/UnitRentContractCompound/Notes/@item.RentContractId"> Notes</a>
+
+                                                        }
+
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th> </th>
+                                <th> </th>
+                                <th>   </th>
+                                <th>  </th>
+                                <th>   </th>
+                                <th>   </th>
+                                <th>   </th>
+                                <th>   </th>
+
+                                <th class="color-danger-500 font-weight-bold">
+                                    @Model.Sum(e => e.ElectricityBill)
+                                </th>
+                                <th class="color-danger-500 font-weight-bold">
+                                    @Model.Sum(e => e.WaterBill)
+                                </th>
+                                <th class="color-danger-500 font-weight-bold">
+                                    @Model.Sum(e => e.TotalDuePay)
+                                </th>
+                                <th>   </th>
+                                <th>   </th>
+                                <th>   </th>
+                                <th>   </th>
+                                <th>   </th>
+                            </tr>
+
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="default-example-modal-lg" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div id="noteModalBody">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect waves-themed" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        var first = false;
+        $(document).ajaxStop(function () {
+            setTimeout(function () {
+                if (first)
+                    return;
+                columnNumberWithCommas('formatNumber');
+                first = true;
+            }, 1000);
+        });
+        $(function () {
+            var table = lastDataTable;
+            $('#bulding-select').on('keyup change', function () {
+                var searchValue = $(this).val();
+                if (searchValue == "All") {
+                    lastDataTable.fnFilter("", 3);
+                } else {
+                    lastDataTable.fnFilter($(this).val(), 3);
+                }
+            });
+        });
+
+        
+
+        function getNote(noteID) {
+            if (noteID == 0)
+                return;
+            $.get("/Home/GetNote", { noteID: noteID }, function (result) {
+                $("#noteModalBody").html(result);
+                $("#default-example-modal-lg").modal('show');
+            });
+        }
+
+        $(document).ready(function () {
+            $(".formatNumber").each(function (val) {
+                console.log($(this).text());
+                $(this).text(numberWithCommas($(this).text()));
+            });
+        });
+    </script>
+}

@@ -1,0 +1,70 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.WorkPlaces>
+@{ ViewData["Title"] = "Work Places";
+    ViewData["PageName"] = "WorkPlaces";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> WorkPlaces";
+    ViewData["Category1"] = "Work Places"; }
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel-tag">
+            <p>
+                @Html.Partial("_CreateNewPartial")
+            </p>
+        </div>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Work Places :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table id="exampleDTB-1" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>@Html.DisplayNameFor(model => model.workPlace) <span class="column-sorter "></span></th>
+                                <th>@Html.DisplayNameFor(model => model.notes) <span class="column-sorter"></span></th>
+                                <th>Operations </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                            <tr>
+                                <td>
+                                    @(item.i + 1 )
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.value.workPlace)</td>
+                                <td>@Html.DisplayFor(modelItem => item.value.notes)</td>
+                                <td>@Html.Partial("_TableButtonsPartial", item.value.IdWorkPlace)</td>
+                            </tr>}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        pageTitle.innerHTML = '<i class="fontello-icon-monitor"></i>' + 'List of Work Places';
+
+        $('#divAdminDash,#divOperations, #divpermission,  #divRegister, #divCompound').removeClass('active');
+        $('#divIqama').addClass('active');
+        $('#accAdminDashboard,#accOperations, #accPermission, #accRegister, #accCompound').removeClass('in');
+        $('#accIqama').addClass('in');
+    </script>
+}

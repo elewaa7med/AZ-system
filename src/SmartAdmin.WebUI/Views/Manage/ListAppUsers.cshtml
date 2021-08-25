@@ -1,0 +1,114 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "List All Users";
+    ViewData["PageName"] = "List All Users";
+    ViewData["Heading"] = "<i class='fal fa-user text-primary'></i> Users";
+    ViewData["Category1"] = "Users";
+    ViewData["PageDescription"] = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/lou-multi-select-57fb8d3/css/multi-select.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Users :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Full Name </th>
+                                <th>Email </th>
+                                <th>Status </th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @item.value.fullName
+                                    </td>
+                                    <td>
+                                        @item.value.Email
+                                    </td>
+                                    @if (!item.value.LockoutEnabled)
+                                    {
+                                        <td><span class="badge badge-success">Active</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td><span class="badge badge-warning">InActive</span></td>
+
+                                    }
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="EditUser" title="Edit" asp-route-id=@item.value.Id>Edit</a>
+                                                    @if (!item.value.LockoutEnabled)
+                                                    {
+                                                        <a class="dropdown-item" asp-action="DeActivateUser" title="Deactivate" asp-route-id=@item.value.Id>Deactivate</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="dropdown-item" asp-action="DeActivateUser" title="Activate" asp-route-id=@item.value.Id>Activate</a>
+                                                    }
+                                                    <a class="dropdown-item" data-toggle="modal" href="#" onclick="getPermissions('@item.value.Id')">Permissions</a>
+                                                    <a class="dropdown-item" asp-action="DeleteUser" title="Delete" asp-route-id=@item.value.Id>Delete</a>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="default-example-modal" role="dialog" tabindex="-1" style="display: none;" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="modal-content">
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/lou-multi-select-57fb8d3/js/jquery.multi-select.js"></script>
+    <script>
+        function getPermissions(userID) {
+            debugger;
+            $.get("@Url.Action("UserPermissions")", { userID: userID }, function (result) {
+                $("#modal-content").html(result);
+                $('.multiSelect2').multiSelect();
+                $("#default-example-modal").modal();
+            });
+        }
+    </script>
+}

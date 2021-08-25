@@ -1,0 +1,238 @@
+﻿@model SmartAdmin.WebUI.Models.DTO.CompoundDTO
+@{
+    ViewData["Title"] = $"{Model.CompoundName} Contracts Expiry";
+    ViewData["PageName"] = $"{Model.CompoundName} Contract Expiry";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> {Model.CompoundName} Contracts Expiry";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+    var canPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ShowPayment })).Succeeded;
+    var canEdit = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.EditContract })).Succeeded;
+    var canRenew = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.RenewContract })).Succeeded;
+    var canDelete = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DeleteContract })).Succeeded;
+    var canArchive = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ArchiveContract })).Succeeded;
+    var canNote = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.WritePaymentNote })).Succeeded;
+    var canLegal = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Legal })).Succeeded;
+}
+<input hidden id="compundID" value="@Model.CompoundID" />
+<input hidden id="representitveId" value="@Model.RepresentitveId" />
+<div class="row">
+    <div class="col-xl-12">
+        @if (ViewBag.Representatives != null)
+        {
+            <div class="alert alert-primary">
+                <div class="d-flex flex-start w-100">
+                    <div class="mr-2 hidden-md-down">
+                        <span class="icon-stack icon-stack-lg">
+                            <i class="base-2 icon-stack-3x color-primary-400"></i>
+                            <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                            <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                        </span>
+                    </div>
+                    <div class="d-flex flex-fill">
+                        <div class="flex-fill">
+                            <span class="h5"> Select Representitve  </span>
+                            <div class="form-group">
+                                <select class="select2 form-control w-100" id="representitveIdSelect" data-select2-id="single-default" tabindex="-1" asp-items="ViewBag.Representatives" aria-hidden="true">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Remaining Amount:  </span> &nbsp;<span class="color-danger-500"> <span id="totalRemainingAmount">0</span> SAR  </span>
+                    @*<span> &nbsp; &nbsp;  -  &nbsp; &nbsp; </span>
+                        <span class="fw-500  text-primary"> Total Due Rent	:  </span> &nbsp;<span class="color-danger-500"><span id="monthExpiryTotal">0</span> SAR  </span>*@
+                </h2>
+                <div class="panel-toolbar" id="selectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="contractExpiryTable" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                @*<th>Contract No</th>*@
+                                <th>Mobile </th>
+                                <th>Representative</th>
+
+                                <th>Annual Rent</th>
+                                <th>Remaining Amount</th>
+                                <th>Contract Expir Date</th>
+                                <th>Notes</th>
+                                <th>Contract Expire After</th>
+                                <th class="noExport">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contractExpiryBody">
+                            @*<tr class="odd">
+                                    <td valign="top" colspan="9" class="dataTables_empty">Loading ....</td>
+                                </tr>*@
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                @*<th>Contract No</th>*@
+                                <th> </th>
+                                <th></th>
+
+                                <th> </th>
+                                <th> </th>
+                                <th>  </th>
+                                <th></th>
+                                <th>  </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="default-example-modal-lg" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div id="noteModalBody">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect waves-themed" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsBlock{
+    <script>
+        var first = false;
+        $(document).ajaxStop(function () {
+            setTimeout(function () {
+                if (first)
+                    return;
+                initializeDataTable("#contractExpiryTable");
+                columnNumberWithCommas('formatNumber');
+                first = true;
+            }, 1000);
+        });
+        $(function () {
+            $("#representitveIdSelect").change(function () {
+                var url = '@Url.Content("~")' + window.location.pathname + "?compoundId=" + $("#compundID").val() + "&representitveId=" + $(this).val();
+                window.location.href = url;
+            });
+            if (!$("#representitveId").val())
+                $("#representitveIdSelect").val(null);
+            fillContractExpiry();
+        })
+        function fillContractExpiry() {
+            var id = $("#compundID").val();
+            var representitveId = $("#representitveId").val();
+            var htmlcontexp = "";
+            var url = '@Url.Content("~/")' + 'Home/getContractExpiryPerCompound';
+            $.getJSON(url, { IdCompound: id, representitveId: representitveId }, function (data) {
+                console.log(data);
+                var bgbadge = "badge-success";
+            var totalRemainingAmount = data[0].table.map(t => { return t.remainingAmount }).reduce((total, current) => { return total += current; }, 0);
+                $.each(data, function (i, row) {
+                        if (row.itemArray[5] <= 15)
+                            btncolorstr = ' btn-danger" ';
+                        else
+                            if (row.itemArray[5] <= 30)
+                                btncolorstr = ' btn-warning" ';
+                            //else
+                            //btncolorstr = ' btn-success" ';
+                    if (row.itemArray[18] > 0) {
+                        bgbadge = "badge-danger ";
+                    } else {
+                        bgbadge = "badge-success";
+                    } 
+                    row.itemArray[16] = row.itemArray[16] || "";
+                    htmlcontexp += '<tr> ' +
+                        '<td><a href="/UnitRentContractCompound/Details/' + row.itemArray[11] + '"  title="Go To Contract"><b> ' + row.itemArray[6] + '</b> </a> </td> ' +
+                        '<td> ' + row.itemArray[0] + ' </td>' +
+                        '<td> ' + row.itemArray[1] + ' </td>' +
+                        '<td > ' + row.itemArray[2] + ' </td>' +
+                        '<td > ' + row.itemArray[15] + ' </td>' +
+                        '<td class="">'
+                                + numberWithCommas(row.itemArray[3])
+                        + ' </td>' +
+                        '<td class=""> <span class="badge ' + bgbadge + '" >' + numberWithCommas(row.itemArray[18]) + '</span ></td>'  +
+                        '<td> ' + row.itemArray[4] + ' </td>' +
+                        '<td ><a class="note" title="' + row.itemArray[16] + '" onClick=getNote(' + row.itemArray[17] + ')>' + row.itemArray[16] + '</a></td > ' +
+                        '<td><a class="btn waves-effect waves-themed ' + btncolorstr + '">' + row.itemArray[5] + ' </a></td>' +
+                        '<td><div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">'+
+
+                        '<div class="btn-group" role = "group">'+
+                            '<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>'+
+                            '<div class="dropdown-menu">' +
+                                    '<a class="dropdown-item" href="/UnitRentContractCompound/Details/' + row.itemArray[11] + '">Details</a>' +
+                                    '<a class="dropdown-item edit" href="/UnitRentContractCompound/Edit/' + row.itemArray[11] +'">Edit</a>'+
+                                    '<a class="dropdown-item renew" href="/UnitRentContractCompound/Renew/' + row.itemArray[11] + '">Renew</a>' +
+                                    '<a class="dropdown-item el-legal" href="/Legal/Create?IdRentContract=' + row.itemArray[11] + '">Legal</a>' +
+                                    '<a class="dropdown-item el-note" href="/UnitRentContractCompound/Notes/' + row.itemArray[11] +'"> Notes</a>' +
+                                    '<a class="dropdown-item archive" onclick="return confirm (\'Are you sure ?\')" href="/UnitRentContractCompound/Archive/' + row.itemArray[11] + '">Archive</a>' +
+                                    '<a class="dropdown-item delete" href="/UnitRentContractCompound/Delete/' + row.itemArray[11] + '">Delete</a>' +
+                             '</div>'+
+                         '</div>'+
+                        '</div></td>'+
+                            '</tr>';
+                });
+                $('#contractExpiryBody').html(htmlcontexp);
+                if (@((!canEdit).ToString().ToLower())) {
+                    $("#contractExpiryBody .edit").remove();
+                }
+                if (@((!canRenew).ToString().ToLower())) {
+                    $("#contractExpiryBody .renew").remove();
+                }
+                if (@((!canArchive).ToString().ToLower())) {
+                    $("#contractExpiryBody .archive").remove();
+                }
+                  if (@((!canDelete).ToString().ToLower())) {
+                      $("#contractExpiryBody .delete").remove();
+                }
+                  if (@((!canLegal).ToString().ToLower())) {
+                      $("#contractExpiryBody .el-legal").remove();
+                }
+                  if (@((!canNote).ToString().ToLower())) {
+                      $("#contractExpiryBody .el-note").remove();
+                }
+                $("#totalRemainingAmount").text(numberWithCommas(totalRemainingAmount));
+            })
+        }
+        function getNote(noteID) {
+            if (noteID == 0 || noteID == null)
+                return;
+            $.get("/Home/GetNote", { noteID: noteID }, function (result) {
+                console.log(result);
+                $("#noteModalBody").html(result);
+                $("#default-example-modal-lg").modal('show');
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,227 @@
+﻿@model SmartAdmin.WebUI.Models.Tenants
+
+@{
+    ViewData["Title"] = "Edit Tenant";
+    ViewData["PageName"] = ViewBag.id !=null ? "Building Tenants " + ViewBag.id : "Not Tenants page";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Edit Tenant";
+    ViewData["Category1"] = "Tenants";
+    ViewData["PageDescription"] = "";
+}
+<form asp-action="Edit" asp-route-pageid="@ViewBag.id" enctype="multipart/form-data" class="was-validated">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="IdTenant" />
+    @if (ViewBag.AlertSaveErr != null)
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">
+                    <i class="fal fa-times"></i>
+                </span>
+            </button>
+            <div class="d-flex flex-start w-100">
+                <div class="d-flex flex-fill">
+                    <div class="flex-fill">
+                        <p>  @ViewBag.AlertSaveErr</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Edit Tenant
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Tenant Name *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" required autocomplete="off" asp-for="tenantName">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Tenant Name In Arabic</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" autocomplete="off" asp-for="TenantNameAR">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Tenant Mobile *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" autocomplete="off" asp-for="tenantMobile" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Emergency Phone *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="emergencyPhone" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Nationality *
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdNationality" class="select2 form-control w-100" asp-items="ViewBag.IdNationality" required>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Iqama No </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="IqamaNo">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="TenantCompany" class="col-form-label col-sm-3 text-sm-right form-label">Tents Company Name* </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="TenantCompany" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                    Company *
+                                </label>
+                                <div class="col-sm-9">
+                                    <select asp-for="IdCompany" class="select2 form-control w-100" asp-items="ViewBag.IdCompany" required>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Tenant Remarks </label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" asp-for="tenantsNotes">
+
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Tenant Family Count *</label>
+                                <div class="col-sm-9">
+                                    <input type="number" min="1" class="form-control" asp-for="tenantFamilycount" required>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Tenant Email *</label>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control" asp-for="tenantEmail" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Current Iqama Picture</label>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrWhiteSpace(Model.IqamaPicture))
+                                    {
+                                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#imgContract"><strog>View Picture</strog></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-default"><strog>No Picture</strog></a>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Iqama Picture</label>
+                                <div class="col-sm-9">
+                                    <input type="file" id="example-fileinput" class="form-control-file" name="iqamaImageFile">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Iqama Expiration Date *</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control az-datepicker-3" value="@Model.dtIqamaExpiration.ToShortDateString()" asp-for="dtIqamaExpiration" autocomplete="off" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fs-xl">
+                                                <i class="fal fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">ID Letter </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" asp-for="IdLetterPicture">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Work Notes </label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" asp-for="workNotes">
+                                    </textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Tenant is Married</label>
+                                <div class="col-sm-9">
+                                    <input type="checkbox" asp-for="isMarried" class="form-control" id="customSwitch1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="form-group  alert alert-primary alert-dismissible text-center">
+                    @if (ViewBag.id == null)
+                    { 
+                        <button class="btn btn-primary ml-auto waves-effect waves-themed" type="submit">Edit Tenant</button>
+                        <a class="btn btn-secondary ml-1 waves-effect waves-themed" asp-action="Index">Cancel</a>
+                    }
+                    else
+                    {
+                         <button class="btn btn-primary ml-auto waves-effect waves-themed" type="submit">Edit Tenant</button>
+                        <a class="btn btn-secondary ml-1 waves-effect waves-themed" asp-controller="Home" asp-action="GetTenants" asp-route-id=@ViewBag.id>Cancel</a>
+                    }
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal fade" id="imgContract">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @*<div class="modal-header">
+                    <div class="alert alert-info" role="alert">
+                        <a href="#" data-dismiss="modal" class="close">&times;</a>
+                        <h3 class="modal-title" >Building Image</h3>
+                    </div>
+                </div>*@
+            <div class="modal-body">
+                <img style="width:100%" src="~/assets/Tenants/@Model.IqamaPicture" alt="@Model.IqamaPicture" />
+            </div>
+            @*<div class="modal-footer">
+                    <div class="alert alert-light" role="alert">
+                        <a href="#" data-dismiss="modal" class="close btn btn-default">Close</a>
+                    </div>
+                </div>*@
+        </div>
+
+    </div>
+</div>

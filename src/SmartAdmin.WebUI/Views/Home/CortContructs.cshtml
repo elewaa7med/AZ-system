@@ -1,0 +1,186 @@
+﻿@{
+    ViewData["Title"] = "Cort Contructs";
+    ViewData["PageName"] = "Cort Contructs";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Cort Contructs";
+    ViewData["Category1"] = "Buildings";
+    ViewData["PageDescription"] = "";
+    var canPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ShowPayment })).Succeeded;
+    var canEdit = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.EditContract })).Succeeded;
+    var canRenew = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.RenewContract })).Succeeded;
+    var canDelete = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DeleteContract })).Succeeded;
+    var canArchive = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ArchiveContract })).Succeeded;
+}
+
+
+
+<div class="row">
+    <div class="col-xl-12">
+        <h1>
+            <span class="fw-900">   Contracts referred to the court </span>
+        </h1>
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Contracts referred to the courts:  </span>&nbsp;<span class="color-danger-500"> <span id="TotalCourtContracts">0</span>   </span>
+                </h2>
+                <div class="panel-toolbar" id="dueRent60SelectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <!-- datatable start -->
+                    <table id="overDueRentTable" class="table table-bordered table-hover table-striped w-100">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Bld</th>
+                                <th>Unit</th>
+                                <th>Tenant</th>
+                                <th>Mobile </th>
+                                <th>Mandoob </th>
+                                <th>Annual Rent</th>
+                                <th> Due Rent</th>
+                                <th>Rent Collection</th>
+                                <th>Note</th>
+
+                                <th>Rent due after</th>
+                                <th class="noExport">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="overDueRentBody">
+                            @*  <tr class="odd"><td valign="top" colspan="11" class="dataTables_empty">Loading ....</td></tr>*@
+
+                        </tbody>
+                        <tfoot class="thead-themed">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+
+<div class="modal fade" id="default-example-modal-lg" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div id="noteModalBody">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect waves-themed" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsBlock{
+    <script>
+        var first = false;
+        $(document).ajaxStop(function () {
+            cutText('.note');
+            setTimeout(function () {
+                if (first)
+                    return;
+                initializeFilteredDataTable("#overDueRentTable", 5, "#dueRent60SelectContainer");
+                initializeFilteredDataTable("#partialPaymentTable", 5, "#partiallyPaidSelectContainer");
+                columnNumberWithCommas('formatNumber');
+                first = true;
+            }, 1000);
+        });
+        $(function () {
+            fillOverDueRent();
+            fillPartialPayment();
+        })
+        function fillOverDueRent() {
+            var newhtmloverduerents = "";
+            var url = '@Url.Content("~/")' + 'Home/GetCourtBuildingsDueOver60';
+            $.getJSON(url, function (data) {
+                $.each(data.due, function (i, row) {
+                    if (row.totalDays <= 0)
+                        btncolorstr = ' btn-danger" ';
+                    else
+                        if (row.totalDays <= 14)
+                            btncolorstr = ' btn-warning" ';
+                        else
+                            btncolorstr = ' btn-success" ';
+                    newhtmloverduerents += '<tr> ' +
+                        '<td>' + (parseInt(i) + 1) + '</td> ' +
+                        '<td> ' + row.building + ' </td>' +
+                        '<td> ' + row.unitNumber + ' </td>' +
+                        '<td> ' + row.tenantName + ' </td>' +
+                        '<td> ' + row.mobile + ' </td>' +
+                        '<td> ' + row.mandoob + ' </td>' +
+                        '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
+                        '<td> ' + numberWithCommas(row.value) + ' </td>' +
+                        '<td> ' + row.collectionDate + ' </td>' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note+'</a></td > ' +
+
+                        '<td>' +
+                        '<a href="/UnitRentContract/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
+                        '</td>' +
+                        '<td>' +
+                        `
+                            <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/UnitRentContract/Details/`+row.contractID+`">Contract</a>
+                                </div>
+                            </div>
+                        `
+                        //'<a href="/UnitRentContract/Details/' + row.contractID + '" title="Contract" class="btn btn-secondary waves-effect waves-themed">ContractAuf</a>'
+                    '</td>'
+                    '</tr>';
+                });
+
+                $('#overDueRentBody').html(newhtmloverduerents);
+                 if (@((!canPay).ToString().ToLower())) {
+                     $("#overDueRentBody .pay").removeAttr('href')
+                }
+
+                $("#TotalCourtContracts").text(numberWithCommas(data.due.length));
+
+            });
+        }
+        function getNote(noteID) {
+            if (noteID == 0)
+                return;
+            $.get("/Home/GetNote", { noteID: noteID }, function (result) {
+                $("#noteModalBody").html(result);
+                $("#default-example-modal-lg").modal('show');
+            });
+        }
+    </script>
+}

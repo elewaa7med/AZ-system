@@ -1,0 +1,219 @@
+﻿@model SmartAdmin.WebUI.Controllers.TenantElectricityData
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env;
+@{
+    ViewData["Title"] = "Electricity Data";
+    ViewData["PageName"] = "page_invoice";
+    ViewData["Heading"] = "<i class='subheader-icon fal fa-plus-circle'></i>  Electricity Data";
+    ViewData["PageDescription"] = "Electricity Data";
+    ViewData["Category1"] = "Page Views";
+    Layout = null;
+    //Layout = "~/Views/Shared/_ExportLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" media="screen, print" href="@($"{_env.WebRootPath}\\css\\vendors.bundle.css")">
+    <link rel="stylesheet" media="screen, print" href="@($"{_env.WebRootPath}\\css\\app.bundle.css")">
+    <link rel="stylesheet" media="screen, print" href="@($"{_env.WebRootPath}\\css\\themes\\cust-theme-3.css")" />
+    <link href="@($"{_env.WebRootPath}\\css\\Receipt.css")" rel="stylesheet" media="screen, print" />
+    <link href="@($"{_env.WebRootPath}\\css\\arabicFont\\notokufiarabic.css")" rel="stylesheet" media="screen, print" />
+
+
+
+
+</head>
+<body style="background-color:white;">
+    <div class="page-wrapper">
+        <div class="page-inner">
+            <div class="page-content-wrapper" style="background-color: white;">
+                <main id="js-page-content" role="main" class="page-content h-100">
+                    <div class="container" style="height:100%;padding-top:20px;padding-bottom:20px;padding-left:40px;padding-right:40px;">
+                        <div data-size="A4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="d-flex align-items-center mb-5">
+                                        <h1 class="keep-print-font fw-500 mb-0 text-primary flex-1 position-relative">
+                                            @Model.CompoundName
+                                            <img src="@($"{_env.WebRootPath}\\img\\logo_print.png")" class="position-absolute pos-top pos-right max-height-reset mt-1 " />
+                                        </h1>
+                                    </div>
+                                    @*<div class="text-dark fw-700 h1 mb-g keep-print-font">
+                                            Unit 1
+                                        </div>*@
+                                </div>
+                            </div>
+                            <hr style="height:50px" />
+                            <div class="row">
+                                <div class="col-sm-12 d-flex">
+                                    <div class="table-responsive">
+                                        <table class="table table-clean table-sm align-self-end">
+                                            <tbody>
+
+
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <h1 class="fw-300 display-5 color-primary-600 keep-print-font pt-1 l-h-n m-0  ">
+                                                            Electricity meter data
+                                                        </h1>
+                                                    </td>
+                                                    <td colspan="2">
+                                                        <h1 class="fw-300 display-5 color-primary-600 keep-print-font pt-1 l-h-n m-0 fontArabic text-right ">
+                                                            بيانات عداد الكهرباء
+                                                        </h1>
+                                                    </td>
+                                                </tr>
+                                                @if (!string.IsNullOrEmpty(Model.CompoundName))
+                                                {
+                                                    <tr>
+                                                        <td class="titleTable_en" style="font-weight:400;">
+                                                            Compound
+                                                        </td>
+
+                                                        <td class="ResultTable_en">
+                                                            @Model.CompoundName
+                                                        </td>
+
+
+                                                        <td class="ResultTable_ar">
+                                                            @Model.CompoundName
+                                                        </td>
+
+                                                        <td class="titleTable_ar">
+                                                            مجمع
+                                                        </td>
+
+                                                    </tr>
+                                                }
+
+
+                                                <tr>
+                                                    <td class="titleTable_en" style="font-weight:400;">
+                                                        Building
+                                                    </td>
+
+                                                    <td class="ResultTable_en">
+                                                        @Model.BuildingNumber
+                                                    </td>
+
+
+                                                    <td class="ResultTable_ar">
+                                                        @Model.BuildingNumber
+
+                                                    </td>
+
+                                                    <td class="titleTable_ar">
+                                                        بناية رقم
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td class="titleTable_en" style="font-weight:400;">
+                                                        Unit Number
+                                                    </td>
+
+                                                    <td class="ResultTable_en">
+                                                        @Model.UnitNumber
+                                                    </td>
+
+
+                                                    <td class="ResultTable_ar">
+                                                        @Model.UnitNumber
+                                                    </td>
+
+                                                    <td class="titleTable_ar">
+                                                        رقم الوحدة
+                                                    </td>
+
+                                                </tr>
+
+
+
+                                                <tr>
+                                                    <td class="titleTable_en" style="font-weight:400;">
+                                                        Electricity meter Number
+                                                    </td>
+
+                                                    <td class="ResultTable_en">
+                                                        @Model.ElectricityMeterNumber
+                                                    </td>
+
+
+                                                    <td class="ResultTable_ar">
+                                                        @Model.ElectricityMeterNumber
+
+
+                                                    </td>
+
+                                                    <td class="titleTable_ar">
+                                                        رقم عداد الكهرباء
+
+                                                    </td>
+
+                                                </tr>
+
+
+
+
+                                                <tr>
+                                                    <td class="titleTable_en" style="font-weight:400;">
+                                                        Payment number
+
+                                                    </td>
+
+                                                    <td class="ResultTable_en">
+                                                        @Model.ElectricityPaymentNumber
+                                                    </td>
+
+
+                                                    <td class="ResultTable_ar">
+                                                        @Model.ElectricityPaymentNumber
+
+
+                                                    </td>
+
+                                                    <td class="titleTable_ar">
+                                                        رقم حساب سداد
+
+                                                    </td>
+
+                                                </tr>
+
+
+
+
+
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                            <hr style="margin-top:460px" />
+                            <hr class="border-top-0 table-scale-border-bottom" style="width:100%; padding:0px; margin:0px" />
+
+                            <div class="row">
+                                <div class="col-sm-12">
+
+                                    <p class="mt-2 text-muted mb-0 fontArabic" style="text-align:center ">
+                                        7249 الأمير حمود بن عبد العزيز - الخبر 34442 - 3972 المملكة العربية السعودية - ت : 00966138020059 س.ت : 2051221520
+                                    </p>
+                                    <p class="mt-2 text-muted mb-0" style="text-align:center">
+                                        7279 Prince Hamoud bin Abdulaziz St. Al Khobar 34442 KSA. T: 00966138020059. CR. 2051221520, www.az-ltd.com
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
