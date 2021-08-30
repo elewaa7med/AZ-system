@@ -16,6 +16,7 @@ namespace SmartAdmin.WebUI.Models
         public DateTime PaymentDate { get; set; }
         public string checkVisaNumber { get; set; }
         public int ContractId { get; set; }
+        public int? Status { get; set; }
         public virtual UnitRentContract unitRentContract { get; set; }
 
         public virtual ICollection<InvoiceRelatedPaymentDates> invoiceRelatedPaymentDates { get; set; }

@@ -146,7 +146,7 @@
     <div class="card mb-g">
         <h4 class="card-header">
             Payments
-              @if (Model.UnitRentContractPayments.Sum(x => x.Amount) != Model.UnitRentContractPayments.Sum(x => x.PaidAmount))
+              @if (Model.UnitRentContractPayments.Sum(x => x.Amount) != Model.UnitRentContractPayments.Sum(x => x.PaidAmount) && Model.Archived != true)
             {
                 <a class="btn btn-success waves-effect waves-themed float-right" asp-action="PartiallyPay" title="Pay"  asp-route-ContractId=@Model.IdRentContract  style="margin:0px 20px;padding:9px 40px;font-weight:bold;">Pay</a>            
             }

@@ -198,11 +198,13 @@ namespace SmartAdmin.WebUI.Controllers
             UnitRentContract unitRentContract = await _context
                 .TUnitRentContract
                 .Include((UnitRentContract t) => t.mUnit)
+                .Include(x => x.invoices)
                 .Include(e => e.UnitRentContractPayments)
                 .ThenInclude(e => e.User)
                 .Include(e => e.UnitRentContractNotes)
                 .ThenInclude(e => e.User)
                 .SingleOrDefaultAsync((UnitRentContract m) => (int?)m.IdRentContract == id);
+            unitRentContract.invoices = _context.Invoices.Where(x => x.ContractId == id).ToList();
             if (unitRentContract == null)
             {
                 return NotFound();
@@ -1314,8 +1316,13 @@ namespace SmartAdmin.WebUI.Controllers
                         }
                         var oldContract = _context.TUnitRentContract.Include(t => t.mCompoundUnits).SingleOrDefault(c => c.contractNumber == PrevContractNum);
                         var unit = oldContract.mCompoundUnits;
-                        unit.UnitRentContractID = null;
-                        _context.TUnitRentContract.Remove(oldContract);
+                        if (unit != null)
+                        {
+                            unit.isRented = false;
+                            unit.UnitRentContractID = null;
+                        }
+                        oldContract.Archived = true;
+                        _context.TUnitRentContract.Update(oldContract);
 
                         if (unitRentContract.VerifiedFromGovernment)
                             unitRentContract.NotVerifiedReason = null;
@@ -1519,8 +1526,15 @@ namespace SmartAdmin.WebUI.Controllers
             InvoicesEntity.PaymentMehtod = model.PaymentMehtod;
             InvoicesEntity.checkVisaNumber = model.checkVisaNumber;
             InvoicesEntity.InvoiceId = _context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault() == null ? 5000 : _context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault().InvoiceId + 1;
+            UnitRentContractAllPaymentLogs unitRentContractAllPaymentLogs = new UnitRentContractAllPaymentLogs();
+            unitRentContractAllPaymentLogs.Action = "Add Payment";
+            unitRentContractAllPaymentLogs.AllPaidAmount = model.PaidAmount;
+            unitRentContractAllPaymentLogs.UnitRentContractID = model.UnitRentContractID;
+            unitRentContractAllPaymentLogs.PaymentDate = DateTime.Now;
+            unitRentContractAllPaymentLogs.UserID = _user.GetUserId(base.HttpContext.User);
             _context.Add(InvoicesEntity);
-            _context.SaveChanges();
+            _context.Add(unitRentContractAllPaymentLogs);
+
 
             var payment = _context.TUnitRentContractPayments
                 .Where(m => m.UnitRentContractID == model.UnitRentContractID && m.Paid == false)
@@ -1553,14 +1567,17 @@ namespace SmartAdmin.WebUI.Controllers
                     break;
                 }
             }
-
-
             _context.SaveChanges();
             return RedirectToAction("Payment", new { id = model.UnitRentContractID });
         }
         public IActionResult UndoLastPayment(int contractId)
         {
             var Invoice = _context.Invoices.Include(x => x.invoiceRelatedPaymentDates).LastOrDefault(x => x.ContractId == contractId);
+            UnitRentContractAllPaymentLogs unitRentContractAllPaymentLogs = new UnitRentContractAllPaymentLogs();
+            unitRentContractAllPaymentLogs.Action = "undo last Payment";
+            unitRentContractAllPaymentLogs.UnitRentContractID = contractId;
+            unitRentContractAllPaymentLogs.PaymentDate = DateTime.Now;
+            unitRentContractAllPaymentLogs.UserID = _user.GetUserId(base.HttpContext.User);
             if (Invoice != null)
             {
                 var invoiceRelatedPaymentDates = Invoice.invoiceRelatedPaymentDates.Reverse().ToList();
@@ -1572,7 +1589,7 @@ namespace SmartAdmin.WebUI.Controllers
                         var pay = _context.TUnitRentContractPayments.Include(c => c.UnitRentContract)
                                                                     .Include(p => p.UnitRentContractPaymentLogs)
                                                                     .Where(c => c.ID == invoiceRelatedPaymentDate.UnitRentContractPaymentId).FirstOrDefault();
-
+                        unitRentContractAllPaymentLogs.AllPaidAmount += (int)invoiceRelatedPaymentDate.Amount;
                         pay.UnitRentContract.remainingAmount += (int)invoiceRelatedPaymentDate.Amount;
                         pay.UnitRentContract.paidAmount -= (int)invoiceRelatedPaymentDate.Amount;
                         pay.PaidAmount -= (int)invoiceRelatedPaymentDate.Amount;
@@ -1585,7 +1602,7 @@ namespace SmartAdmin.WebUI.Controllers
                         }
                         _context.UnitRentContractPaymentLogs.RemoveRange(pay.UnitRentContractPaymentLogs.ToList());
                     }
-                    _context.Invoices.Remove(Invoice);
+                    _context.Invoices.Update(Invoice);
                     _context.InvoiceRelatedPaymentDates.RemoveRange(Invoice.invoiceRelatedPaymentDates);
                     _context.SaveChanges();
                 }
@@ -1597,6 +1614,7 @@ namespace SmartAdmin.WebUI.Controllers
                                                                            .Where(c => c.PaidAmount > 0 && c.UnitRentContractID == contractId)
                                                                            .OrderByDescending(p => p.DueDate)
                                                                            .FirstOrDefault();
+                unitRentContractAllPaymentLogs.AllPaidAmount = payment.PaidAmount;
                 payment.UnitRentContract.remainingAmount += payment.PaidAmount;
                 payment.UnitRentContract.paidAmount -= payment.PaidAmount;
                 payment.PaidAmount = 0;
@@ -1605,18 +1623,26 @@ namespace SmartAdmin.WebUI.Controllers
                 payment.Note = null;
                 payment.Paid = false;
                 _context.UnitRentContractPaymentLogs.RemoveRange(payment.UnitRentContractPaymentLogs.ToList());
-                _context.SaveChanges();
             }
+            _context.Add(unitRentContractAllPaymentLogs);
+            _context.SaveChanges();
             return RedirectToAction("Payment", new { id = contractId });
         }
         public IActionResult UndoAllPayments(int contractId)
         {
             var Invoice = _context.Invoices.Where(x => x.ContractId == contractId).Include(x => x.invoiceRelatedPaymentDates);
+            UnitRentContractAllPaymentLogs unitRentContractAllPaymentLogs = new UnitRentContractAllPaymentLogs();
+            unitRentContractAllPaymentLogs.Action = "undo All Payment";
+            unitRentContractAllPaymentLogs.UnitRentContractID = contractId;
+            unitRentContractAllPaymentLogs.PaymentDate = DateTime.Now;
+            unitRentContractAllPaymentLogs.UserID = _user.GetUserId(base.HttpContext.User);
             if (Invoice != null)
             {
+
                 var unitRentContractId = Invoice.FirstOrDefault().invoiceRelatedPaymentDates.ToList();
                 if (unitRentContractId.Count() >= 0)
                 {
+                    unitRentContractAllPaymentLogs.AllPaidAmount = (int)Invoice.Sum(x => x.Payment);
                     _context.InvoiceRelatedPaymentDates.RemoveRange(unitRentContractId);
                     _context.Invoices.RemoveRange(Invoice);
 
@@ -1635,6 +1661,7 @@ namespace SmartAdmin.WebUI.Controllers
                 payment.Paid = false;
                 _context.UnitRentContractPaymentLogs.RemoveRange(payment.UnitRentContractPaymentLogs.ToList());
             }
+            _context.Add(unitRentContractAllPaymentLogs);
             _context.SaveChanges();
             UpdateLastPayment(contractId, GetLastPaymentData(payments.FirstOrDefault().UnitRentContract.paymentMethod, payments.FirstOrDefault().UnitRentContract.dtLeaseStart));
             return RedirectToAction("Payment", new { id = contractId });

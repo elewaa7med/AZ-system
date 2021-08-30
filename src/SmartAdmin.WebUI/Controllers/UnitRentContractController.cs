@@ -100,12 +100,13 @@ namespace SmartAdmin.WebUI.Controllers
             UnitRentContract unitRentContract = await _context
                 .TUnitRentContract
                 .Include((UnitRentContract t) => t.mUnit)
+                .Include(x => x.invoices)
                 .Include(e => e.UnitRentContractPayments)
                 .ThenInclude(e => e.User)
                 .Include(e => e.UnitRentContractNotes)
                 .ThenInclude(e => e.User)
                 .SingleOrDefaultAsync((UnitRentContract m) => (int?)m.IdRentContract == id);
-
+            unitRentContract.invoices = _context.Invoices.Where(x => x.ContractId == id).ToList();
             if (unitRentContract == null)
             {
                 return NotFound();
@@ -1007,8 +1008,13 @@ namespace SmartAdmin.WebUI.Controllers
                             }
                             var oldContract = _context.TUnitRentContract.Include(t => t.mUnit).SingleOrDefault(c => c.contractNumber == PrevContractNum);
                             var unit = oldContract.mUnit;
-                            unit.UnitRentContractID = null;
-                            _context.TUnitRentContract.Remove(oldContract);
+                            if (unit != null)
+                            {
+                                unit.isRented = false;
+                                unit.UnitRentContractID = null;
+                            }
+                            oldContract.Archived = true;
+                            _context.TUnitRentContract.Update(oldContract);
                             if (unitRentContract.VerifiedFromGovernment)
                                 unitRentContract.NotVerifiedReason = null;
 
@@ -1278,7 +1284,7 @@ namespace SmartAdmin.WebUI.Controllers
                     }
                     _context.Invoices.Remove(Invoice);
                     _context.InvoiceRelatedPaymentDates.RemoveRange(Invoice.invoiceRelatedPaymentDates);
-                   
+
                 }
             }
             else
@@ -1297,9 +1303,9 @@ namespace SmartAdmin.WebUI.Controllers
                 payment.Note = null;
                 payment.Paid = false;
                 _context.UnitRentContractPaymentLogs.RemoveRange(payment.UnitRentContractPaymentLogs.ToList());
-                
+
             }
-           
+
             _context.Add(unitRentContractAllPaymentLogs);
             _context.SaveChanges();
             return RedirectToAction("Payment", new { id = contractId });
@@ -1444,7 +1450,7 @@ namespace SmartAdmin.WebUI.Controllers
                     //       PaymentState = coverAllRent,
                     //   }
                     //}
-                }) ;
+                });
                 paidAmount -= rentValue;
                 month += incrmentStep;
                 remainingLastContact = 0;
@@ -1471,7 +1477,8 @@ namespace SmartAdmin.WebUI.Controllers
                     if (InvoicePayment < (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount))
                     {
                         break;
-                    }else
+                    }
+                    else
                     {
                         InvoicePayment = InvoicePayment - (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount);
                         counter++;

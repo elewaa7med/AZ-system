@@ -14,6 +14,7 @@ namespace SmartAdmin.WebUI.Models
         public Invoices invoice { get; set; }
         public bool PaymentState { get; set; }
         public int UnitRentContractPaymentId { get; set; }
+        public int? Status { get; set; }
         public UnitRentContractPayment unitRentContractPayment { get; set; }
     }
 }

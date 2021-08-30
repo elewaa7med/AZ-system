@@ -19,7 +19,7 @@ namespace SmartAdmin.WebUI.Controllers
 
 		public IActionResult Index()
 		{
-			return View(_context.unitRentContractAllPaymentLogs.Include(x => x.UnitRentContract).Include(x => x.User));
+			return View(_context.unitRentContractAllPaymentLogs.Include(x => x.UnitRentContract).ThenInclude(x=>x.mCompound).Include(x => x.User));
 		}
 	}
 }
