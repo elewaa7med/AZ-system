@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartAdmin.WebUI.Data;
 
 namespace SmartAdmin.WebUI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210830143640_add status column to Invoice and RelatedPayment")]
+    partial class addstatuscolumntoInvoiceandRelatedPayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1318,8 +1320,6 @@ namespace SmartAdmin.WebUI.Migrations
 
                     b.Property<int>("AllPaidAmount");
 
-                    b.Property<int>("InvoiceID");
-
                     b.Property<DateTime>("PaymentDate");
 
                     b.Property<int>("UnitRentContractID");
@@ -1327,8 +1327,6 @@ namespace SmartAdmin.WebUI.Migrations
                     b.Property<string>("UserID");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("InvoiceID");
 
                     b.HasIndex("UnitRentContractID");
 
@@ -1948,11 +1946,6 @@ namespace SmartAdmin.WebUI.Migrations
 
             modelBuilder.Entity("SmartAdmin.WebUI.Models.UnitRentContractAllPaymentLogs", b =>
                 {
-                    b.HasOne("SmartAdmin.WebUI.Models.Invoices", "Invoice")
-                        .WithMany("unitRentContractAllPaymentLogs")
-                        .HasForeignKey("InvoiceID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("SmartAdmin.WebUI.Models.UnitRentContract", "UnitRentContract")
                         .WithMany("UnitRentContractAllPaymentLogs")
                         .HasForeignKey("UnitRentContractID")

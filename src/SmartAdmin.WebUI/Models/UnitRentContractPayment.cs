@@ -39,6 +39,8 @@ namespace SmartAdmin.WebUI.Models
         public int UnitRentContractID { get; set; }
         public virtual UnitRentContract UnitRentContract { get; set; }
         public virtual ApplicationUser User { get; set; }
+        public virtual Invoices Invoice {get;set;}
+        public int InvoiceID {get;set; }
         public string UserID { get; set; }
         public string Action { get; set; }
     }

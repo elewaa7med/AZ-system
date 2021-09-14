@@ -20,5 +20,6 @@ namespace SmartAdmin.WebUI.Models
         public virtual UnitRentContract unitRentContract { get; set; }
 
         public virtual ICollection<InvoiceRelatedPaymentDates> invoiceRelatedPaymentDates { get; set; }
+        public virtual ICollection<UnitRentContractAllPaymentLogs> unitRentContractAllPaymentLogs { get; set; }
     }
 }
