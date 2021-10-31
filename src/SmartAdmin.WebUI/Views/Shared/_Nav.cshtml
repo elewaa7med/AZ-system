@@ -36,6 +36,7 @@
 
 
     var hasBuildingDashboardAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingDashboard })).Succeeded);
+    var hasPaymentlogsAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.PaymentLogs })).Succeeded);
     var hasMeadowParkDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MeadowParkGardenDashboard })).Succeeded);
     var hasDesertRoseDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertRoseDashboard })).Succeeded);
     var hasDaarResidenceDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DaarResidenceDashboard })).Succeeded);
@@ -911,7 +912,7 @@
                 </li> 
             }
 
-            if (hasBuildingAccess || hasMeadowParkAccess || hasDesertRoseAccess || hasDaarResidenceAccess || hasVilla24Access || hasVilla21Access || hasDesertApartmentsAccess)
+            if (hasBuildingAccess || hasBuildingHyamAlrashedAccess || hasBuildingsroohAccess || hasBuildingUKAccess || hasMeadowParkAccess || hasDesertRoseAccess || hasDaarResidenceAccess || hasVilla24Access || hasVilla21Access || hasDesertApartmentsAccess)
             {
                 list = new List<string> { "Electricity", "Bulding water Meter" };
     <li class="@(list.Contains(pageName) ? "active open" : "")">
@@ -997,7 +998,7 @@
             </li>
         </ul>
     </li> }
-            if (isAdmin)
+            if (isAdmin || hasPaymentlogsAccess)
             {
                 list = new List<string> { "Register", "Positions page", "Owners", "Cities", "Districts", "Companies", "Mandoobs", "Payment logs" };
     <li class="@(list.Contains(pageName) ? "active open" : "")">
@@ -1006,46 +1007,55 @@
             <span class="nav-link-text">Setup</span>
         </a>
         <ul>
-            <li class="@("Payment logs".Contains(pageName) ? "active" : "")">
-                <a asp-area="" asp-controller="PaymentLogs" asp-action="index" title="Register" data-filter-tags="register">
-                    <span class="nav-link-text">Payment Logs</span>
-                </a>
-            </li>
-            <li class="@("Register".Contains(pageName) ? "active" : "")">
-                <a asp-area="" asp-controller="Account" asp-action="Register" title="Register" data-filter-tags="register">
-                    <span class="nav-link-text">Register</span>
-                </a>
-            </li>
-            <li class="@("Cities".Contains(pageName) ? "active" : "")">
-                <a href="~/Cities" title="Cities" data-filter-tags="">
-                    <span class="nav-link-text">Cities</span>
-                </a>
-            </li>
-            <li class="@("Districts".Contains(pageName) ? "active" : "")">
-                <a href="~/Districts" title="Districts" data-filter-tags="">
-                    <span class="nav-link-text">Districts</span>
-                </a>
-            </li>
-            <li class="@("Companies".Contains(pageName) ? "active" : "")">
-                <a href="~/Companies" title="Companies" data-filter-tags="">
-                    <span class="nav-link-text">Companies</span>
-                </a>
-            </li>
-            <li class="@("Positions page".Contains(pageName) ? "active" : "")">
-                <a href="~/Tpositions" title="Positions" data-filter-tags="">
-                    <span class="nav-link-text">Positions</span>
-                </a>
-            </li>
-            <li class="@("Mandoobs".Contains(pageName) ? "active" : "")">
-                <a href="~/Mandoobs" title="Sales Representatives" data-filter-tags="">
-                    <span class="nav-link-text">Sales Representatives</span>
-                </a>
-            </li>
-            <li class="@("Owners".Contains(pageName) ? "active" : "")">
-                <a href="~/Owners" title="Owners" data-filter-tags="">
-                    <span class="nav-link-text">Owners</span>
-                </a>
-            </li>
+            @if(isAdmin){
+                <li class="@("Payment logs".Contains(pageName) ? "active" : "")">
+                    <a asp-area="" asp-controller="PaymentLogs" asp-action="index" title="Register" data-filter-tags="register">
+                        <span class="nav-link-text">Payment Logs</span>
+                    </a>
+                </li>
+                <li class="@("Register".Contains(pageName) ? "active" : "")">
+                    <a asp-area="" asp-controller="Account" asp-action="Register" title="Register" data-filter-tags="register">
+                        <span class="nav-link-text">Register</span>
+                    </a>
+                </li>
+                <li class="@("Cities".Contains(pageName) ? "active" : "")">
+                    <a href="~/Cities" title="Cities" data-filter-tags="">
+                        <span class="nav-link-text">Cities</span>
+                    </a>
+                </li>
+                <li class="@("Districts".Contains(pageName) ? "active" : "")">
+                    <a href="~/Districts" title="Districts" data-filter-tags="">
+                        <span class="nav-link-text">Districts</span>
+                    </a>
+                </li>
+                <li class="@("Companies".Contains(pageName) ? "active" : "")">
+                    <a href="~/Companies" title="Companies" data-filter-tags="">
+                        <span class="nav-link-text">Companies</span>
+                    </a>
+                </li>
+                <li class="@("Positions page".Contains(pageName) ? "active" : "")">
+                    <a href="~/Tpositions" title="Positions" data-filter-tags="">
+                        <span class="nav-link-text">Positions</span>
+                    </a>
+                </li>
+                <li class="@("Mandoobs".Contains(pageName) ? "active" : "")">
+                    <a href="~/Mandoobs" title="Sales Representatives" data-filter-tags="">
+                        <span class="nav-link-text">Sales Representatives</span>
+                    </a>
+                </li>
+                <li class="@("Owners".Contains(pageName) ? "active" : "")">
+                    <a href="~/Owners" title="Owners" data-filter-tags="">
+                        <span class="nav-link-text">Owners</span>
+                    </a>
+                </li>
+              }
+             else { 
+                 <li class="@("Payment logs".Contains(pageName) ? "active" : "")">
+                    <a asp-area="" asp-controller="PaymentLogs" asp-action="index" title="Register" data-filter-tags="register">
+                        <span class="nav-link-text">Payment Logs</span>
+                    </a>
+                </li>
+            }
         </ul>
     </li> list = new List<string> { "List All Users", "Roles" };
     <li class="@(list.Contains(pageName) ? "active open" : "")">

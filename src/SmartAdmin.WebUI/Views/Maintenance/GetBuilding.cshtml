@@ -38,6 +38,8 @@
                                 <th>Unit</th>
                                 <th>Responsible</th>
                                 <th>Days to end</th>
+                                <th>Start Date</th>
+                                <th>End DAte Date</th>
                                 <th>Cost</th>
                                 <th class="noExport"> Operation</th>
                             </tr>
@@ -46,37 +48,45 @@
                             @{ int i = 1;}
                             @foreach (var item in Model)
                             {
-                <tr>
-                    <td>@i</td>
-                    <td>@item.Unit.mBuilding.BuildingName</td>
-                    <td>@item.Unit.UnitNumber</td>
-                    <td>@item.User?.fullName</td>
-                    @{ var daysToEnd = item.MaintenanceEndDate.Subtract(DateTime.Now).Days;
-                                        var cssClass = daysToEnd > 0 ? "badge badge-success" : "badge badge-danger"; }
-                    <td>
-                        <span class="@cssClass">@daysToEnd</span>
-                    </td>
-                    <td class="formatNumber">
-                        @item.Cost
-                    </td>
-                    <td>
-                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-action="Details" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Details</a>
-                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Edit</a>
-                                    <a class="dropdown-item" asp-action="Print" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Print</a>
-                                    <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Delete</a>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>i++;
+                            <tr>
+                                <td>@i</td>
+                                <td>@item.Unit.mBuilding.BuildingName</td>
+                                <td>@item.Unit.UnitNumber</td>
+                                <td>@item.User?.fullName</td>
+                                @{ var daysToEnd = item.MaintenanceEndDate.Subtract(DateTime.Now).Days;
+                                    var cssClass = daysToEnd > 0 ? "badge badge-success" : "badge badge-danger"; }
+                                <td>
+                                    <span class="@cssClass">@daysToEnd</span>
+                                </td>
+                                <td>
+                                    @item.CreatedOn.ToShortDateString()
+                                </td>
+                                <td>
+                                    @item.MaintenanceEndDate.ToShortDateString()
+                                </td>
+                                <td class="formatNumber">
+                                    @item.Cost
+                                </td>
+                                <td>
+                                    <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" asp-action="Details" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Details</a>
+                                                <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Edit</a>
+                                                <a class="dropdown-item" asp-action="Print" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Print</a>
+                                                <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.ID" asp-route-pageid="@ViewBag.id">Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>i++;
                             }
                         </tbody>
                         <tfoot class="thead-themed">
                             <tr>
+                                <th> </th>
+                                <th> </th>
                                 <th> </th>
                                 <th> </th>
                                 <th> </th>

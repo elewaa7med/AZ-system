@@ -29,6 +29,7 @@ namespace SmartAdmin.WebUI.Controllers
                                              .Include(u => u.CompoundUnit.mCompoundBuilding)
                                              .Include(e => e.User)
                                              .Where(e => e.CompoundUnitID.HasValue && e.CompoundUnit.mCompoundBuilding.IdCompound == compoundID)
+                                             .OrderBy(x=>x.MaintenanceEndDate)
                                              .ToList();
             ViewBag.CompoundID = compoundID;
             ViewBag.CompoundName = _context.TCompounds.FirstOrDefault(c => c.IdCompound == compoundID).compoundName;
@@ -42,6 +43,7 @@ namespace SmartAdmin.WebUI.Controllers
                                              .Include(u => u.Unit.mBuilding)
                                              .Include(e => e.User)
                                              .Where(e => e.UnitID.HasValue && e.Unit.idMasterBuilding == id)
+                                              .OrderBy(x => x.MaintenanceEndDate)
                                              .ToList();
             return View(model);
         }

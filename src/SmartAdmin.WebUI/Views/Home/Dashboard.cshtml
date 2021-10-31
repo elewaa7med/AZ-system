@@ -24,7 +24,7 @@
     <div class="col-sm-6 col-xl-6">
         <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
             <div class="">
-                <a class="text-white">
+                <a class="text-white" href="/Home/GetPaymentDetails?TotalToday=true">
                     <h3 class="display-4 d-block l-h-n m-0 fw-500">
                         <span class="format"> @Model.TotalRevenuToday</span>
                         <small class="m-0 l-h-n"> <h3 class="fw-500"> Total sums collected during Today @Model.day (@Model.date) </h3> </small>
@@ -37,7 +37,7 @@
     <div class="col-sm-6 col-xl-6">
         <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
             <div class="">
-                <a class="text-white">
+                <a class="text-white" href="/Home/GetPaymentDetails">
                     <h3 class="display-4 d-block l-h-n m-0 fw-500">
                         <span class="format"> @Model.TotalRevenu</span>
                         <small class="m-0 l-h-n"> <h3 class="fw-500">Total sums collected during the month of @Model.MonthName </h3> </small>
@@ -103,6 +103,7 @@
                             <tbody>
                                 @foreach (var record in item.Items)
                                 {
+                                    if (record.Type.Trim().Contains("Shop ") || record.Type.Trim().Contains("Store ") || record.Type.Trim().Contains("Warehouse ")) { continue; }
             <tr>
                 <th>@record.Type</th>
                 <td>@record.Occupied</td>

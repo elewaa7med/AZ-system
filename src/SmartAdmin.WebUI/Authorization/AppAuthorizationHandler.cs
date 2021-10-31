@@ -211,6 +211,10 @@ namespace SmartAdmin.WebUI.Authorization
 
         [Display(Name = "Desert Apartments")]
         [System.ComponentModel.DisplayName("Dashboard")]
-        DesertApartmentsDashboard = 27
+        DesertApartmentsDashboard = 27,
+
+        [Display(Name = "PaymentLogs")]
+        [System.ComponentModel.DisplayName("Other")]
+        PaymentLogs = 48
     }
 }

@@ -7,6 +7,30 @@
 
 <div class="row">
     <div class="col-xl-12">
+        @if (ViewBag.Representatives != null)
+        {
+            <input hidden id="representitveId" value="@ViewBag.RepresentitveId" />
+
+            <div class="alert alert-primary">
+                <div class="d-flex flex-start w-100">
+                    <div class="mr-2 hidden-md-down">
+                        <span class="icon-stack icon-stack-lg">
+                            <i class="base-2 icon-stack-3x color-primary-400"></i>
+                            <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                            <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                        </span>
+                    </div>
+                    <div class="d-flex flex-fill">
+                        <div class="flex-fill">
+                            <span class="h5"> Select Representitve  </span>
+                            <div class="form-group">
+                                <select class="select2 form-control w-100" id="representitveIdSelect" data-select2-id="single-default" tabindex="-1" asp-items="ViewBag.Representatives" aria-hidden="true">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> }
         @*<div class="panel-tag">
                 <p>
                     <a asp-action="Create" asp-route-id="@ViewBag.id" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
@@ -42,6 +66,7 @@
                                 <th>Building NO</th>
                                 <th>Unit</th>
                                 <th>Payment</th>
+                                <th>payment Date</th>
                                 <th>Action</th>
                                 <th>By</th>
                                 <th>operation</th>
@@ -62,12 +87,15 @@
                                     </td>
                                     <td>
                                         @(item.value.UnitRentContract.IdUnitCompound == null ? item.value.UnitRentContract.mUnit.mBuilding.BuildingName : item.value.UnitRentContract.mCompoundUnits.mCompoundBuilding.BuildingNumber)
-                                    </td> 
+                                    </td>
                                     <td>
                                         @(item.value.UnitRentContract.IdUnitCompound == null ? item.value.UnitRentContract.mUnit.UnitNumber : item.value.UnitRentContract.mCompoundUnits.UnitNumber)
                                     </td>
-                                    <td>
+                                    <td class="formatNumber">
                                         @item.value.AllPaidAmount
+                                    </td>
+                                    <td>
+                                        @item.value.PaymentDate
                                     </td>
                                     <td>
                                         @item.value.Action
@@ -93,7 +121,7 @@
                                                             <a class="dropdown-item" asp-action="Invoice" asp-controller="UnitRentContractCompound" title="Invoice" asp-route-InvoiceId=@item.value.Invoice.Id>Show Invoice</a>
                                                         }
                                                         @*<a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.value.IdBuilding>Edit</a>
-        <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdBuilding>Delete</a>*@
+                                                            <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdBuilding>Delete</a>*@
                                                     </div>
                                                 </div>
                                             </div>
@@ -103,6 +131,21 @@
                                 </tr>
                             }
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="formatNumber">@Model.Sum(x => x.AllPaidAmount)</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+
+                            </tr>
+                        </tfoot>
 
                     </table>
                     <!-- datatable end -->
@@ -112,3 +155,23 @@
     </div>
 </div>
 
+@section ScriptsBlock
+{
+    <script>
+        $(function () {
+            if (!$("#representitveId").val())
+                $("#representitveIdSelect").val(null);
+        })
+        $("#representitveIdSelect").change(function () {
+            var url = '@Url.Content("~")' + window.location.pathname  +"?representitveId=" + $(this).val();;
+             window.location.href = url;
+        })
+
+        $(document).ready(function () {
+            $(".formatNumber").each(function (val) {
+                console.log($(this).text());
+                $(this).text(numberWithCommas($(this).text()));
+            });
+        });
+    </script>
+}

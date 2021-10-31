@@ -725,7 +725,7 @@ namespace SmartAdmin.WebUI.Controllers
                         DateTime date = new DateTime();
                         //add water to yearly rent
                         var yearlyRent = unitRentContract.yearlyRent;
-
+                        unitRentContract.UnitRentContractPayments = _context.TUnitRentContractPayments.Include(x => x.InvoiceRelatedPaymentDates).Where(x => x.UnitRentContractID == unitRentContract.IdRentContract).ToList();
                         switch (unitRentContract.paymentMethod)
                         {
                             case 1:
@@ -1526,6 +1526,7 @@ namespace SmartAdmin.WebUI.Controllers
             InvoicesEntity.PaymentMehtod = model.PaymentMehtod;
             InvoicesEntity.checkVisaNumber = model.checkVisaNumber;
             InvoicesEntity.Status = null;
+            //InvoicesEntity.InvoiceId = long.Parse(model.InvoiceId);
             InvoicesEntity.InvoiceId = _context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault() == null ? 5000 : _context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault().InvoiceId + 1;
             _context.Add(InvoicesEntity);
             UnitRentContractAllPaymentLogs unitRentContractAllPaymentLogs = new UnitRentContractAllPaymentLogs();
@@ -1636,10 +1637,10 @@ namespace SmartAdmin.WebUI.Controllers
         public IActionResult UndoAllPayments(int contractId)
         {
             var Invoice = _context.Invoices.Where(x => x.ContractId == contractId && x.Status == null).Include(x => x.invoiceRelatedPaymentDates);
-       
+
             if (Invoice != null)
             {
-               
+
                 var invoiceRelatedPaymentDatesEntity = Invoice.FirstOrDefault().invoiceRelatedPaymentDates.ToList();
                 Invoice.ToList().ForEach(x =>
                 {
@@ -1659,7 +1660,7 @@ namespace SmartAdmin.WebUI.Controllers
                 invoiceRelatedPaymentDatesEntity.ForEach(x =>
                 {
                     x.Status = 0;
-                    
+
                 });
                 if (invoiceRelatedPaymentDatesEntity.Count() > 0)
                 {
@@ -1722,6 +1723,7 @@ namespace SmartAdmin.WebUI.Controllers
         {
             var InvoicesForSameContract = _context.Invoices.Where(x => x.ContractId == unitRentContract.IdRentContract && x.Status == null);
 
+
             var payments = _context.TUnitRentContractPayments.Include(p => p.UnitRentContractPaymentLogs).Where(c => c.UnitRentContractID == unitRentContract.IdRentContract).ToList();
             _context.UnitRentContractPaymentLogs.RemoveRange(payments.SelectMany(p => p.UnitRentContractPaymentLogs).ToList());
             _context.TUnitRentContractPayments.RemoveRange(payments);
@@ -1772,32 +1774,69 @@ namespace SmartAdmin.WebUI.Controllers
                 remainingLastContact = 0;
                 payedFromRemainingLastContact = 0;
             }
+
+
             int counter = 0;
             remainingLastContact = unitRentContract.LastContractRemainingAmount;
+            var invoiceRelatedPaymentDates = _context.InvoiceRelatedPaymentDates.Include(x => x.unitRentContractPayment).Where(x => x.unitRentContractPayment.UnitRentContractID == unitRentContract.IdRentContract).ToList();
+            invoiceRelatedPaymentDates.ToList().ForEach(x => x.Status = 0);
+
             foreach (var invoice in InvoicesForSameContract)
             {
-                decimal InvoicePayment = invoice.Payment;
-                while (InvoicePayment > 0)
+                //decimal InvoicePayment = invoice.Payment;
+                //while (InvoicePayment > 0)
+                //{
+                //    var unitRentContractPayment = unitRentContract.UnitRentContractPayments.OrderBy(x => x.DueDate).ElementAt(counter);
+                //    unitRentContractPayment.InvoiceRelatedPaymentDates = invoiceRelatedPaymentDates.Where(x => x.Status == null).ToList() ?? new List<InvoiceRelatedPaymentDates>();
+                //    decimal currentPaidifListHaveValue = unitRentContractPayment.Amount - unitRentContractPayment.InvoiceRelatedPaymentDates.Sum(x => x.Amount);
+                //    unitRentContractPayment.InvoiceRelatedPaymentDates.Add(
+                //        new InvoiceRelatedPaymentDates()
+                //        {
+                //            Amount = InvoicePayment < (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount) ? InvoicePayment : (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.PaidAmount),
+                //            InvoiceId = invoice.Id,
+                //            PaymentState = InvoicePayment >= (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount),
+                //        });
+                //    if (InvoicePayment < (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount))
+                //    {
+                //        invoiceRelatedPaymentDates.Add(unitRentContractPayment.InvoiceRelatedPaymentDates.LastOrDefault());
+                //        break;
+                //    }
+                //    else
+                //    {
+                //        invoiceRelatedPaymentDates.Add(unitRentContractPayment.InvoiceRelatedPaymentDates.LastOrDefault());
+                //        InvoicePayment = InvoicePayment - (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount);
+                //        counter++;
+                //    }
+                //}
+                var unitRentContractPayment = unitRentContract.UnitRentContractPayments.Where(x => x.PaymentDate.Value.ToShortDateString() == DateTime.Today.ToShortDateString()).OrderBy(x => x.DueDate).ElementAt(counter);
+                if (unitRentContractPayment.Amount == invoice.Payment)
                 {
-                    var unitRentContractPayment = unitRentContract.UnitRentContractPayments.OrderBy(x => x.DueDate).ElementAt(counter);
-                    unitRentContractPayment.InvoiceRelatedPaymentDates = unitRentContractPayment.InvoiceRelatedPaymentDates.Where(x => x.Status == null).ToList() ?? new List<InvoiceRelatedPaymentDates>();
-                    decimal currentPaidifListHaveValue = unitRentContractPayment.Amount - unitRentContractPayment.InvoiceRelatedPaymentDates.Sum(x => x.Amount);
                     unitRentContractPayment.InvoiceRelatedPaymentDates.Add(
-                        new InvoiceRelatedPaymentDates()
-                        {
-                            Amount = InvoicePayment < (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount) ? InvoicePayment : (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.PaidAmount),
-                            InvoiceId = invoice.Id,
-                            PaymentState = InvoicePayment >= (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount),
-                        });
-                    if (InvoicePayment < (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount))
+                    new InvoiceRelatedPaymentDates()
                     {
-                        break;
-                    }
-                    else
+                        Amount = invoice.Payment,
+                        InvoiceId = invoice.Id,
+                        PaymentState = true,
+                    });
+                    counter++;
+                }
+                else if (unitRentContractPayment.Amount < invoice.Payment)
+                {
+                    unitRentContractPayment.InvoiceRelatedPaymentDates.Add(
+                    new InvoiceRelatedPaymentDates()
                     {
-                        InvoicePayment = InvoicePayment - (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount);
-                        counter++;
-                    }
+                        Amount = unitRentContractPayment.Amount,
+                        InvoiceId = invoice.Id,
+                        PaymentState = false,
+                    });
+
+                    decimal invoiceRemain = invoice.Payment - unitRentContractPayment.Amount;
+                    counter++;
+                    unitRentContractPayment = unitRentContract.UnitRentContractPayments.Where(x => x.PaymentDate.Value.ToShortDateString() == DateTime.Today.ToShortDateString()).OrderBy(x => x.DueDate).ElementAt(counter);
+                }
+                else if (unitRentContractPayment.Amount > invoice.Payment)
+                {
+
                 }
             }
             return unitRentContract.UnitRentContractPayments.Where(d => d.Paid).OrderByDescending(p => p.DueDate).FirstOrDefault()?.DueDate ?? unitRentContract.dtLeaseStart.AddMonths(-incrmentStep);

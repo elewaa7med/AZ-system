@@ -39,21 +39,28 @@
                             </tr>
                             @if (Model.CompoundUnitID.HasValue)
                             {
-                                <tr>
-                                    <td>
-                                        <strong>Compound:  </strong>
-                                    </td>
-                                    <td>
-                                        @ViewBag.CompoundName
-                                    </td>
-                                </tr>
-                            }
+                        <tr>
+                            <td>
+                                <strong>Compound:  </strong>
+                            </td>
+                            <td>
+                                @ViewBag.CompoundName
+                            </td>
+                        </tr>}
                             <tr>
                                 <td>
                                     <strong>Unit:  </strong>
                                 </td>
                                 <td>
                                     @(Model.CompoundUnitID.HasValue?Model.CompoundUnit.UnitNumber: Model.Unit.UnitNumber)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Start Date:  </strong>
+                                </td>
+                                <td>
+                                    @(Model.CreatedOn.ToShortDateString())
                                 </td>
                             </tr>
                         </tbody>
