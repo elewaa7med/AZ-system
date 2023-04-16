@@ -8,6 +8,8 @@
     ViewData["Title"] = "List All Legal";
     int count = 0;
     var canNote = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.WritePaymentNote })).Succeeded;
+    var canPay = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.ShowPayment })).Succeeded;
+
 }
 
 @if (TempData["AlertSaveErr"] != null)
@@ -44,7 +46,6 @@
         </div>
     </div>
 }
-
 <div class="row">
     <div class="col-xl-12">
         <div class="alert alert-primary">
@@ -58,13 +59,13 @@
                 </div>
                 <div class="d-flex flex-fill">
                     <div class="flex-fill">
-                        <span class="h5"> Select Building  </span>
+                        <span class="h5"> Select Unit Owner  </span>
                         <div class="form-group">
-                            <select class="select2 form-control w-100" id="bulding-select" data-select2-id="single-default" tabindex="-1" aria-hidden="true">
+                            <select class="select2 form-control w-100" id="Owner-select" data-select2-id="single-default" tabindex="-1" aria-hidden="true">
                                 <option value="All">All</option>
-                                @foreach (var item in Model.OrderByDescending(e => e.BuldingNumber))
+                                @foreach (var item in ViewBag.Owners)
                                 {
-                                    <option value="@item.BuldingNumber">@item.BuldingNumber</option>
+                                    <option value="@item.Value" selected="@(item.Selected == true ? true : false)">@item.Text</option>
                                 }
                             </select>
                         </div>
@@ -74,14 +75,44 @@
         </div>
     </div>
 </div>
+
+@*<div class="row">
+    <div class="col-xl-12">
+    <div class="alert alert-primary">
+    <div class="d-flex flex-start w-100">
+    <div class="mr-2 hidden-md-down">
+    <span class="icon-stack icon-stack-lg">
+    <i class="base-2 icon-stack-3x color-primary-400"></i>
+    <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+    <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+    </span>
+    </div>
+    <div class="d-flex flex-fill">
+    <div class="flex-fill">
+    <span class="h5"> Select Building  </span>
+    <div class="form-group">
+    <select class="select2 form-control w-100" id="bulding-select" data-select2-id="single-default" tabindex="-1" aria-hidden="true">
+    <option value="All">All</option>
+    @foreach (var item in Model.OrderByDescending(e => e.BuldingNumber))
+    {
+    <option value="@item.BuldingNumber">@item.BuldingNumber</option>
+    }
+    </select>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>*@
 <div class="row">
     <div class="col-xl-12">
 
         @*<div class="panel-tag">
             <p>
-                <select class="form-control">
-                    <option value="value">text</option>
-                </select>
+            <select class="form-control">
+            <option value="value">text</option>
+            </select>
             </p>
             </div>*@
 
@@ -216,12 +247,22 @@
                                                     <a class="dropdown-item" asp-action="Details" title="Details" asp-route-Id=@item.Id asp-route-pageid=@ViewBag.page>Details</a>
                                                     <a class="dropdown-item" asp-action="UndoLegal" title="Undo Legal" asp-route-Id=@item.Id asp-route-pageid=@ViewBag.page onclick="return confirm('Are you sure you want to Undo Legal for this item?');">Undo Legal</a>
                                                     <a class="dropdown-item" asp-action="Delete" title="Delete Legal And Contract" asp-route-pageid=@Model.Select(x=>x.pageId).FirstOrDefault() asp-route-Id=@item.Id onclick="return confirm('Are you sure you want to Delete Legal and Contract?');">Delete</a>
+
                                                     @if (item.IsBulding)
                                                     {
+                                                        @if (canPay)
+                                                        {
+                                                            <a class="dropdown-item" asp-action="Payment" asp-controller="UnitRentContract" title="Payment" asp-route-id="@item.RentContractId" asp-route-pageid="@ViewBag.page">Payment</a>
+                                                        }
                                                         <a class="dropdown-item" asp-action="Details" asp-controller="UnitRentContract" title="Contract" asp-route-Id=@item.RentContractId>Contract</a>
+
                                                     }
                                                     else
                                                     {
+                                                        @if (canPay)
+                                                        {
+                                                            <a class="dropdown-item" asp-action="Payment" asp-controller="UnitRentContractCompound" title="Payment" asp-route-id="@item.RentContractId" asp-route-pageid="@ViewBag.page">Payment</a>
+                                                        }
                                                         <a class="dropdown-item" asp-action="Details" asp-controller="UnitRentContractCompound" title="Contract" asp-route-Id=@item.RentContractId>Contract</a>
                                                     }
                                                     @if (canNote)
@@ -291,7 +332,6 @@
                 </button>
             </div>
             <div id="noteModalBody">
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect waves-themed" data-dismiss="modal">Close</button>
@@ -301,44 +341,52 @@
 </div>
 
 @section scripts{
-    <script>
-        var first = false;
-        $(document).ajaxStop(function () {
-            setTimeout(function () {
-                if (first)
-                    return;
-                columnNumberWithCommas('formatNumber');
-                first = true;
-            }, 1000);
-        });
-        $(function () {
-            var table = lastDataTable;
-            $('#bulding-select').on('keyup change', function () {
-                var searchValue = $(this).val();
-                if (searchValue == "All") {
-                    lastDataTable.fnFilter("", 3);
-                } else {
-                    lastDataTable.fnFilter($(this).val(), 3);
-                }
-            });
-        });
-
-        
-
-        function getNote(noteID) {
-            if (noteID == 0)
+<script>
+    var first = false;
+    $(document).ajaxStop(function () {
+        setTimeout(function () {
+            if (first)
                 return;
-            $.get("/Home/GetNote", { noteID: noteID }, function (result) {
-                $("#noteModalBody").html(result);
-                $("#default-example-modal-lg").modal('show');
-            });
-        }
-
-        $(document).ready(function () {
-            $(".formatNumber").each(function (val) {
-                console.log($(this).text());
-                $(this).text(numberWithCommas($(this).text()));
-            });
+            columnNumberWithCommas('formatNumber');
+            first = true;
+        }, 1000);
+    });
+    $(function () {
+        var table = lastDataTable;
+        $('#bulding-select').on('keyup change', function () {
+            var searchValue = $(this).val();
+            if (searchValue == "All") {
+                lastDataTable.fnFilter("", 3);
+            } else {
+                lastDataTable.fnFilter($(this).val(), 3);
+            }
         });
-    </script>
+    });
+
+
+
+    function getNote(noteID) {
+        if (noteID == 0)
+            return;
+        $.get("/Home/GetNote", { noteID: noteID }, function (result) {
+            $("#noteModalBody").html(result);
+            $("#default-example-modal-lg").modal('show');
+        });
+    }
+
+    $(document).ready(function () {
+        $(".formatNumber").each(function (val) {
+            console.log($(this).text());
+            $(this).text(numberWithCommas($(this).text()));
+        });
+    });
+
+    $("#Owner-select").change(function(){
+        if($(this).val() != "All"){
+            window.location.href = "Index?id="+@ViewBag.page+"&OwnerId="+$(this).val();
+        }else{
+            window.location.href = "Index?id="+@ViewBag.page;
+        }
+    })
+</script>
 }

@@ -1,9 +1,11 @@
 ﻿@model SmartAdmin.WebUI.Models.DTO.RentContractPayment
-@{ ViewData["Title"] = "Pay";
+@{
+    ViewData["Title"] = "Pay";
     ViewData["PageName"] = "Unit rent contracts " + Model.pageid;
     ViewData["Heading"] = "<i class='fal fa-badge-dollar text-primary'></i>Pay";
     ViewData["Category1"] = "Units";
-    ViewData["PageDescription"] = ""; }
+    ViewData["PageDescription"] = "";
+}
 
 <div class="row">
     <div class="col-xl-12">
@@ -36,22 +38,24 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="ID" />
     <input type="hidden" asp-for="UnitRentContractID" />
+    <input type="hidden" asp-for="PropertyTypeId" />
     @if (ViewBag.AlertSaveErr != null)
     {
-<div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">
-            <i class="fal fa-times"></i>
-        </span>
-    </button>
-    <div class="d-flex flex-start w-100">
-        <div class="d-flex flex-fill">
-            <div class="flex-fill">
-                <p>  @ViewBag.AlertSaveErr</p>
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">
+                    <i class="fal fa-times"></i>
+                </span>
+            </button>
+            <div class="d-flex flex-start w-100">
+                <div class="d-flex flex-fill">
+                    <div class="flex-fill">
+                        <p>  @ViewBag.AlertSaveErr</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>}
+    }
     <div class="row">
         <div class="col-xl-12">
             <div id="panel-6" class="panel ">
@@ -82,6 +86,12 @@
                                 <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Paid Amount * </label>
                                 <div class="col-sm-9">
                                     <input asp-for="PaidAmount" value="" type="number" max="@Model.TotalPaymentValue" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Payment Date * </label>
+                                <div class="col-sm-9">
+                                    <input asp-for="PaymentDate" type="date" min="@Model.PaymentDate" class="form-control" value="" required formnovalidate>
                                 </div>
                             </div>
 
@@ -124,28 +134,36 @@
     </div>
 </form>
 @section ScriptsBlock{
-    <script>
-        function back() {
-            var fallbackUrl = "/UnitRentContract/Payment?id=" + $("#UnitRentContractID").val();
-            var prevPage = window.location.href;
-            window.history.go(-1);
-            setTimeout(function () {
-                if (window.location.href == prevPage) {
-                    window.location.href = fallbackUrl;
-                }
-            }, 500);
-        }
-        function ChangePaymetMehtod() {
-            if ($("#PaymentMehtod").val() == 3 || $("#PaymentMehtod").val() == 4 || $("#PaymentMehtod").val() == 5) {
-                $("#checkVisaDiv").show();
-                $("#checkVisaNumber").attr("Required", "Required");
-                $("#PaymentMehtod").val() == 3 ? $("#CheckVisaNumberlabel").text("Check Number") : $("#CheckVisaNumberlabel").text("Transform Number");
-            } else {
-                $("#checkVisaDiv").hide();
-                $("#checkVisaNumber").removeAttr("Required");
+<script>
+    function back() {
+        var fallbackUrl = "/UnitRentContract/Payment?id=" + $("#UnitRentContractID").val();
+        var prevPage = window.location.href;
+        window.history.go(-1);
+        setTimeout(function () {
+            if (window.location.href == prevPage) {
+                window.location.href = fallbackUrl;
             }
+        }, 500);
+    }
+    function ChangePaymetMehtod() {
+        if ($("#PaymentMehtod").val() == 3 || $("#PaymentMehtod").val() == 4 || $("#PaymentMehtod").val() == 5) {
+            $("#checkVisaDiv").show();
+            $("#checkVisaNumber").attr("Required", "Required");
+            $("#PaymentMehtod").val() == 3 ? $("#CheckVisaNumberlabel").text("Check Number") : $("#CheckVisaNumberlabel").text("Transform Number");
+        } else {
+            $("#checkVisaDiv").hide();
+            $("#checkVisaNumber").removeAttr("Required");
         }
-    </script>
+    }
+    $("#PaymentDate").change((e)=>{
+        if(new Date(e.target.min.split(" ")[0].split("/")[2],e.target.min.split(" ")[0].split("/")[1] - 1 ,e.target.min.split(" ")[0].split("/")[0]).getTime() > new Date($("#PaymentDate").val()).getTime()){
+            $("#PaymentDate").get(0).setCustomValidity('Invalid Date your date must be after last payment ' + e.target.min.split(" ")[0]);
+        }
+        else{
+            $("#PaymentDate").get(0).setCustomValidity('');
+        }
+    });
+</script>
 }
 
 

@@ -8,6 +8,7 @@
 <form asp-action="Edit" enctype="multipart/form-data" class="was-validated">
     <input type="hidden" asp-for="IdRentContract" />
     <input type="hidden" asp-for="mMasterBuilding" value="@Model.mMasterBuilding" />
+    <input type="hidden" asp-for="LastContractRemainingAmount" value="@Model.LastContractRemainingAmount" />
     <input type="hidden" asp-for="dtCreated" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     @if (ViewBag.AlertSaveErr != null)
@@ -664,6 +665,7 @@
             var yearlyRent = parseFloat($("#yearlyRent").val());
             var waterBillAmount = parseFloat($("#WaterBillAmount").val());
             var paidAmount = parseFloat($('#paidAmount').val());
+            var LastContractRemainingAmount = parseFloat($('#LastContractRemainingAmount').val());
             var YearlyRentVm = parseFloat($('#YearlyRentVm').val());
 
             if (isNaN(yearlyRent)) {
@@ -683,7 +685,7 @@
                 paidAmount = 0;
             }
 
-            $('#remainingAmount').val(YearlyRentVm + waterBillAmount - paidAmount);
+            $('#remainingAmount').val(YearlyRentVm + waterBillAmount + LastContractRemainingAmount - paidAmount);
             $("#yearlyRent").val(YearlyRentVm + waterBillAmount);
             $('#rentCommission').val(YearlyRentVm / 100);
 

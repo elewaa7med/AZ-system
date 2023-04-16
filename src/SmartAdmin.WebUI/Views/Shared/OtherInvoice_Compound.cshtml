@@ -1,0 +1,255 @@
+﻿@model SmartAdmin.WebUI.Models.Invoices
+@{
+    ViewData["Title"] = "Invoice";
+    ViewData["PageName"] = "Invoice";
+    ViewData["Heading"] = "<i class='subheader-icon fal fa-plus-circle'></i>  Invoice <button class='btn btn-success' style='float:right' onclick='window.print()'> print Invoice </button>";
+    ViewData["PageDescription"] = "Printable Invoice Page";
+    ViewData["Category1"] = "Page Views";
+}
+@section HeadBlock {
+<link rel="stylesheet" media="screen, print" href="~/css/page-invoice-2.css">
+}
+<div class="container">
+    <div data-size="A4">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="d-flex align-items-center mb-5">
+                    <h2 class="fw-300 display-4 fw-500 color-primary-600 keep-print-font pt-4 l-h-n m-0">
+                        Receipt Voucher
+                        <div class="text-dark fw-700 h1 mb-0 keep-print-font">
+                            # @("E-"+Model.InvoiceId)
+                        </div>
+                        <div class="text-dark fw-700 h5 mb-g keep-print-font">
+                            Vat No. 301236576400003
+                        </div>
+                        @*<img id="barcode" alt="" class="position-absolute pos-top pos-right height-mobile-auto mt-1 " src="/img/logo_print.png">*@
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 d-flex">
+                <div class="table-responsive">
+                    <table class="table table-clean table-sm align-self-end">
+                        <tbody>
+                            <tr>
+                                <td style="width:30%">
+                                    <strong>Payment Date:  </strong>
+                                </td>
+                                <td style="width:70%">
+                                    @Model.PaymentDate.ToShortDateString()
+                                </td>
+                            </tr>
+                            @if (Model.UnitRentContractOtherPayment.UnitRentContract.mUnit == null)
+                            {
+                                <tr>
+                                    <td style="width:30%">
+                                        <strong>Compound Name:  </strong>
+                                    </td>
+                                    <td style="width:70%">
+                                        @Model.UnitRentContractOtherPayment.UnitRentContract.mCompoundUnits.mCompoundBuilding.mCompound.compoundName
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>
+                                    <strong>@(Model.UnitRentContractOtherPayment.UnitRentContract.mUnit == null ? "Compound" : "Building Number") </strong>
+                                </td>
+                                <td>
+                                    @(Model.UnitRentContractOtherPayment.UnitRentContract.mUnit == null ?
+                                    Model.UnitRentContractOtherPayment.UnitRentContract.mCompoundUnits.mCompoundBuilding.BuildingNumber : Model.UnitRentContractOtherPayment.UnitRentContract.mUnit.mBuilding.BuildingName)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Unit :</strong>
+                                </td>
+                                <td>
+                                    @(Model.UnitRentContractOtherPayment.UnitRentContract.mUnit == null ?
+                                    Model.UnitRentContractOtherPayment.UnitRentContract.mCompoundUnits.UnitNumber : Model.UnitRentContractOtherPayment.UnitRentContract.mUnit.UnitNumber)
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-6 d-flex">
+                <div class="table-responsive">
+                    <table class="table table-clean table-sm align-self-end">
+                        <tbody>
+                            <tr>
+                                <td style="width:30%">
+                                    <strong>Company Name :  </strong>
+                                </td>
+                                <td style="width:70%">
+                                    @Model.UnitRentContractOtherPayment.UnitRentContract.mTenant.TenantCompany
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Tenant  :  </strong>
+                                </td>
+                                <td>
+                                    @Model.UnitRentContractOtherPayment.UnitRentContract.mTenant.tenantName
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Payment Mehtod  :  </strong>
+                                </td>
+                                <td>
+                                    @(Enum.GetName(typeof(Enums.PaymentMehtod),Model.PaymentMehtod) + (Model.PaymentMehtod == 3 || Model.PaymentMehtod == 4 ? " (" + Model.checkVisaNumber + ")" :""))
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="min-height:400px">
+            <div class="col-sm-12">
+                <div class="table-responsive">
+                    <table class="table mt-5">
+                        <thead>
+                            <tr>
+                                <th class="text-center border-top-0 table-scale-border-bottom fw-700" style="width:5%">#</th>
+                                <th class="border-top-0 table-scale-border-bottom fw-700">Description</th>
+                                <th class="text-right border-top-0 table-scale-border-bottom fw-700">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int counter = 0;
+
+                                if (Model.UnitRentContractOtherPayment.Commession != 0)
+                                {
+                                    counter++;
+                                    <tr>
+                                        <td class="text-center fw-700">@counter</td>
+
+                                        <td class="text-left strong">
+                                            Commession
+                                        </td>
+                                        <td class="text-right format"> @Model.UnitRentContractOtherPayment.Commession SAR</td>
+                                    </tr>
+                                }
+                                if (Model.UnitRentContractOtherPayment.Insurence != 0)
+                                {
+                                    counter++;
+                                    <tr>
+                                        <td class="text-center fw-700">@counter</td>
+
+                                        <td class="text-left strong">
+                                            Insurence
+                                        </td>
+                                        <td class="text-right format"> @Model.UnitRentContractOtherPayment.Insurence SAR</td>
+                                    </tr>
+                                }
+                                if (Model.UnitRentContractOtherPayment.OtherPayment != 0)
+                                {
+                                    counter++;
+                                    <tr>
+                                        <td class="text-center fw-700">@counter</td>
+
+                                        <td class="text-left strong">
+                                            @Model.UnitRentContractOtherPayment.OtherPaymentText
+                                        </td>
+                                        <td class="text-right format"> @Math.Ceiling(Model.UnitRentContractOtherPayment.OtherPayment/1.15) SAR</td>
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="col-sm-8 ml-sm-auto">&nbsp;</div>
+
+            <div class="col-sm-4 ml-sm-auto ">
+                <table class="table table-clean table-responsiv">
+                    <tbody>
+                        @if (Model.UnitRentContractOtherPayment.ApplyTax == true)
+                        {
+                            <tr>
+                                <td class="text-left">
+                                    <strong>VAT (15%)</strong>
+                                </td>
+                                <td class="text-right"><strong>@Math.Floor(Model.UnitRentContractOtherPayment.OtherPayment - Model.UnitRentContractOtherPayment.OtherPayment/1.15) SAR</strong> </td>
+                            </tr>
+                        }
+                        <tr class="table-scale-border-top border-left-0 border-right-0 border-bottom-0">
+                            <td class="text-left keep-print-font">
+                                <h4 class="m-0 fw-700 h2 keep-print-font color-primary-700">Total</h4>
+                            </td>
+                            <td class="text-right keep-print-font">
+                                <h4 class="m-0 fw-700 h2 keep-print-font format"> @Model.Payment SAR</h4>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="text-center col-md-12">
+                <img src="@ViewBag.Url" width="150" />
+            </div>
+        </div>
+
+
+        <div class="row" style="margin-top:160px">
+            <div class="col-sm-6 d-flex">
+            </div>
+
+            <div class="col-sm-1 d-flex"> </div>
+            <div class="col-sm-5 d-flex">
+                <div class="table-responsive">
+                    <table class="" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0 " style="text-align:center">
+                                    <span class="titleSegnat_en textB"> Sign By </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align:center; padding-top:30px"> ----------------------------- </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+        <hr />
+
+        <div class="row" style="margin-bottom:0!important; padding-bottom:0px!important">
+            <div class="col-sm-12" style="margin-bottom:0!important; padding-bottom:0px!important">
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+@section ScriptsBlock {
+<script>
+    $(function () {
+        columnNumberWithCommas('format');
+    })
+</script>
+}
+
+
+
+
+

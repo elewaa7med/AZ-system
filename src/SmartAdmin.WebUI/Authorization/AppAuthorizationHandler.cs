@@ -83,6 +83,10 @@ namespace SmartAdmin.WebUI.Authorization
         [System.ComponentModel.DisplayName("Building")]
         BuildingAccountant = 12,
 
+        [Display(Name = "Sanus Compound")]
+        [System.ComponentModel.DisplayName("Sanus Compound")]
+        SanusAccountant = 51,
+
         [Display(Name = "Building srooh")]
         [System.ComponentModel.DisplayName("Building")]
         BuildingSroohAccountant = 33,
@@ -156,6 +160,10 @@ namespace SmartAdmin.WebUI.Authorization
         [System.ComponentModel.DisplayName("Other")]
         LegalOpalCompound = 47,
 
+        [Display(Name = "Legal Sanus Compound")]
+        [System.ComponentModel.DisplayName("Other")]
+        LegalSanusCompound = 47,
+
 
         [Display(Name = "Delete Note")]
         [System.ComponentModel.DisplayName("Contract")]
@@ -201,6 +209,10 @@ namespace SmartAdmin.WebUI.Authorization
         [System.ComponentModel.DisplayName("Compounds")]
         DesertApartments = 26,
 
+        [Display(Name = "Sanus Compound")]
+        [System.ComponentModel.DisplayName("Compounds")]
+        SanusCompound = 26,
+
         [Display(Name = "Add Compounds Buildings")]
         [System.ComponentModel.DisplayName("Compounds")]
         AddBuilding =28,
@@ -213,8 +225,32 @@ namespace SmartAdmin.WebUI.Authorization
         [System.ComponentModel.DisplayName("Dashboard")]
         DesertApartmentsDashboard = 27,
 
+        [Display(Name = "Sanus Compound")]
+        [System.ComponentModel.DisplayName("Dashboard")]
+        SanusCompoundDashboard = 49,
+
         [Display(Name = "PaymentLogs")]
         [System.ComponentModel.DisplayName("Other")]
-        PaymentLogs = 48
+        PaymentLogs = 48,
+
+        [Display(Name = "Compound Contracts")]
+        [System.ComponentModel.DisplayName("Compounds Contracts")]
+        CompoundContracts = 52,
+
+        [Display(Name = "Oasis Gardens")]
+        [System.ComponentModel.DisplayName("Compounds")]
+        OasisGardens = 53,
+
+        [Display(Name = "Oasis Resorts")]
+        [System.ComponentModel.DisplayName("Compounds")]
+        OasisResorts = 54,
+        
+        [Display(Name = "Legal Oasis Gardens Compound")]
+        [System.ComponentModel.DisplayName("Other")]
+        LegalOasisGardensCompound = 55,
+
+        [Display(Name = "Legal Oasis Resorts Compound")]
+        [System.ComponentModel.DisplayName("Other")]
+        LegalOasisResortsCompound = 56,
     }
 }

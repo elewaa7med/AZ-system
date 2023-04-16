@@ -12,6 +12,7 @@ using SmartAdmin.WebUI.Data;
 using SmartAdmin.WebUI.Models;
 using SmartAdmin.WebUI.Models.ViewModels;
 using SmartAdmin.WebUI.Services;
+using static SmartAdmin.WebUI.Enums;
 
 namespace SmartAdmin.WebUI.Controllers
 {
@@ -26,7 +27,7 @@ namespace SmartAdmin.WebUI.Controllers
             _user = user;
         }
         // GET: LegalController
-        public ActionResult Index(int? id, int? compoundID)
+        public ActionResult Index(int? id, int? compoundID, int? OwnerId)
         {
 
             //string times = "2:25:00+0:45:00+1:15:00+1:56:00+3:30:00+1:30:00+2:15:00+2:30:00+3:15:00+2:15:00+3:00:00+5:15:00+1:59:00+4:00:00+1:59:00+2:00:00+10:59:00";
@@ -106,9 +107,18 @@ namespace SmartAdmin.WebUI.Controllers
                 RequestSubmitDate = e.RequestSubmitDate.ToShortDateString(),
                 Note = e.UnitRentContract.UnitRentContractNotes.OrderByDescending(t => t.CreatedOn).Select(t => t.Note).FirstOrDefault() ?? string.Empty,
                 pageId = e.UnitRentContract.mMasterBuilding,
-                compoundId = compoundID
+                compoundId = compoundID,
+                OwnerId = e.UnitRentContract.mUnit != null ?  (int)e.UnitRentContract.mUnit.UnitOwner : (int)e.UnitRentContract.mCompoundUnits.UnitOwner
             }).ToList();
-
+            if (OwnerId != null)
+            {
+                result = result.Where(x => x.OwnerId == OwnerId).ToList();
+                ViewBag.Owners = GetEnumAsSelectListWithSelectedValue<UnitOwner>((int)OwnerId);
+            }
+            else
+            {
+                ViewBag.Owners = GetEnumAsSelectList<UnitOwner>();
+            }
             return View(result);
         }
 

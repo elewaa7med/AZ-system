@@ -62,5 +62,7 @@ namespace SmartAdmin.WebUI.Models.ViewModels
         public int? pageId { get; set; }
         public string DisplayType { get; set; }
         public int? compoundId { get; set; }
+
+        public int OwnerId { get; set; }
     }
 }

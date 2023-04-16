@@ -23,5 +23,8 @@
 
 .js-bg-color, .js-bg-gradient, .js-bg-gradient-demo, .js-bg-target {
 }
-
+.btn-black{
+    background-color:#000 !important;
+    color:#fff !important;
+}
 /* Enter custom CSS rules for your application here */

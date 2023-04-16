@@ -43,48 +43,58 @@ namespace SmartAdmin.WebUI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var tenants = _context.TTenants.OrderBy(m => m.tenantName).ToList();
-            var tenantsHasContractsIDs = _context.TUnitRentContract
+            var tenants = await _context.TTenants.Where(x => x.Archived == false).OrderBy(m => m.tenantName).ToListAsync();
+            var tenantsHasContractsIDs = await _context.TUnitRentContract
                                                  .Select(t => new
                                                  {
                                                      t.IdTenant,
-                                                     t.Archived
-                                                 }).ToList();
+                                                 }).ToListAsync();
             foreach (var item in tenants.ToList())
             {
-                var tenant = tenantsHasContractsIDs.FirstOrDefault(tt => tt.IdTenant == item.IdTenant);
-                if (tenant == null)
-                    continue;
-
-                if (tenant.Archived)
-                    tenants.Remove(item);
-
-                item.HasContract = true;
+                var tenant = tenantsHasContractsIDs.FirstOrDefault(x => x.IdTenant == item.IdTenant);
+                if (tenant != null)
+                    item.HasContract = true;
             }
             return View(tenants);
         }
 
+        public async Task<IActionResult> Archive(int id)
+        {
+            var Tenant = await _context.TTenants.Where(x => x.IdTenant == id).FirstOrDefaultAsync();
+            Tenant.Archived = true;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ArchivedTenants");
+        }
+
+        public async Task<IActionResult> Unarchive(int id)
+        {
+            var Tenant = await _context.TTenants.Where(x => x.IdTenant == id).FirstOrDefaultAsync();
+            Tenant.Archived = false;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+
         public async Task<IActionResult> ArchivedTenants()
         {
-            var tenants = _context.TTenants.OrderBy(m => m.tenantName).ToList();
+            var tenants = await _context.TTenants.Where(x => x.Archived == true).OrderBy(m => m.tenantName).ToListAsync();
             var tenantsHasContractsIDs = _context.TUnitRentContract
-                                                 .Select(t => new
-                                                 {
-                                                     t.IdTenant,
-                                                     t.Archived
-                                                 }).ToList();
+                                               .Select(t => new
+                                               {
+                                                   t.IdTenant,
+                                               }).ToList();
             foreach (var item in tenants.ToList())
             {
-                var tenant = tenantsHasContractsIDs.FirstOrDefault(tt => tt.IdTenant == item.IdTenant);
-                if (tenant == null || !tenant.Archived)
-                    tenants.Remove(item);
+                var tenant = tenantsHasContractsIDs.FirstOrDefault(x => x.IdTenant == item.IdTenant);
+                if (tenant != null)
+                    item.HasContract = true;
             }
             return View(tenants);
         }
 
         public async Task<IActionResult> Details(int? id, int? pageid)
         {
-            
+
             if (!id.HasValue)
             {
                 return NotFound();
@@ -142,7 +152,7 @@ namespace SmartAdmin.WebUI.Controllers
             return View(tenants);
         }
 
-        public async Task<IActionResult> Edit(int? id , int? pageid)
+        public async Task<IActionResult> Edit(int? id, int? pageid)
         {
             if (!id.HasValue)
             {
@@ -198,12 +208,13 @@ namespace SmartAdmin.WebUI.Controllers
                     }
                     throw;
                 }
-                if(pageid == null) { 
+                if (pageid == null)
+                {
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    return RedirectToAction("GetTenants","Home",new { id = pageid });
+                    return RedirectToAction("GetTenants", "Home", new { id = pageid });
 
                 }
             }

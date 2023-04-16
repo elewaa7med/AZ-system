@@ -394,6 +394,38 @@ namespace SmartAdmin.WebUI.Migrations
                     b.ToTable("TCompoundBuildings");
                 });
 
+            modelBuilder.Entity("SmartAdmin.WebUI.Models.CompoundContracts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CompoundName")
+                        .IsRequired();
+
+                    b.Property<string>("IdCreated");
+
+                    b.Property<string>("IdModified");
+
+                    b.Property<string>("Notes");
+
+                    b.Property<string>("contractImage");
+
+                    b.Property<DateTime>("dtCreated");
+
+                    b.Property<DateTime>("dtLeaseEnd");
+
+                    b.Property<DateTime>("dtLeaseStart");
+
+                    b.Property<DateTime>("dtModified");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdCreated");
+
+                    b.ToTable("compoundContracts");
+                });
+
             modelBuilder.Entity("SmartAdmin.WebUI.Models.CompoundUnitKeys", b =>
                 {
                     b.Property<int>("IdUnitKeys")
@@ -502,7 +534,9 @@ namespace SmartAdmin.WebUI.Migrations
 
                     b.HasIndex("IdPropertyType");
 
-                    b.HasIndex("UnitRentContractID");
+                    b.HasIndex("UnitRentContractID")
+                        .IsUnique()
+                        .HasFilter("[UnitRentContractID] IS NOT NULL");
 
                     b.ToTable("TCompoundUnits");
                 });
@@ -768,11 +802,17 @@ namespace SmartAdmin.WebUI.Migrations
 
                     b.Property<int?>("Status");
 
+                    b.Property<decimal>("TaxAmount");
+
+                    b.Property<int?>("TaxRateId");
+
                     b.Property<int>("UnitRentContractPaymentId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InvoiceId");
+
+                    b.HasIndex("TaxRateId");
 
                     b.HasIndex("UnitRentContractPaymentId");
 
@@ -797,11 +837,17 @@ namespace SmartAdmin.WebUI.Migrations
 
                     b.Property<int?>("Status");
 
+                    b.Property<int?>("UnitRentContractOtherPaymentID");
+
                     b.Property<string>("checkVisaNumber");
+
+                    b.Property<bool?>("isOtherPayment");
 
                     b.Property<int?>("unitRentContractIdRentContract");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UnitRentContractOtherPaymentID");
 
                     b.HasIndex("unitRentContractIdRentContract");
 
@@ -1098,11 +1144,51 @@ namespace SmartAdmin.WebUI.Migrations
                     b.ToTable("TPosition");
                 });
 
+            modelBuilder.Entity("SmartAdmin.WebUI.Models.TaxRate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("EndApplingDate");
+
+                    b.Property<int>("Rate");
+
+                    b.Property<DateTime>("StartApplingDate");
+
+                    b.Property<bool>("Status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TaxRate");
+                });
+
+            modelBuilder.Entity("SmartAdmin.WebUI.Models.TaxToProperttypes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("PropertyTypesId");
+
+                    b.Property<int>("TaxRateId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyTypesId");
+
+                    b.HasIndex("TaxRateId");
+
+                    b.ToTable("taxToProperttypes");
+                });
+
             modelBuilder.Entity("SmartAdmin.WebUI.Models.Tenants", b =>
                 {
                     b.Property<int>("IdTenant")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Archived");
 
                     b.Property<int>("IdCompany");
 
@@ -1358,6 +1444,43 @@ namespace SmartAdmin.WebUI.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("TUnitRentContractNotes");
+                });
+
+            modelBuilder.Entity("SmartAdmin.WebUI.Models.UnitRentContractOtherPayment", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("ApplyTax");
+
+                    b.Property<int>("Commession");
+
+                    b.Property<int>("Insurence");
+
+                    b.Property<int>("MonyType");
+
+                    b.Property<string>("Note");
+
+                    b.Property<int>("OtherPayment");
+
+                    b.Property<string>("OtherPaymentText");
+
+                    b.Property<int>("PaidAmount");
+
+                    b.Property<DateTime?>("PaymentDate");
+
+                    b.Property<int>("UnitRentContractID");
+
+                    b.Property<string>("UserID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UnitRentContractID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("unitRentContractOtherPayment");
                 });
 
             modelBuilder.Entity("SmartAdmin.WebUI.Models.UnitRentContractPayment", b =>
@@ -1691,6 +1814,13 @@ namespace SmartAdmin.WebUI.Migrations
                         .HasForeignKey("IdModifiedBy");
                 });
 
+            modelBuilder.Entity("SmartAdmin.WebUI.Models.CompoundContracts", b =>
+                {
+                    b.HasOne("SmartAdmin.WebUI.Models.ApplicationUser", "mCreatedBy")
+                        .WithMany()
+                        .HasForeignKey("IdCreated");
+                });
+
             modelBuilder.Entity("SmartAdmin.WebUI.Models.CompoundUnitKeys", b =>
                 {
                     b.HasOne("SmartAdmin.WebUI.Models.Mandoobs", "mMandoob")
@@ -1734,8 +1864,8 @@ namespace SmartAdmin.WebUI.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SmartAdmin.WebUI.Models.UnitRentContract", "UnitRentContract")
-                        .WithMany()
-                        .HasForeignKey("UnitRentContractID");
+                        .WithOne()
+                        .HasForeignKey("SmartAdmin.WebUI.Models.CompoundUnits", "UnitRentContractID");
                 });
 
             modelBuilder.Entity("SmartAdmin.WebUI.Models.Compounds", b =>
@@ -1813,6 +1943,10 @@ namespace SmartAdmin.WebUI.Migrations
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("SmartAdmin.WebUI.Models.TaxRate", "TaxRate")
+                        .WithMany()
+                        .HasForeignKey("TaxRateId");
+
                     b.HasOne("SmartAdmin.WebUI.Models.UnitRentContractPayment", "unitRentContractPayment")
                         .WithMany("InvoiceRelatedPaymentDates")
                         .HasForeignKey("UnitRentContractPaymentId")
@@ -1821,6 +1955,10 @@ namespace SmartAdmin.WebUI.Migrations
 
             modelBuilder.Entity("SmartAdmin.WebUI.Models.Invoices", b =>
                 {
+                    b.HasOne("SmartAdmin.WebUI.Models.UnitRentContractOtherPayment", "UnitRentContractOtherPayment")
+                        .WithMany()
+                        .HasForeignKey("UnitRentContractOtherPaymentID");
+
                     b.HasOne("SmartAdmin.WebUI.Models.UnitRentContract", "unitRentContract")
                         .WithMany("invoices")
                         .HasForeignKey("unitRentContractIdRentContract");
@@ -1874,6 +2012,19 @@ namespace SmartAdmin.WebUI.Migrations
                     b.HasOne("SmartAdmin.WebUI.Models.ApplicationUser", "mUserModified")
                         .WithMany()
                         .HasForeignKey("IdModifiedBy");
+                });
+
+            modelBuilder.Entity("SmartAdmin.WebUI.Models.TaxToProperttypes", b =>
+                {
+                    b.HasOne("SmartAdmin.WebUI.Models.PropertyTypes", "PropertyTypes")
+                        .WithMany("TaxToProperttypes")
+                        .HasForeignKey("PropertyTypesId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SmartAdmin.WebUI.Models.TaxRate", "TaxRate")
+                        .WithMany("TaxToProperttypes")
+                        .HasForeignKey("TaxRateId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("SmartAdmin.WebUI.Models.Tenants", b =>
@@ -1972,6 +2123,18 @@ namespace SmartAdmin.WebUI.Migrations
 
                     b.HasOne("SmartAdmin.WebUI.Models.ApplicationUser", "User")
                         .WithMany()
+                        .HasForeignKey("UserID");
+                });
+
+            modelBuilder.Entity("SmartAdmin.WebUI.Models.UnitRentContractOtherPayment", b =>
+                {
+                    b.HasOne("SmartAdmin.WebUI.Models.UnitRentContract", "UnitRentContract")
+                        .WithMany("UnitRentContractOtherPayment")
+                        .HasForeignKey("UnitRentContractID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SmartAdmin.WebUI.Models.ApplicationUser", "User")
+                        .WithMany("UnitRentContractOtherPayment")
                         .HasForeignKey("UserID");
                 });
 

@@ -21,6 +21,22 @@
     <Compile Remove="Migrations\20210210142651_add-forignkey-fromMasterBuildings-toTenants.Designer.cs" />
     <Compile Remove="Migrations\20210621084325_AddColumnInvoiceId_ToTableInvoice.cs" />
     <Compile Remove="Migrations\20210621084325_AddColumnInvoiceId_ToTableInvoice.Designer.cs" />
+    <Compile Remove="Migrations\20211122173401_create relation between UnitRentContractOtherPayment and Invoices.cs" />
+    <Compile Remove="Migrations\20211122173401_create relation between UnitRentContractOtherPayment and Invoices.Designer.cs" />
+    <Compile Remove="Migrations\20211122173755_create relation between UnitRentContractOtherPayment and Invoices.cs" />
+    <Compile Remove="Migrations\20211122173755_create relation between UnitRentContractOtherPayment and Invoices.Designer.cs" />
+    <Compile Remove="Migrations\20211122174839_add column InvoiceId to unitRentContractOtherPayment.cs" />
+    <Compile Remove="Migrations\20211122174839_add column InvoiceId to unitRentContractOtherPayment.Designer.cs" />
+    <Compile Remove="Migrations\20211122175249_add column InvoiceId to unitRentContractOtherPayment.cs" />
+    <Compile Remove="Migrations\20211122175249_add column InvoiceId to unitRentContractOtherPayment.Designer.cs" />
+    <Compile Remove="Migrations\20211122175640_add column InvoiceId to unitRentContractOtherPayment.cs" />
+    <Compile Remove="Migrations\20211122175640_add column InvoiceId to unitRentContractOtherPayment.Designer.cs" />
+    <Compile Remove="Migrations\20211122180000_add column InvoiceId to unitRentContractOtherPayment.cs" />
+    <Compile Remove="Migrations\20211122180000_add column InvoiceId to unitRentContractOtherPayment.Designer.cs" />
+    <Compile Remove="Migrations\20211122182330_test.cs" />
+    <Compile Remove="Migrations\20211122182330_test.Designer.cs" />
+    <Compile Remove="Migrations\20211122182501_test.cs" />
+    <Compile Remove="Migrations\20211122182501_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,6 +80,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.7" />
   </ItemGroup>
 
   <ItemGroup>

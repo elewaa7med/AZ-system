@@ -239,14 +239,12 @@ namespace SmartAdmin.WebUI.Controllers
                     string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     string callbackUrl = base.Url.EmailConfirmationLink(user.Id, code, base.Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
                 }
                 AddErrors(result);
             }
             model.Jobpositions = _context.TPosition.ToList();
-            return View(model);
+            return RedirectToAction("ListAppUsers", "Manage");
         }
 
         [HttpPost]

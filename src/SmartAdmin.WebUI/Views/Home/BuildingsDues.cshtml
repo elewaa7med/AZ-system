@@ -54,11 +54,14 @@
                         <i class="base-2 icon-stack-3x color-primary-400"></i>
                         <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
                         <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
-                    </span>   <span class="fw-500  text-primary"> Total Due Rent Payments :  </span> &nbsp;<span class="color-danger-500"><span id="dueTotal">0</span></span> @if (@ViewBag.id == 4) {<span> GBP </span> } else {<span>SAR </span>}
+                    </span>   <span class="fw-500  text-primary"> Total Due Rent Payments :  </span> &nbsp;<span class="color-danger-500"><span id="dueTotal">0</span></span> @if (@ViewBag.id == 4)
+                    {<span> GBP </span> }
+                    else
+                    {<span>SAR </span>}
 
-</h2>
+                </h2>
 
-<div class="panel-toolbar" id="dueRentSelectContainer">
+                <div class="panel-toolbar" id="dueRentSelectContainer">
                 </div>
                 <div class="panel-toolbar">
                     <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
@@ -107,11 +110,11 @@
         <h1>
             @if (@ViewBag.id == 4)
             {
-        <span class="fw-900">   Over Due (Over 4 days) Rent Payments </span> }
-                    else
-                    {
-                        <span class="fw-900">   Over Due (Over 15 days) Rent Payments </span>
-                                    }
+                <span class="fw-900">   Over Due (Over 4 days) Rent Payments </span> }
+            else
+            {
+                <span class="fw-900">   Over Due (Over 30 days) Rent Payments </span>
+            }
         </h1>
         <div id="panel-1" class="panel">
             <div class="panel-hdr">
@@ -123,16 +126,16 @@
                     </span>
                     @if (@ViewBag.id == 4)
                     {<span class="fw-500  text-primary"> Total Over Due (Over 4 days) Rent Payments:  </span> }
-                                    else
-                                    {
-                                       <span class="fw-500  text-primary"> Total Over Due (Over 15 days) Rent Payments:  </span>
-                                                            }
-                                                            &nbsp;<span class="color-danger-500"> <span id="overDueTotal">0</span></span>
-                                                                            @if (@ViewBag.id == 4)
-                                                                            {<span> GBP </span> }
-                                                                            else
-                                                                            {<span>SAR </span>}
-                                                                                        </h2>
+                    else
+                    {
+                        <span class="fw-500  text-primary"> Total Over Due (Over 30 days) Rent Payments:  </span>
+                    }
+                    &nbsp;<span class="color-danger-500"> <span id="overDueTotal">0</span></span>
+                    @if (@ViewBag.id == 4)
+                    {<span> GBP </span> }
+                    else
+                    {<span>SAR </span>}
+                </h2>
                 <div class="panel-toolbar" id="dueRent60SelectContainer">
                 </div>
                 <div class="panel-toolbar">
@@ -388,7 +391,7 @@
                         '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
                         '<td> ' + numberWithCommas(row.value) + ' </td>' +
                         '<td> ' + row.collectionDate + ' </td>' +
-                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a></td > ' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + ' </a><p>' + row.noteDate +'</p></td > ' +
                         '<td>' +
                         '<a href="/UnitRentContract/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
                         '</td>' +
@@ -429,9 +432,13 @@
             var newhtmloverduerents = "";
             var url = '@Url.Content("~/")' + 'Home/GetBuildingsDueOver60?id='+@ViewBag.id;
             $.getJSON(url, { representitveId: representitveId }, function (data) {
-                $.each(data.due,  function (i, row) {
-                    if (row.totalDays <= 0)
+                $.each(data.due, function (i, row) {
+                    if (row.totalDays <= 0) {
                         btncolorstr = ' btn-danger" ';
+                        if (row.totalDays < -90) {
+                            btncolorstr = ' btn-black" ';
+                        }
+                    }
                     else
                         if (row.totalDays <= 14)
                             btncolorstr = ' btn-warning" ';
@@ -447,10 +454,10 @@
                         '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
                         '<td> ' + numberWithCommas(row.value) + ' </td>' +
                         '<td> ' + row.collectionDate + ' </td>' +
-                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note+'</a></td > ' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a><p>' + row.noteDate +'</p></td > ' +
 
                         '<td>' +
-                        '<a href="/UnitRentContract/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
+                        '<a s href="/UnitRentContract/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
                         '</td>' +
                         '<td>' +
                         `
@@ -501,8 +508,12 @@
                         }
                         var noteId = row.itemArray[15];
 
-                        if (row.itemArray[5] <= 15)
+                        if (row.itemArray[5] <= 15) {
                             btncolorstr = ' btn-danger" ';
+                            if (row.itemArray[5] < -90) {
+                                btncolorstr = ' btn-black" ';
+                            }
+                        }
                         else
                             if (row.itemArray[5] <= 30)
                                 btncolorstr = ' btn-warning" ';
@@ -579,9 +590,13 @@
             var newhtmloverduerents = "";
             var url = '@Url.Content("~/")' + 'Home/GetBuildingssPatrtialPaymentDue?id='+@ViewBag.id;
             $.getJSON(url, { representitveId: representitveId }, function (data) {
-                $.each(data.due,  function (i, row) {
-                    if (row.totalDays <= 0)
+                $.each(data.due, function (i, row) {
+                    if (row.totalDays <= 0) {
                         btncolorstr = ' btn-danger" ';
+                        if (row.totalDays < -90) {
+                            btncolorstr = ' btn-black" ';
+                        }
+                    }
                     else
                         if (row.totalDays <= 14)
                             btncolorstr = ' btn-warning" ';
@@ -597,7 +612,7 @@
                         '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
                         '<td> ' + numberWithCommas(row.value) + ' </td>' +
                         '<td> ' + row.collectionDate + ' </td>' +
-                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a></td > ' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a><p>' + row.noteDate +'</p></td > ' +
                         '<td>' +
                         '<a href="/UnitRentContract/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
                         '</td>' +

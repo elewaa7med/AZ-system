@@ -202,5 +202,8 @@ namespace SmartAdmin.WebUI.Models
 
         [NotMapped]
         public bool HasContract { get; set; }
+
+
+        public bool Archived { get; set; }
     }
 }

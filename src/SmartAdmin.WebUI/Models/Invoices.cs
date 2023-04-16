@@ -17,8 +17,11 @@ namespace SmartAdmin.WebUI.Models
         public string checkVisaNumber { get; set; }
         public int ContractId { get; set; }
         public int? Status { get; set; }
+        public bool? isOtherPayment { get; set; }
+
         public virtual UnitRentContract unitRentContract { get; set; }
 
+        public virtual UnitRentContractOtherPayment UnitRentContractOtherPayment { get; set; }
         public virtual ICollection<InvoiceRelatedPaymentDates> invoiceRelatedPaymentDates { get; set; }
         public virtual ICollection<UnitRentContractAllPaymentLogs> unitRentContractAllPaymentLogs { get; set; }
     }

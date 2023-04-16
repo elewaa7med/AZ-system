@@ -129,7 +129,7 @@
 <div class="row">
     <div class="col-xl-12">
         <h1>
-            <span class="fw-900">   Over Due (Over 15 days) Rent Payments </span>
+            <span class="fw-900">   Over Due (Over 30 days) Rent Payments </span>
         </h1>
         <div id="panel-1" class="panel">
             <div class="panel-hdr">
@@ -138,7 +138,7 @@
                         <i class="base-2 icon-stack-3x color-primary-400"></i>
                         <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
                         <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
-                    </span>   <span class="fw-500  text-primary"> Total Over Due (Over 15 days) Rent Payments:  </span>&nbsp;<span class="color-danger-500"> <span id="overDueTotal">0</span> SAR  </span>
+                    </span>   <span class="fw-500  text-primary"> Total Over Due (Over 30 days) Rent Payments:  </span>&nbsp;<span class="color-danger-500"> <span id="overDueTotal">0</span> SAR  </span>
                 </h2>
                 <div class="panel-toolbar" id="dueRent60SelectContainer">
                 </div>
@@ -398,8 +398,10 @@
             var url = '@Url.Content("~/")' + 'Home/GetCompoundsDue';
             $.getJSON(url, { compoundID: id, representitveId: representitveId}, function (data) {
                 $.each(data.due, function (i, row) {
-                    if (row.totalDays <= 15)
-                            btncolorstr = 'btn-danger';
+                    if (row.totalDays <= 15) { 
+                        btncolorstr = 'btn-danger';
+                        
+                }
                     else  btncolorstr = 'btn-warning';
                     newhtmlduerents += '<tr> ' +
                         '<td> ' + (parseInt(i) + 1) + '</td> ' +
@@ -411,7 +413,7 @@
                         '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
                         '<td> ' + numberWithCommas(row.value) + ' </td>' +
                         '<td> ' + row.collectionDate + ' </td>' +
-                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a></td > ' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a><p>' + row.noteDate +'</p></td > ' +
                         '<td>' +
                         '<a href="/UnitRentContractCompound/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
                         '</td>' +
@@ -453,8 +455,12 @@
             var url = '@Url.Content("~/")' + 'Home/GetCompoundsDueOver60';
             $.getJSON(url, { compoundID: id, representitveId: representitveId }, function (data) {
                 $.each(data.due, function (i, row) {
-                    if (row.totalDays <= 0)
+                    if (row.totalDays <= 0) {
                         btncolorstr = ' btn-danger" ';
+                        if (row.totalDays <= -90) {
+                            btncolorstr = 'btn-black';
+                        }
+                    }
                     else
                         if (row.totalDays <= 14)
                             btncolorstr = ' btn-warning" ';
@@ -471,7 +477,7 @@
                         '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
                         '<td> ' + numberWithCommas(row.value) + ' </td>' +
                         '<td> ' + row.collectionDate + ' </td>' +
-                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a></td > ' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a><p>' + row.noteDate +'</p></td > ' +
                         '<td>' +
                         '<a href="/UnitRentContractCompound/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
                         '</td>' +
@@ -515,8 +521,12 @@
             var url = '@Url.Content("~/")' + 'Home/GetCompoundsPatrtialPaymentDue';
             $.getJSON(url, { compoundID: id, representitveId: representitveId}, function (data) {
                 $.each(data.due, function (i, row) {
-                        if (row.totalDays <= 0)
+                        if (row.totalDays <= 0) { 
                             btncolorstr = ' btn-danger" ';
+                            if (row.totalDays <= -90) {
+                                btncolorstr = 'btn-black" ';
+                            }
+                        }
                         else
                             if (row.totalDays <= 14)
                                 btncolorstr = ' btn-warning" ';
@@ -534,7 +544,7 @@
                         '<td> ' + numberWithCommas(row.annualRent) + ' </td>' +
                         '<td> ' + numberWithCommas(row.value) + ' </td>' +
                         '<td> ' + row.collectionDate + ' </td>' +
-                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note+'</a></td > ' +
+                        '<td ><a class="note" title="' + row.note + '" onClick=getNote(' + row.noteID + ')>' + row.note + '</a><p>' + row.noteDate +'</p></td > ' +
                         '<td>' +
                         '<a href="/UnitRentContractCompound/Payment?id=' + row.contractID + '" class="btn waves-effect waves-themed pay ' + btncolorstr + '">' + row.totalDays + ' </a>' +
                         '</td>' +
@@ -581,8 +591,12 @@
                 var totalRemainingAmount = data.length > 0 ? data[0].table.map(t => { return t.remainingAmount }).reduce((total, current) => { return total += current; }, 0) : 0;
                 var totalAmount = 0;
                 $.each(data, function (i, row) {
-                        if (row.itemArray[5] <= 15)
+                        if (row.itemArray[5] <= 15) {
                             btncolorstr = ' btn-danger" ';
+                            if (row.itemArray[5] <= -90) {
+                                btncolorstr = 'btn-black" ';
+                            }
+                        }
                         else
                             if (row.itemArray[5] <= 30)
                                 btncolorstr = ' btn-warning" ';

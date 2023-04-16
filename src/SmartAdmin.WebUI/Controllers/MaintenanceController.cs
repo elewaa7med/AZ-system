@@ -181,7 +181,7 @@ namespace SmartAdmin.WebUI.Controllers
         }
         public JsonResult GetBuildingUnits(int buildingID)
         {
-            var result = _context.Units.Where(e => e.IdBuilding == buildingID && e.UnitOwner != Enums.UnitOwner.Saad)
+            var result = _context.Units.Where(e => e.IdBuilding == buildingID && e.UnitOwner != Enums.UnitOwner.xSaad)
                                        .OrderBy(e => e.UnitNumber)
                                        .Select(e => new
                                        {
@@ -193,7 +193,7 @@ namespace SmartAdmin.WebUI.Controllers
         }
         public JsonResult GetCompoundBuildingUnits(int buildingID)
         {
-            var result = _context.TCompoundUnits.Where(e => e.IdBuilding == buildingID && e.UnitOwner != Enums.UnitOwner.Saad)
+            var result = _context.TCompoundUnits.Where(e => e.IdBuilding == buildingID && e.UnitOwner != Enums.UnitOwner.xSaad)
                                                 .OrderBy(e => e.UnitNumber)
                                                 .Select(e => new
                                                 {

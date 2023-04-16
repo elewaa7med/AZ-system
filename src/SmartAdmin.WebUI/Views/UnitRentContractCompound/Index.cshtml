@@ -207,6 +207,8 @@
                                                     {
                                                         <a class="dropdown-item" asp-action="Notes" asp-controller="UnitRentContract" asp-route-id=@item.value.IdRentContract> Notes</a>
                                                     }
+                                                    <a class="dropdown-item" asp-action="UnitHistory" title="Details" asp-route-unitId=@item.value.IdUnitCompound>Unit History</a>
+                                                    <a class="dropdown-item" asp-action="TenantHistory" title="Details" asp-route-TenentId=@item.value.IdTenant>Tenant History</a>
                                                     <a class="dropdown-item" @block id="block-@item.value.IdRentContract" onclick=getBlock("@item.value.IdRentContract")>Block</a>
                                                     <a class="dropdown-item" @Unblock id="unblock-@item.value.IdRentContract" onclick=unBlock("@item.value.IdRentContract")>Un Block</a>
                                                 </div>

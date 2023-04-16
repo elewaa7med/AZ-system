@@ -1,0 +1,154 @@
+﻿@using Microsoft.AspNetCore.Authorization
+
+@model IEnumerable<SmartAdmin.WebUI.Models.UnitRentContract>
+@{
+   ViewData["Title"] = "Compounds Rent Contracts History";
+    ViewData["PageName"] = "Compounds Rent Contracts";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i>  Compounds Rent Contracts History";
+    ViewData["Category1"] = "Compounds";
+    ViewData["PageDescription"] = "";
+ }
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size: 150%; ">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>   <span class="fw-500  text-primary"> Total Contracts :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+                </h2>
+                <div class="panel-toolbar" id="selectContainer">
+                </div>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                        <thead class="bg-primary-600">
+                            <tr>
+                                 <th>#</th>
+                                <th>Contract No. </th>
+                                <th>Building </th>
+                                <th>Unit </th>
+                                <th>Type </th>
+                                <th>Yearly Rent </th>
+                                <th>EJAR Verified</th>
+                                <th>Tenant </th>
+                                <th>Representative </th>
+                                <th>Leas start Date </th>
+                                <th>Lease Rent in Months </th>
+                                <th>Lease end Date </th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @item.value.contractNumber
+                                    </td>
+                                    <td>
+                                        @item.value.mCompoundUnits?.mCompoundBuilding.BuildingNumber
+                                    </td>
+                                    <td>
+                                        @item.value.mCompoundUnits?.UnitNumber
+                                    </td>
+                                    <td>
+                                        @item.value.mCompoundUnits?.mPropertyType?.PropertyTypeName
+                                    </td>
+                                    <td class="formatNumber">
+                                        @(item.value.yearlyRent-(item.value.WaterBillAmount??0))
+                                    </td>
+                                    <td>
+                                        @if (item.value.VerifiedFromGovernment)
+                                        {
+                                            <span class="badge badge-success  badge-pill">Yes</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger badge-pill">No</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.value.mTenant?.tenantName
+                                    </td>
+                                    <td>
+                                        @item.value.Mandoob?.fullName
+                                    </td>
+                                    <td>
+                                        @item.value.dtLeaseStart.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        @item.value.leasePeriodInMonthes
+                                    </td>
+                                    <td>
+                                        @item.value.dtLeaseEnd.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.IdRentContract>Details</a>
+                                                    <a class="dropdown-item" target="_blank" asp-action="ContractPrint" asp-controller="UnitRentContract" asp-route-id=@item.value.IdRentContract> Print</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="formatNumber">@(Model.Sum(x=>x.yearlyRent) - (Model.Sum(x=>x.WaterBillAmount)??0))</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsBlock
+{
+    <script>
+        var first = false;
+        $(document).ajaxStop(function () {
+            setTimeout(function () {
+                if (first)
+                    return;
+                columnNumberWithCommas('formatNumber');
+                first = true;
+            }, 1000);
+        });
+        $(document).ready(function () {
+            $(".formatNumber").each(function (val) {
+                console.log($(this).text());
+                $(this).text(numberWithCommas($(this).text()));
+            });
+        });
+    </script>
+}

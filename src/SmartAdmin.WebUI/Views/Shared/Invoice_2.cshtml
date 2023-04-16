@@ -1,6 +1,7 @@
 ﻿@model SmartAdmin.WebUI.Models.Invoices
 @{ ViewData["Title"] = "Invoice";
-    ViewData["PageName"] = "Invoice";
+    //ViewData["PageName"] = "Invoice " + (Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mMasterBuilding == 0 ? Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mMasterBuilding
+    //    : Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.IdCompound+"");
     ViewData["Heading"] = "<i class='subheader-icon fal fa-plus-circle'></i>  Invoice <button class='btn btn-success' style='float:right' onclick='window.print()'> print Invoice </button>";
     ViewData["PageDescription"] = "Printable Invoice Page";
     ViewData["Category1"] = "Page Views"; }
@@ -13,9 +14,9 @@
             <div class="col-sm-12">
                 <div class="d-flex align-items-center mb-5">
                     <h2 class="fw-300 display-4 fw-500 color-primary-600 keep-print-font pt-4 l-h-n m-0">
-                        INVOICE
+                        Receipt Voucher
                         <div class="text-dark fw-700 h1 mb-0 keep-print-font">
-                            # @("E-"+Model.InvoiceId)
+                            # @("E-" + Model.InvoiceId)
                         </div>
                         <div class="text-dark fw-700 h5 mb-g keep-print-font">
                             Vat No. 301236576400003
@@ -39,14 +40,23 @@
                                     @Model.PaymentDate.ToShortDateString()
                                 </td>
                             </tr>
-
+                            @if(Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mUnit == null) { 
+                                <tr>
+                                    <td style="width:30%">
+                                        <strong>Compound Name:  </strong>
+                                    </td>
+                                    <td style="width:70%">
+                                        @Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mCompoundUnits.mCompoundBuilding.mCompound.compoundName
+                                    </td>
+                                </tr>
+                            }
                             <tr>
                                 <td>
                                     <strong>@(Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mUnit == null ? "Compound" : "Building Number") </strong>
                                 </td>
                                 <td>
                                     @(Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mUnit == null ?
-                                         Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mCompoundUnits.mCompoundBuilding.BuildingNumber : Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mUnit.mBuilding.BuildingName)
+         Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mCompoundUnits.mCompoundBuilding.BuildingNumber : Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mUnit.mBuilding.BuildingName)
                                 </td>
                             </tr>
                             <tr>
@@ -55,7 +65,7 @@
                                 </td>
                                 <td>
                                     @(Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mUnit == null ?
-                                        Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mCompoundUnits.UnitNumber : Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mUnit.UnitNumber)
+        Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mCompoundUnits.UnitNumber : Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mUnit.UnitNumber)
                                 </td>
                             </tr>
 
@@ -89,7 +99,7 @@
                                     <strong>Payment Mehtod  :  </strong>
                                 </td>
                                 <td>
-                                    @(Enum.GetName(typeof(Enums.PaymentMehtod),Model.PaymentMehtod) + (Model.PaymentMehtod == 3 || Model.PaymentMehtod == 4 ? " (" + Model.checkVisaNumber + ")" :""))
+                                    @(Enum.GetName(typeof(Enums.PaymentMehtod), Model.PaymentMehtod) + (Model.PaymentMehtod == 3 || Model.PaymentMehtod == 4 ? " (" + Model.checkVisaNumber + ")" : ""))
                                 </td>
                             </tr>
                         </tbody>
@@ -112,22 +122,46 @@
                             @{
                                 int counter = 0;
 
-                                foreach (var iterate in Model.invoiceRelatedPaymentDates.Where(x=>x.Amount > 0 ).OrderBy(x=>x.unitRentContractPayment.DueDate) )
+                                foreach (var iterate in Model.invoiceRelatedPaymentDates.Where(x => x.Amount > 0).OrderBy(x => x.unitRentContractPayment.DueDate))
                                 {
                                     counter++;
                                     <tr>
                                         <td class="text-center fw-700">@counter</td>
 
                                         <td class="text-left strong">
-                                           @( iterate.PaymentState == true ?
+                                            @( iterate.PaymentState == true ?
                                             "Payment (full) for the period " + iterate.unitRentContractPayment.DueDate.ToShortDateString() : "Payment (partial) for the period " + iterate.unitRentContractPayment.DueDate.ToShortDateString())
                                         </td>
-                                        <td class="text-right">SAR @iterate.Amount </td>
+                                        <td class="text-right format"> @iterate.Amount SAR</td>
                                     </tr>
                                 }
-                             }
-                        </tbody>
-                    </table>
+
+                                if (Model.invoiceRelatedPaymentDates.FirstOrDefault().TaxRateId != null)
+                                {
+                                    <tr>
+                                        <td class="text-center fw-700"></td>
+
+                                        <td class="text-left strong">
+                                            Including value added tax 15% (VAT)
+                                        </td>
+                                        <td class="text-right format"> @Model.invoiceRelatedPaymentDates.Sum(x => x.TaxAmount) SAR</td>
+                                    </tr>
+
+                                    }
+                                else 
+                                { 
+                                    <tr>
+                                        <td class="text-center fw-700"></td>
+
+                                        <td class="text-left strong">
+                                            Including value added tax  0% (VAT)
+                                        </td>
+                                        <td class="text-right format"> 0.00 SAR</td>
+                                    </tr>
+                                }
+                         }
+                            </tbody>
+                        </table>
                 </div>
 
             </div>
@@ -138,24 +172,24 @@
                 <table class="table table-clean table-responsiv">
                     <tbody>
                         @*<tr>
-                            <td class="text-left">
-                                <strong>Subtotal</strong>
-                            </td>
-                            <td class="text-right"><strong>  SAR 8,497.05  </strong> </td>
-                        </tr>
+                                <td class="text-left">
+                                    <strong>Subtotal</strong>
+                                </td>
+                                <td class="text-right"><strong>  SAR 8,497.05  </strong> </td>
+                            </tr>
 
-                        <tr>
-                            <td class="text-left">
-                                <strong>VAT (15%)</strong>
-                            </td>
-                            <td class="text-right"><strong>SAR 679.76 </strong> </td>
-                        </tr>*@
+                            <tr>
+                                <td class="text-left">
+                                    <strong>VAT (15%)</strong>
+                                </td>
+                                <td class="text-right"><strong>SAR 679.76 </strong> </td>
+                            </tr>*@
                         <tr class="table-scale-border-top border-left-0 border-right-0 border-bottom-0">
                             <td class="text-left keep-print-font">
                                 <h4 class="m-0 fw-700 h2 keep-print-font color-primary-700">Total</h4>
                             </td>
                             <td class="text-right keep-print-font">
-                                <h4 class="m-0 fw-700 h2 keep-print-font">SAR @Model.Payment</h4>
+                                <h4 class="m-0 fw-700 h2 keep-print-font format"> @(Model.Payment + Model.invoiceRelatedPaymentDates.Sum(x => x.TaxAmount)) SAR</h4>
                             </td>
                         </tr>
 
@@ -165,7 +199,9 @@
             </div>
         </div>
         <div class="row">
-
+            <div class="text-center col-md-12">
+                <img src="@ViewBag.Url" width="150" />
+            </div>
         </div>
 
 
@@ -240,41 +276,21 @@
             </div>
 
             <div class="col-sm-1 d-flex"> </div>
-
-
             <div class="col-sm-5 d-flex">
                 <div class="table-responsive">
                     <table class="" style="width:100%">
                         <thead>
                             <tr>
-
-
-
                                 <th class="border-top-0 " style="text-align:center">
                                     <span class="titleSegnat_en textB"> Sign By </span>
                                 </th>
-
-                                <th class="border-top-0" style="text-align:center">
-                                    <span class="titleSegnat_en textB">  Stamp </span>
-                                </th>
-
-
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td style="text-align:center; padding-top:30px"> ----------------------------- </td>
-                                <td style="text-align:center; padding-top:30px"> </td>
-
-
                             </tr>
-
-
                         </tbody>
-
-
-
-
                     </table>
                 </div>
             </div>
@@ -300,10 +316,13 @@
 </div>
 
 
-
 @section ScriptsBlock {
+    <script>
+        $(function () {
+            columnNumberWithCommas('format');
+        })
+    </script>
 }
-
 
 
 

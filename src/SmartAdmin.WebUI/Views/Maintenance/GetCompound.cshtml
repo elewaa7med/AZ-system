@@ -38,7 +38,8 @@
                                 <th>Unit</th>
                                 <th>Responsible</th>
                                 <th>Days to end</th>
-                                <th>Cost</th>
+                                <th>Work Activity</th>
+                                @*<th>Cost</th>*@
                                 <th class="noExport"> Operation</th>
                             </tr>
                         </thead>
@@ -56,9 +57,46 @@
                     <td>
                         <span class="@cssClass">@daysToEnd</span>
                     </td>
-                    <td class="formatNumber">
-                        @item.Cost
+                    <td>
+                       <ul>
+                            @{
+                                if(item.ElectricityDesc != null) { 
+                                    <li>@item.ElectricityDesc</li>
+                                }
+                                if(item.PlumbingDesc != null) { 
+                                    <li>@item.PlumbingDesc</li>
+                                }
+                                if(item.PaintDesc != null) { 
+                                    <li>@item.PaintDesc</li>
+                                }
+                                if(item.TilesDesc != null) { 
+                                    <li>@item.TilesDesc</li>
+                                }
+                                if(item.ToiletDesc != null) { 
+                                    <li>@item.ToiletDesc</li>
+                                }
+                                if(item.WaterHeaterDesc != null) { 
+                                    <li>@item.WaterHeaterDesc</li>
+                                }
+                                if(item.KitchenDesc != null) { 
+                                    <li>@item.KitchenDesc</li>
+                                }
+                                if(item.ConditioningDesc != null) { 
+                                    <li>@item.ConditioningDesc</li>
+                                }
+                                if(item.WasteDesc != null) { 
+                                    <li>@item.WasteDesc</li>
+                                }
+                                           
+                                if(item.OthersDesc != null) { 
+                                    <li>@item.OthersDesc</li>
+                                }
+                            }
+                        </ul>
                     </td>
+                    @*<td class="formatNumber">
+                        @item.Cost
+                    </td>*@
                     <td>
                         <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
                             <div class="btn-group" role="group">
@@ -82,7 +120,8 @@
                                 <th> </th>
                                 <th> </th>
                                 <th> </th>
-                                <th class="formatNumber">@Model.Sum(x => x.Cost)</th>
+                                <th> </th>
+                                @*<th class="formatNumber">@Model.Sum(x => x.Cost)</th>*@
                                 <th> </th>
                             </tr>
                         </tfoot>

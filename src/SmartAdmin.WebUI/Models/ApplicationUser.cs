@@ -102,5 +102,6 @@ namespace SmartAdmin.WebUI.Models
         }
         public virtual ICollection<UserPermission> UserPermissions { get; set; } = new HashSet<UserPermission>();
         public virtual ICollection<UnitRentContractAllPaymentLogs> UnitRentContractAllPaymentLogs { get; set; }
+        public virtual ICollection<UnitRentContractOtherPayment> UnitRentContractOtherPayment { get; set; }
     }
 }

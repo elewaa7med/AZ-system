@@ -1,7 +1,8 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject SmartAdmin.WebUI.Data.ApplicationDbContext context;
-@{ var authenticatedUser = SignInManager.IsSignedIn(User);
+@{
+    var authenticatedUser = SignInManager.IsSignedIn(User);
     var user = UserManager.GetUserAsync(User).Result;
     var list = new List<string>();
     var pageName = ViewBag.PageName ?? "null";
@@ -14,7 +15,7 @@
 
     var hasBuildingAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingAccountant })).Succeeded);
     var hasBuildingsroohAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingSroohAccountant })).Succeeded);
-    var hasBuildingUKAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingUK})).Succeeded);
+    var hasBuildingUKAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingUK })).Succeeded);
     var hasBuildingHyamAlrashedAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingHyamAlrashed })).Succeeded);
     var hasMeadowParkAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MeadowParkGarden })).Succeeded);
     var hasDesertRoseAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertRose })).Succeeded);
@@ -22,10 +23,14 @@
     var hasVilla24Access = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Villa24 })).Succeeded);
     var hasVilla21Access = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Villa21 })).Succeeded);
     var hasDesertApartmentsAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertApartments })).Succeeded);
+    var hasOasisGardens = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.OasisGardens })).Succeeded;
+    var hasOasisResorts = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.OasisResorts })).Succeeded;
     var hasLegalAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Legal })).Succeeded;
     var hasLegalSroohAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalSrooh })).Succeeded;
     var hasLegalHyamAlrashedAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalHyamAlrashed })).Succeeded;
     var hasLegalUKAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalUK })).Succeeded;
+    var hasLegalOasisGardens = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalOasisGardensCompound })).Succeeded;
+    var hasLegalOasisResorts = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalOasisResortsCompound })).Succeeded;
 
     var hasLegalMeadowParkAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalMeadowPark })).Succeeded;
     var hasLegalDesertRoseAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalDesertRose })).Succeeded;
@@ -46,1035 +51,1226 @@
     var hasAddBuildings = isAdmin || ((isAccountantManager || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.AddBuilding })).Succeeded);
     var hasAddUnits = isAdmin || ((isAccountantManager || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.AddUnites })).Succeeded);
 
-    var comoundsNames = context.TCompounds.Select(c => new { c.IdCompound, Name = c.compoundName + " Electricity" }).ToList(); }
-    <ul id="js-nav-menu" class="nav-menu">
-        @if (authenticatedUser)
+    var comoundsNames = context.TCompounds.Select(c => new { c.IdCompound, Name = c.compoundName + " Electricity" }).ToList();
+}
+<ul id="js-nav-menu" class="nav-menu">
+    @if (authenticatedUser)
+    {
+        if (hasBuildingAccess || hasBuildingHyamAlrashedAccess || hasBuildingsroohAccess || hasBuildingUKAccess || hasMeadowParkAccess || hasDesertRoseAccess || hasDaarResidenceAccess || hasVilla24Access || hasVilla21Access || hasDesertApartmentsAccess)
         {
-            if (hasBuildingAccess || hasBuildingHyamAlrashedAccess || hasBuildingsroohAccess || hasBuildingUKAccess || hasMeadowParkAccess || hasDesertRoseAccess || hasDaarResidenceAccess || hasVilla24Access || hasVilla21Access || hasDesertApartmentsAccess)
-            {
-                list = new List<string> { "Dashboard", "Dashboard of Dues", "Dashboards" };
-                <li class="@(list.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Dashboard" data-filter-tags="dashboard">
-                        <i class="fal fa-window"></i>
-                        <span class="nav-link-text">Dashboard</span>
-                    </a>
-                    <ul>
-                        @if (hasBuildingDashboardAccess || hasMeadowParkDashboardAccess || hasDesertRoseDashboardAccess || hasDaarResidenceDashboardAccess || hasVilla24DashboardAccess || hasVilla21DashboardAccess || hasDesertApartmentsDashboardAccess)
-                         {
-                            <li class="@("Dashboards".Contains(pageName) ? "active " : "")">
-                                <a asp-area="" asp-controller="Home" asp-action="Dashboard" title="Dashboard" data-filter-tags="Dashboard">
-                                    <span class="nav-link-text">Dashboard</span>
-                                </a>
-                            </li>
-                         }
-                        <li class="@("Dashboard of Dues".Contains(pageName) ? "active " : "")">
-                            <a asp-area="" asp-controller="Home" asp-action="IndexAdmin2" title="Dashboard of Dues" data-filter-tags="Dashboard of Dues">
-                                <span class="nav-link-text">Dashboard of Dues</span>
+            list = new List<string> { "Dashboard", "Dashboard of Dues", "Dashboards" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Dashboard" data-filter-tags="dashboard">
+                    <i class="fal fa-window"></i>
+                    <span class="nav-link-text">Dashboard</span>
+                </a>
+                <ul>
+                    @if (hasBuildingDashboardAccess || hasMeadowParkDashboardAccess || hasDesertRoseDashboardAccess || hasDaarResidenceDashboardAccess || hasVilla24DashboardAccess || hasVilla21DashboardAccess || hasDesertApartmentsDashboardAccess)
+                    {
+                        <li class="@("Dashboards".Contains(pageName) ? "active " : "")">
+                            <a asp-area="" asp-controller="Home" asp-action="Dashboard" title="Dashboard" data-filter-tags="Dashboard">
+                                <span class="nav-link-text">Dashboard</span>
                             </a>
                         </li>
-                    </ul>
-                </li> 
-            }
-            if (hasBuildingsroohAccess || hasLegalSroohAccess)
-            {
-                list = new List<string> { "Keys 2", "Units page 2", "Buildings page 2", "Building dues page 2", "Unit rent contracts 2", "Archived Unit Contracts 2", "Legal 2", "Non-Rented Units 2", "Building Electricity 2", "Building Insurance 2", "Building Tenants 2", "Building Maintenance 2"};
-                <li class="@(list.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Operations" data-filter-tags="Buildings">
-                        <i class="fal fa-edit"></i>
-                        <span class="nav-link-text">Buildings Srooh</span>
-                    </a>
-                    <ul>
-                        @if (hasBuildingsroohAccess)
-                        {
-                            <li class="@("Building dues page 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/BuildingsDues?id=2" title="Buildings Dues & Stats" data-filter-tags="Buildings Dues & Stats">
-                                    <span class="nav-link-text">Buildings Dues </span>
-                                </a>
-                            </li>
-
-                            <li class="@("Non-Rented Units 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/NonRentUnits?id=2" title="Non-Rented Units" data-filter-tags="Non-Rented Units">
-                                    <span class="nav-link-text">Non-Rented Units </span>
-                                </a>
-                            </li>
-                        }
-                        @if (hasLegalSroohAccess)
-                        {
-                            <li class="@("Legal 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?id=2" title="Legal" data-filter-tags="Legal">
-                                    <span class="nav-link-text">Legal </span>
-                                </a>
-                            </li>
-                        }
-                        @if (hasBuildingsroohAccess)
-                        {
-                            <li class="@("Unit rent contracts 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitRentContract?id=2" title="Rent Contracts" data-filter-tags="Rent Contracts">
-                                    <span class="nav-link-text">Contracts</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Electricity 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/ElectricityMeter/GetBuildingMeters?id=2"  data-filter-tags="Electricity" title="Electricity" class="waves-effect waves-themed ">
-                                    <span class="nav-link-text">Electricity</span>
-                                </a>
-                            </li>
-                            <li class="@("Buildings page 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/Buildings?id=2" title="Buildings" data-filter-tags="Buildings">
-                                    <span class="nav-link-text">Buildings</span>
-                                </a>
-                            </li>
-                            <li class="@("Units page 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/Units?id=2" title="Units" data-filter-tags="Units">
-                                    <span class="nav-link-text">Units</span>
-                                </a>
-                            </li>
-                            <li class="@("Archived Unit Contracts 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitRentContract/Archived?id=2" title="Archived Rent Contracts" data-filter-tags="Archived Rent Contracts">
-                                    <span class="nav-link-text">Archived Contracts</span>
-                                </a>
-                            </li>
-                            <li class="@("Keys 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitKeys?id=2" title="Keys of the Units" data-filter-tags="Keys of the Units">
-                                    <span class="nav-link-text">Keys of the Units</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Insurance 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/GetBuildingInsurance?id=2" title="Building Insurance " data-filter-tags="Building Insurance ">
-                                    <span class="nav-link-text">Building Insurance</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Tenants 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/GetTenants?id=2" title="Building Tenants" data-filter-tags="Building Tenants">
-                                    <span class="nav-link-text">Building Tenants</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Maintenance 2".Contains(pageName) ? "active" : "")">
-                                <a href="~/Maintenance/GetBuilding?id=2" title="Building Maintenance" data-filter-tags="Building Maintenance">
-                                    <span class="nav-link-text">Building Maintenance</span>
-                                </a>
-                            </li>
-                          }
-                    </ul>
-                </li> 
-            }
-
-            if (hasBuildingHyamAlrashedAccess || hasLegalHyamAlrashedAccess)
-            {
-                list = new List<string> { "Keys 3", "Units page 3", "Buildings page 3", "Building dues page 3", "Unit rent contracts 3", "Archived Unit Contracts 3", "Legal 3", "Non-Rented Units 3", "Building Electricity 3", "Building Insurance 3", "Building Tenants 3", "Building Maintenance 3" };
-                <li class="@(list.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Operations" data-filter-tags="Buildings Hyam Alrasheed">
-                        <i class="fal fa-edit"></i>
-                        <span class="nav-link-text">Buildings Hyam Alrasheed</span>
-                    </a>
-                    <ul>
-                        @if (hasBuildingHyamAlrashedAccess)
-                        {
-                            <li class="@("Building dues page 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/BuildingsDues?id=3" title="Buildings Dues & Stats" data-filter-tags="Buildings Dues & Stats">
-                                    <span class="nav-link-text">Buildings Dues </span>
-                                </a>
-                            </li>
-                            <li class="@("Non-Rented Units 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/NonRentUnits?id=3" title="Non-Rented Units" data-filter-tags="Non-Rented Units">
-                                    <span class="nav-link-text">Non-Rented Units </span>
-                                </a>
-                            </li>
-                        }
-                        @if (hasLegalHyamAlrashedAccess)
-                        {
-                            <li class="@("Legal 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?id=3" title="Legal" data-filter-tags="Legal">
-                                    <span class="nav-link-text">Legal </span>
-                                </a>
-                            </li>
-                        }
-                        @if (hasBuildingHyamAlrashedAccess)
-                        {
-                            <li class="@("Unit rent contracts 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitRentContract?id=3" title="Rent Contracts" data-filter-tags="Rent Contracts">
-                                    <span class="nav-link-text">Contracts</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Electricity 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/ElectricityMeter/GetBuildingMeters?id=3" data-filter-tags="Electricity" title="Electricity" class="waves-effect waves-themed ">
-                                    <span class="nav-link-text">Electricity</span>
-                                </a>
-                            </li>
-                            <li class="@("Buildings page 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/Buildings?id=3" title="Buildings" data-filter-tags="Buildings">
-                                    <span class="nav-link-text">Buildings</span>
-                                </a>
-                            </li>
-                            <li class="@("Units page 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/Units?id=3" title="Units" data-filter-tags="Units">
-                                    <span class="nav-link-text">Units</span>
-                                </a>
-                            </li>
-                            <li class="@("Archived Unit Contracts 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitRentContract/Archived?id=3" title="Archived Rent Contracts" data-filter-tags="Archived Rent Contracts">
-                                    <span class="nav-link-text">Archived Contracts</span>
-                                </a>
-                            </li>
-                            <li class="@("Keys 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitKeys?id=3" title="Keys of the Units" data-filter-tags="Keys of the Units">
-                                    <span class="nav-link-text">Keys of the Units</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Insurance 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/GetBuildingInsurance?id=3" title="Building Insurance " data-filter-tags="Building Insurance ">
-                                    <span class="nav-link-text">Building Insurance</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Tenants 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/GetTenants?id=3" title="Building Tenants" data-filter-tags="Building Tenants">
-                                    <span class="nav-link-text">Building Tenants</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Maintenance 3".Contains(pageName) ? "active" : "")">
-                                <a href="~/Maintenance/GetBuilding?id=3" title="Building Maintenance" data-filter-tags="Building Maintenance">
-                                    <span class="nav-link-text">Building Maintenance</span>
-                                </a>
-                            </li>
-                         }
-                    </ul>
-                </li>
-            }
-
-            if (hasBuildingUKAccess || hasLegalUKAccess)
-            {
-                list = new List<string> { "Keys 4", "Units page 4", "Buildings page 4", "Building dues page 4", "Unit rent contracts 4", "Archived Unit Contracts 4", "Legal 4", "Non-Rented Units 4", "Building Electricity 4", "Building Insurance 4", "Building Tenants 4", "Building Maintenance 4" };
-                <li class="@(list.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Operations" data-filter-tags="Buildings">
-                        <i class="fal fa-edit"></i>
-                        <span class="nav-link-text">Buildings UK</span>
-                    </a>
-                    <ul>
-                        @if (hasBuildingUKAccess)
-                        {
-                            <li class="@("Building dues page 4".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/BuildingsDues?id=4" title="Buildings Dues & Stats" data-filter-tags="Buildings Dues & Stats">
-                                    <span class="nav-link-text">Buildings Dues </span>
-                                </a>
-                            </li>
-                            <li class="@("Non-Rented Units 4".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/NonRentUnits?id=4" title="Non-Rented Units" data-filter-tags="Non-Rented Units">
-                                    <span class="nav-link-text">Non-Rented Units </span>
-                                </a>
-                            </li>
-                        }
-                        @if (hasLegalUKAccess)
-                        {
-                            <li class="@("Legal 4".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?id=4" title="Legal" data-filter-tags="Legal">
-                                    <span class="nav-link-text">Legal </span>
-                                </a>
-                            </li>
-                         }
-                        @if (hasBuildingUKAccess)
-                        {
-                            <li class="@("Unit rent contracts 4".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitRentContract?id=4" title="Rent Contracts" data-filter-tags="Rent Contracts">
-                                    <span class="nav-link-text">Contracts</span>
-                                </a>
-                            </li>
-                                <li class="@("Building Electricity 4".Contains(pageName) ? "active" : "")">
-                                    <a href="~/ElectricityMeter/GetBuildingMeters?id=4" data-filter-tags="Electricity" title="Electricity" class="waves-effect waves-themed ">
-                                        <span class="nav-link-text">Electricity</span>
-                                    </a>
-                                </li>
-                                <li class="@("Buildings page 4".Contains(pageName) ? "active" : "")">
-                                    <a href="~/Buildings?id=4" title="Buildings" data-filter-tags="Buildings">
-                                        <span class="nav-link-text">Buildings</span>
-                                    </a>
-                                </li>
-                                <li class="@("Units page 4".Contains(pageName) ? "active" : "")">
-                                    <a href="~/Units?id=4" title="Units" data-filter-tags="Units">
-                                        <span class="nav-link-text">Units</span>
-                                    </a>
-                                </li>
-                                <li class="@("Archived Unit Contracts 4".Contains(pageName) ? "active" : "")">
-                                    <a href="~/UnitRentContract/Archived?id=4" title="Archived Rent Contracts" data-filter-tags="Archived Rent Contracts">
-                                        <span class="nav-link-text">Archived Contracts</span>
-                                    </a>
-                                </li>
-                                <li class="@("Keys 4".Contains(pageName) ? "active" : "")">
-                                    <a href="~/UnitKeys?id=4" title="Keys of the Units" data-filter-tags="Keys of the Units">
-                                        <span class="nav-link-text">Keys of the Units</span>
-                                    </a>
-                                </li>
-                                <li class="@("Building Insurance 4".Contains(pageName) ? "active" : "")">
-                                    <a href="~/Home/GetBuildingInsurance?id=4" title="Building Insurance " data-filter-tags="Building Insurance ">
-                                        <span class="nav-link-text">Building Insurance</span>
-                                    </a>
-                                </li>
-                                <li class="@("Building Tenants 4".Contains(pageName) ? "active" : "")">
-                                    <a href="~/Home/GetTenants?id=4" title="Building Tenants" data-filter-tags="Building Tenants">
-                                        <span class="nav-link-text">Building Tenants</span>
-                                    </a>
-                                </li>
-                                <li class="@("Building Maintenance 4".Contains(pageName) ? "active" : "")">
-                                    <a href="~/Maintenance/GetBuilding?id=4" title="Building Maintenance" data-filter-tags="Building Maintenance">
-                                        <span class="nav-link-text">Building Maintenance</span>
-                                    </a>
-                                </li>
-                         }
-                    </ul>
-                </li>
-            }
-            
-            if (hasBuildingAccess || hasLegalAccess)
-            {
-                list = new List<string> { "Keys 1","Units page 1", "Buildings page 1", "Building dues page 1", "Unit rent contracts 1", "Archived Unit Contracts 1", "Legal 1", "Non-Rented Units 1", "Building Electricity 1", "Building Insurance 1", "Building Tenants 1", "Building Maintenance 1" };
-                <li class="@(list.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Operations" data-filter-tags="Buildings">
-                        <i class="fal fa-edit"></i>
-                        <span class="nav-link-text">Buildings</span>
-                    </a>
-                    <ul>
-                        @if (hasBuildingAccess)
-                        {
-                            <li class="@("Building dues page 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/BuildingsDues?id=1" title="Buildings Dues & Stats" data-filter-tags="Buildings Dues & Stats">
-                                    <span class="nav-link-text">Buildings Dues</span>
-                                </a>
-                            </li>
-                            <li class="@("Non-Rented Units 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/NonRentUnits?id=1" title="Non-Rented Units" data-filter-tags="Non-Rented Units">
-                                    <span class="nav-link-text">Non-Rented Units </span>
-                                </a>
-                            </li>
-                         }
-                        @if (hasLegalAccess)
-                        {
-                            <li class="@("Legal 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?id=1" title="Legal" data-filter-tags="Legal">
-                                    <span class="nav-link-text">Legal </span>
-                                </a>
-                            </li>
-                         }
-                        @if (hasBuildingAccess)
-                        {
-                            <li class="@("Unit rent contracts 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitRentContract?id=1" title="Rent Contracts" data-filter-tags="Rent Contracts">
-                                    <span class="nav-link-text">Contracts</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Electricity 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/ElectricityMeter/GetBuildingMeters?id=1" data-filter-tags="Electricity" title="Electricity" class="waves-effect waves-themed ">
-                                    <span class="nav-link-text">Electricity</span>
-                                </a>
-                            </li>
-                            <li class="@("Buildings page 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/Buildings?id=1" title="Buildings" data-filter-tags="Buildings">
-                                    <span class="nav-link-text">Buildings</span>
-                                </a>
-                            </li>
-                            <li class="@("Units page 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/Units?id=1" title="Units" data-filter-tags="Units">
-                                    <span class="nav-link-text">Units</span>
-                                </a>
-                            </li>
-                            <li class="@("Archived Unit Contracts 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitRentContract/Archived?id=1" title="Archived Rent Contracts" data-filter-tags="Archived Rent Contracts">
-                                    <span class="nav-link-text">Archived Contracts</span>
-                                </a>
-                            </li>
-                            <li class="@("Keys 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/UnitKeys?id=1" title="Keys of the Units" data-filter-tags="Keys of the Units">
-                                    <span class="nav-link-text">Keys of the Units</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Insurance 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/GetBuildingInsurance?id=1" title="Building Insurance " data-filter-tags="Building Insurance ">
-                                    <span class="nav-link-text">Building Insurance</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Tenants 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/Home/GetTenants?id=1" title="Building Tenants" data-filter-tags="Building Tenants">
-                                    <span class="nav-link-text">Building Tenants</span>
-                                </a>
-                            </li>
-                            <li class="@("Building Maintenance 1".Contains(pageName) ? "active" : "")">
-                                <a href="~/Maintenance/GetBuilding?id=1" title="Building Maintenance" data-filter-tags="Building Maintenance">
-                                    <span class="nav-link-text">Building Maintenance</span>
-                                </a>
-                            </li>
-                         }
-                    </ul>
-                </li> 
-            }
-
-
-            if (hasDaarResidenceAccess)
-            {
-                <li class="@(new List<string> { "Building Daar Resident ","unit Daar Resident ","Daar Resident Blocked","Daar Residence Dashboard", "Daar Residence Contracts", "Daar Residence Contract Expiry", "Daar Residence Non Rented Units" ,"Daar Resident Electricity","Daar Resident Insurance ","Daar Resident Archived Contracts","Daar Residence Tenants","Daar Resident Maintenance", "Legal Daar Resident ","Desert rose compound Building"}.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Desert Rose" data-filter-tags="Daar Residence">
-                        <i class="fal fa-building"></i>
-                        <span class="nav-link-text">Daar Residence</span>
-                    </a>
-                    <ul>
-                        <li class="@("Daar Residence Dashboard".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/DaarResident" title="Collections" data-filter-tags="Collections" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Collections</span>
+                    }
+                    <li class="@("Dashboard of Dues".Contains(pageName) ? "active " : "")">
+                        <a asp-area="" asp-controller="Home" asp-action="IndexAdmin2" title="Dashboard of Dues" data-filter-tags="Dashboard of Dues">
+                            <span class="nav-link-text">Dashboard of Dues</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        }
+        if (hasBuildingsroohAccess || hasLegalSroohAccess)
+        {
+            list = new List<string> { "Keys 2", "Units page 2", "Buildings page 2", "Building dues page 2", "Unit rent contracts 2", "Archived Unit Contracts 2", "Legal 2", "Non-Rented Units 2", "Building Electricity 2", "Building Insurance 2", "Building Tenants 2", "Building Maintenance 2" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Operations" data-filter-tags="Buildings">
+                    <i class="fal fa-edit"></i>
+                    <span class="nav-link-text">Buildings Srooh</span>
+                </a>
+                <ul>
+                    @if (hasBuildingsroohAccess)
+                    {
+                        <li class="@("Building dues page 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/BuildingsDues?id=2" title="Buildings Dues & Stats" data-filter-tags="Buildings Dues & Stats">
+                                <span class="nav-link-text">Buildings Dues </span>
                             </a>
                         </li>
-                        <li class="@("Daar Residence Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundContracts?compoundID=4" title="Contracts" data-filter-tags="Contracts" class="waves-effect waves-themed ">
+
+                        <li class="@("Non-Rented Units 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/NonRentUnits?id=2" title="Non-Rented Units" data-filter-tags="Non-Rented Units">
+                                <span class="nav-link-text">Non-Rented Units </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasLegalSroohAccess)
+                    {
+                        <li class="@("Legal 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?id=2" title="Legal" data-filter-tags="Legal">
+                                <span class="nav-link-text">Legal </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasBuildingsroohAccess)
+                    {
+                        <li class="@("Unit rent contracts 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract?id=2" title="Rent Contracts" data-filter-tags="Rent Contracts">
                                 <span class="nav-link-text">Contracts</span>
                             </a>
                         </li>
-                        <li class="@("Daar Resident Archived Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=4" title="Archived" data-filter-tags="Archived" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Archived Contracts</span>
-                            </a>
-                        </li>
-                        @if (hasLegalDaarResidenceAccess) { 
-                            <li class="@("Legal Daar Resident ".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?compoundID=4" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
-                                    <span class="nav-link-text">Legal</span>
-                                </a>
-                            </li>
-                        }
-                        @*<li class="@("Desert Rose Contract Expiry".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/ContractExpiry?compoundID=4" title="Contracts Expiry" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Contracts Expiry</span>
-                            </a>
-                        </li>*@
-
-                        <li class="@("Daar Residence Non Rented Units".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetNonRentedUnits?compoundID=4" title="Non Rented Units" data-filter-tags="Non Rented Units" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Non Rented Units</span>
-                            </a>
-                        </li>
-                        <li class="@("Daar Resident Electricity".Contains(pageName) ? "active" : "")">
-                            <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=4" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                        <li class="@("Building Electricity 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/ElectricityMeter/GetBuildingMeters?id=2" data-filter-tags="Electricity" title="Electricity" class="waves-effect waves-themed ">
                                 <span class="nav-link-text">Electricity</span>
                             </a>
                         </li>
-                        <li class="@("Daar Resident Insurance ".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundInsurance?compoundID=4" class="waves-effect waves-themed " data-filter-tags="Insurance ">
-                                <span class="nav-link-text">Insurance</span>
+                        <li class="@("Buildings page 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/Buildings?id=2" title="Buildings" data-filter-tags="Buildings">
+                                <span class="nav-link-text">Buildings</span>
                             </a>
                         </li>
-                        <li class="@("Daar Residence Tenants".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetTenants?compoundID=4" title="Tenants" data-filter-tags="Daar Residence Tenants">
-                                <span class="nav-link-text">Tenants</span>
+                        <li class="@("Units page 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/Units?id=2" title="Units" data-filter-tags="Units">
+                                <span class="nav-link-text">Units</span>
                             </a>
                         </li>
-                        <li class="@("Daar Resident Maintenance".Contains(pageName) ? "active" : "")">
-                            <a href="~/Maintenance/GetCompound?compoundID=4" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
-                                <span class="nav-link-text">Maintenance</span>
-                            </a>
-                        </li>
-                        <li class="@("Daar Resident Blocked".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/Blocked?compoundID=4" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
-                                <span class="nav-link-text">Blocked</span>
-                            </a>
-                        </li>
-                        @if (hasAddBuildings)
-                        {
-                            <li class="@("Building Daar Resident ".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundBuildings/Index?IdCompound=4" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
-                                    <span class="nav-link-text">Add Buildings</span>
-                                </a>
-                            </li>
-                        }
-                        @if (hasAddUnits)
-                        {
-                            <li class="@("unit Daar Resident ".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundUnits/Index?IdCompound=4" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
-                                    <span class="nav-link-text">Add Units</span>
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </li> 
-            }
-            if (hasDesertRoseAccess)
-            {
-                <li class="@(new List<string> {"Building Desert rose compound","unit Desert rose compound", "Desert rose compound Blocked","Desert Rose Dashboard", "Desert Rose Contracts", "Desert Rose Contract Expiry", "Desert Rose Non Rented Units","Desert rose compound Electricity","Desert rose compound Insurance ","Desert rose compound Archived Contracts","Desert Rose Tenants","Desert rose compound Maintenance","Legal Desert rose compound"}.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Desert Rose" data-filter-tags="Desert Rose">
-                        <i class="fal fa-building"></i>
-                        <span class="nav-link-text">Desert Rose</span>
-                    </a>
-                    <ul>
-                        <li class="@("Desert Rose Dashboard".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/DesertRose" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
-                                <span class="nav-link-text">Collections</span>
-                            </a>
-                        </li>
-
-                        <li class="@("Desert Rose Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundContracts?compoundID=3" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
-                                <span class="nav-link-text">Contracts</span>
-                            </a>
-                        </li>
-                        <li class="@("Desert rose compound Archived Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=3" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived">
+                        <li class="@("Archived Unit Contracts 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract/Archived?id=2" title="Archived Rent Contracts" data-filter-tags="Archived Rent Contracts">
                                 <span class="nav-link-text">Archived Contracts</span>
                             </a>
                         </li>
-                        @if (hasLegalDesertRoseAccess) { 
-                            <li class="@("Legal Desert rose compound".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?compoundID=3" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
-                                    <span class="nav-link-text">Legal</span>
-                                </a>
-                            </li>
-                        }
-                        @*<li class="@("Desert Rose Contract Expiry".Contains(pageName) ? "active" : "")">
+                        <li class="@("Keys 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitKeys?id=2" title="Keys of the Units" data-filter-tags="Keys of the Units">
+                                <span class="nav-link-text">Keys of the Units</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Insurance 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetBuildingInsurance?id=2" title="Building Insurance " data-filter-tags="Building Insurance ">
+                                <span class="nav-link-text">Building Insurance</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Tenants 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetTenants?id=2" title="Building Tenants" data-filter-tags="Building Tenants">
+                                <span class="nav-link-text">Building Tenants</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Maintenance 2".Contains(pageName) ? "active" : "")">
+                            <a href="~/Maintenance/GetBuilding?id=2" title="Building Maintenance" data-filter-tags="Building Maintenance">
+                                <span class="nav-link-text">Building Maintenance</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+        if (hasBuildingHyamAlrashedAccess || hasLegalHyamAlrashedAccess)
+        {
+            list = new List<string> { "Keys 3", "Units page 3", "Buildings page 3", "Building dues page 3", "Unit rent contracts 3", "Archived Unit Contracts 3", "Legal 3", "Non-Rented Units 3", "Building Electricity 3", "Building Insurance 3", "Building Tenants 3", "Building Maintenance 3" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Operations" data-filter-tags="Buildings Hyam Alrasheed">
+                    <i class="fal fa-edit"></i>
+                    <span class="nav-link-text">Buildings Hyam Alrasheed</span>
+                </a>
+                <ul>
+                    @if (hasBuildingHyamAlrashedAccess)
+                    {
+                        <li class="@("Building dues page 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/BuildingsDues?id=3" title="Buildings Dues & Stats" data-filter-tags="Buildings Dues & Stats">
+                                <span class="nav-link-text">Buildings Dues </span>
+                            </a>
+                        </li>
+                        <li class="@("Non-Rented Units 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/NonRentUnits?id=3" title="Non-Rented Units" data-filter-tags="Non-Rented Units">
+                                <span class="nav-link-text">Non-Rented Units </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasLegalHyamAlrashedAccess)
+                    {
+                        <li class="@("Legal 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?id=3" title="Legal" data-filter-tags="Legal">
+                                <span class="nav-link-text">Legal </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasBuildingHyamAlrashedAccess)
+                    {
+                        <li class="@("Unit rent contracts 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract?id=3" title="Rent Contracts" data-filter-tags="Rent Contracts">
+                                <span class="nav-link-text">Contracts</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Electricity 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/ElectricityMeter/GetBuildingMeters?id=3" data-filter-tags="Electricity" title="Electricity" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Electricity</span>
+                            </a>
+                        </li>
+                        <li class="@("Buildings page 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/Buildings?id=3" title="Buildings" data-filter-tags="Buildings">
+                                <span class="nav-link-text">Buildings</span>
+                            </a>
+                        </li>
+                        <li class="@("Units page 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/Units?id=3" title="Units" data-filter-tags="Units">
+                                <span class="nav-link-text">Units</span>
+                            </a>
+                        </li>
+                        <li class="@("Archived Unit Contracts 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract/Archived?id=3" title="Archived Rent Contracts" data-filter-tags="Archived Rent Contracts">
+                                <span class="nav-link-text">Archived Contracts</span>
+                            </a>
+                        </li>
+                        <li class="@("Keys 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitKeys?id=3" title="Keys of the Units" data-filter-tags="Keys of the Units">
+                                <span class="nav-link-text">Keys of the Units</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Insurance 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetBuildingInsurance?id=3" title="Building Insurance " data-filter-tags="Building Insurance ">
+                                <span class="nav-link-text">Building Insurance</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Tenants 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetTenants?id=3" title="Building Tenants" data-filter-tags="Building Tenants">
+                                <span class="nav-link-text">Building Tenants</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Maintenance 3".Contains(pageName) ? "active" : "")">
+                            <a href="~/Maintenance/GetBuilding?id=3" title="Building Maintenance" data-filter-tags="Building Maintenance">
+                                <span class="nav-link-text">Building Maintenance</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+        if (hasBuildingUKAccess || hasLegalUKAccess)
+        {
+            list = new List<string> { "Keys 4", "Units page 4", "Buildings page 4", "Building dues page 4", "Unit rent contracts 4", "Archived Unit Contracts 4", "Legal 4", "Non-Rented Units 4", "Building Electricity 4", "Building Insurance 4", "Building Tenants 4", "Building Maintenance 4" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Operations" data-filter-tags="Buildings">
+                    <i class="fal fa-edit"></i>
+                    <span class="nav-link-text">Buildings UK</span>
+                </a>
+                <ul>
+                    @if (hasBuildingUKAccess)
+                    {
+                        <li class="@("Building dues page 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/BuildingsDues?id=4" title="Buildings Dues & Stats" data-filter-tags="Buildings Dues & Stats">
+                                <span class="nav-link-text">Buildings Dues </span>
+                            </a>
+                        </li>
+                        <li class="@("Non-Rented Units 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/NonRentUnits?id=4" title="Non-Rented Units" data-filter-tags="Non-Rented Units">
+                                <span class="nav-link-text">Non-Rented Units </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasLegalUKAccess)
+                    {
+                        <li class="@("Legal 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?id=4" title="Legal" data-filter-tags="Legal">
+                                <span class="nav-link-text">Legal </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasBuildingUKAccess)
+                    {
+                        <li class="@("Unit rent contracts 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract?id=4" title="Rent Contracts" data-filter-tags="Rent Contracts">
+                                <span class="nav-link-text">Contracts</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Electricity 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/ElectricityMeter/GetBuildingMeters?id=4" data-filter-tags="Electricity" title="Electricity" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Electricity</span>
+                            </a>
+                        </li>
+                        <li class="@("Buildings page 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/Buildings?id=4" title="Buildings" data-filter-tags="Buildings">
+                                <span class="nav-link-text">Buildings</span>
+                            </a>
+                        </li>
+                        <li class="@("Units page 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/Units?id=4" title="Units" data-filter-tags="Units">
+                                <span class="nav-link-text">Units</span>
+                            </a>
+                        </li>
+                        <li class="@("Archived Unit Contracts 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract/Archived?id=4" title="Archived Rent Contracts" data-filter-tags="Archived Rent Contracts">
+                                <span class="nav-link-text">Archived Contracts</span>
+                            </a>
+                        </li>
+                        <li class="@("Keys 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitKeys?id=4" title="Keys of the Units" data-filter-tags="Keys of the Units">
+                                <span class="nav-link-text">Keys of the Units</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Insurance 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetBuildingInsurance?id=4" title="Building Insurance " data-filter-tags="Building Insurance ">
+                                <span class="nav-link-text">Building Insurance</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Tenants 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetTenants?id=4" title="Building Tenants" data-filter-tags="Building Tenants">
+                                <span class="nav-link-text">Building Tenants</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Maintenance 4".Contains(pageName) ? "active" : "")">
+                            <a href="~/Maintenance/GetBuilding?id=4" title="Building Maintenance" data-filter-tags="Building Maintenance">
+                                <span class="nav-link-text">Building Maintenance</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+        if (hasBuildingAccess || hasLegalAccess)
+        {
+            list = new List<string> { "Keys 1", "Units page 1", "Buildings page 1", "Building dues page 1", "Unit rent contracts 1", "Archived Unit Contracts 1", "Legal 1", "Non-Rented Units 1", "Building Electricity 1", "Building Insurance 1", "Building Tenants 1", "Building Maintenance 1" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Operations" data-filter-tags="Buildings">
+                    <i class="fal fa-edit"></i>
+                    <span class="nav-link-text">Buildings</span>
+                </a>
+                <ul>
+                    @if (hasBuildingAccess)
+                    {
+                        <li class="@("Building dues page 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/BuildingsDues?id=1" title="Buildings Dues & Stats" data-filter-tags="Buildings Dues & Stats">
+                                <span class="nav-link-text">Buildings Dues</span>
+                            </a>
+                        </li>
+                        <li class="@("Non-Rented Units 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/NonRentUnits?id=1" title="Non-Rented Units" data-filter-tags="Non-Rented Units">
+                                <span class="nav-link-text">Non-Rented Units </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasLegalAccess)
+                    {
+                        <li class="@("Legal 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?id=1" title="Legal" data-filter-tags="Legal">
+                                <span class="nav-link-text">Legal </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasBuildingAccess)
+                    {
+                        <li class="@("Unit rent contracts 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract?id=1" title="Rent Contracts" data-filter-tags="Rent Contracts">
+                                <span class="nav-link-text">Contracts</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Electricity 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/ElectricityMeter/GetBuildingMeters?id=1" data-filter-tags="Electricity" title="Electricity" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Electricity</span>
+                            </a>
+                        </li>
+                        <li class="@("Buildings page 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/Buildings?id=1" title="Buildings" data-filter-tags="Buildings">
+                                <span class="nav-link-text">Buildings</span>
+                            </a>
+                        </li>
+                        <li class="@("Units page 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/Units?id=1" title="Units" data-filter-tags="Units">
+                                <span class="nav-link-text">Units</span>
+                            </a>
+                        </li>
+                        <li class="@("Archived Unit Contracts 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract/Archived?id=1" title="Archived Rent Contracts" data-filter-tags="Archived Rent Contracts">
+                                <span class="nav-link-text">Archived Contracts</span>
+                            </a>
+                        </li>
+                        <li class="@("Keys 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitKeys?id=1" title="Keys of the Units" data-filter-tags="Keys of the Units">
+                                <span class="nav-link-text">Keys of the Units</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Insurance 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetBuildingInsurance?id=1" title="Building Insurance " data-filter-tags="Building Insurance ">
+                                <span class="nav-link-text">Building Insurance</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Tenants 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetTenants?id=1" title="Building Tenants" data-filter-tags="Building Tenants">
+                                <span class="nav-link-text">Building Tenants</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Maintenance 1".Contains(pageName) ? "active" : "")">
+                            <a href="~/Maintenance/GetBuilding?id=1" title="Building Maintenance" data-filter-tags="Building Maintenance">
+                                <span class="nav-link-text">Building Maintenance</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+
+        if (hasDaarResidenceAccess)
+        {
+            <li class="@(new List<string> { "Building Daar Resident ","unit Daar Resident ","Daar Resident Blocked","Daar Residence Dashboard", "Daar Residence Contracts", "Daar Residence Contract Expiry", "Daar Residence Non Rented Units" ,"Daar Resident Electricity","Daar Resident Insurance ","Daar Resident Archived Contracts","Daar Residence Tenants","Daar Resident Maintenance", "Legal Daar Resident ","Desert rose compound Building"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Desert Rose" data-filter-tags="Daar Residence">
+                    <i class="fal fa-building"></i>
+                    <span class="nav-link-text">Daar Residence</span>
+                </a>
+                <ul>
+                    <li class="@("Daar Residence Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/DaarResident" title="Collections" data-filter-tags="Collections" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+                    <li class="@("Daar Residence Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=4" title="Contracts" data-filter-tags="Contracts" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Daar Resident Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=4" title="Archived" data-filter-tags="Archived" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalDaarResidenceAccess)
+                    {
+                        <li class="@("Legal Daar Resident ".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=4" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    @*<li class="@("Desert Rose Contract Expiry".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/ContractExpiry?compoundID=4" title="Contracts Expiry" class="waves-effect waves-themed ">
+                        <span class="nav-link-text">Contracts Expiry</span>
+                        </a>
+                        </li>*@
+
+                    <li class="@("Daar Residence Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=4" title="Non Rented Units" data-filter-tags="Non Rented Units" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Non Rented Units</span>
+                        </a>
+                    </li>
+                    <li class="@("Daar Resident Electricity".Contains(pageName) ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=4" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
+                        </a>
+                    </li>
+                    <li class="@("Daar Resident Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=4" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("Daar Residence Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=4" title="Tenants" data-filter-tags="Daar Residence Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("Daar Resident Maintenance".Contains(pageName) ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=4" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("Daar Resident Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=4" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building Daar Resident ".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=4" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit Daar Resident ".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=4" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        if (hasDesertRoseAccess)
+        {
+            <li class="@(new List<string> {"Building Desert rose compound","unit Desert rose compound", "Desert rose compound Blocked","Desert Rose Dashboard", "Desert Rose Contracts", "Desert Rose Contract Expiry", "Desert Rose Non Rented Units","Desert rose compound Electricity","Desert rose compound Insurance ","Desert rose compound Archived Contracts","Desert Rose Tenants","Desert rose compound Maintenance","Legal Desert rose compound"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Desert Rose" data-filter-tags="Desert Rose">
+                    <i class="fal fa-building"></i>
+                    <span class="nav-link-text">Desert Rose</span>
+                </a>
+                <ul>
+                    <li class="@("Desert Rose Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/DesertRose" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+
+                    <li class="@("Desert Rose Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=3" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Desert rose compound Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=3" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalDesertRoseAccess)
+                    {
+                        <li class="@("Legal Desert rose compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=3" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    @*<li class="@("Desert Rose Contract Expiry".Contains(pageName) ? "active" : "")">
                         <a href="~/Home/ContractExpiry?compoundID=3" title="Contracts Expiry" class="waves-effect waves-themed ">
-                            <span class="nav-link-text">Contracts Expiry</span>
+                        <span class="nav-link-text">Contracts Expiry</span>
                         </a>
                         </li>*@
 
-                        <li class="@("Desert Rose Non Rented Units".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetNonRentedUnits?compoundID=3" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units</">
-                                <span class="nav-link-text">Non Rented Units</span>
-                            </a>
-                        </li>
-                        <li class="@(("Desert rose compound Electricity").Contains(pageName) ? "active" : "")">
-                            <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=3" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Electricity</span>
-                            </a>
-                        </li>
-                        <li class="@("Desert rose compound Insurance ".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundInsurance?compoundID=3" class="waves-effect waves-themed " data-filter-tags="Insurance ">
-                                <span class="nav-link-text">Insurance</span>
-                            </a>
-                        </li>
-                        <li class="@("Desert Rose Tenants".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetTenants?compoundID=3" title="Tenants" data-filter-tags="Desert Rose Tenants">
-                                <span class="nav-link-text">Tenants</span>
-                            </a>
-                        </li>
-                        <li class="@(("Desert rose compound Maintenance").Contains(pageName) ? "active" : "")">
-                            <a href="~/Maintenance/GetCompound?compoundID=3" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
-                                <span class="nav-link-text">Maintenance</span>
-                            </a>
-                        </li>
-                        <li class="@("Desert rose compound Blocked".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/Blocked?compoundID=3" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
-                                <span class="nav-link-text">Blocked</span>
-                            </a>
-                        </li>
-                        @if (hasAddBuildings)
-                        {
-                            <li class="@("Building Desert rose compound".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundBuildings/Index?IdCompound=3" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
-                                    <span class="nav-link-text">Add Buildings</span>
-                                </a>
-                            </li>
-                         }
-                        @if (hasAddUnits)
-                        {
-                            <li class="@("unit Desert rose compound".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundUnits/Index?IdCompound=3" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
-                                    <span class="nav-link-text">Add Units</span>
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </li> 
-            }
-            if (hasMeadowParkAccess)
-            {
-                <li class="@(new List<string> { "unit  Meadow Park Garden","Building Meadow Park Garden","Meadow Park Garden Blocked","Meadow Park Garden Dashboard", "Meadow Park Garden Contracts", "Meadow Park Garden Contract Expiry", "Meadow Park Garden Non Rented Units" ,"Meadow Park Garden Electricity","Meadow Park Garden Insurance ","Meadow Park Garden Archived Contracts","Meadow Park Garden Tenants","Meadow Park Garden Maintenance","Legal Meadow Park Garden"}.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Meadow Park Garden" data-filter-tags="Meadow Park Garden">
-                        <i class="fal fa-building"></i>
-
-                        <span class="nav-link-text">Meadow Park Garden</span>
-                    </a>
-                    <ul>
-                        <li class="@("Meadow Park Garden  Dashboard".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/MeadowPark" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
-                                <span class="nav-link-text">Collections</span>
-                            </a>
-                        </li>
-
-                        <li class="@("Meadow Park Garden Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundContracts?compoundID=2" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
-                                <span class="nav-link-text">Contracts</span>
-                            </a>
-                        </li>
-                        <li class="@("Meadow Park Garden Archived Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=2" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
-                                <span class="nav-link-text">Archived Contracts</span>
-                            </a>
-                        </li>
-                        @if (hasLegalMeadowParkAccess) { 
-                            <li class="@("Legal Meadow Park Garden".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?compoundID=2" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
-                                    <span class="nav-link-text">Legal</span>
-                                </a>
-                            </li>
-                        }
-                        <li class="@("Meadow Park Garden Non Rented Units".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetNonRentedUnits?compoundID=2" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
-                                <span class="nav-link-text">Non Rented Units</span>
-                            </a>
-                        </li>
-                        <li class="@("Meadow Park Garden Electricity".Contains(pageName) ? "active" : "")">
-                            <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=2" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Electricity</span>
-                            </a>
-                        </li>
-                        <li class="@("Meadow Park Garden Insurance ".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundInsurance?compoundID=2" class="waves-effect waves-themed " data-filter-tags="Insurance ">
-                                <span class="nav-link-text">Insurance</span>
-                            </a>
-                        </li>
-                        <li class="@("Meadow Park Garden Tenants".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetTenants?compoundID=2" title="Tenants" data-filter-tags="Meadow Park Garden Tenants">
-                                <span class="nav-link-text">Tenants</span>
-                            </a>
-                        </li>
-                        <li class="@("Meadow Park Garden Maintenance".Contains(pageName) ? "active" : "")">
-                            <a href="~/Maintenance/GetCompound?compoundID=2" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
-                                <span class="nav-link-text">Maintenance</span>
-                            </a>
-                        </li>
-                        <li class="@("Meadow Park Garden Blocked".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/Blocked?compoundID=2" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
-                                <span class="nav-link-text">Blocked</span>
-                            </a>
-                        </li>
-                        @if (hasAddBuildings)
-                        {
-                    <li class="@("Building Meadow Park Garden".Contains(pageName) ? "active" : "")">
-                        <a href="~/CompoundBuildings/Index?IdCompound=2" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
-                            <span class="nav-link-text">Add Buildings</span>
+                    <li class="@("Desert Rose Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=3" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units</">
+                            <span class="nav-link-text">Non Rented Units</span>
                         </a>
-                    </li>}
-                        @if (hasAddUnits)
-                        {
-                    <li class="@("unit Meadow Park Garden".Contains(pageName) ? "active" : "")">
-                        <a href="~/CompoundUnits/Index?IdCompound=2" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
-                            <span class="nav-link-text">Add Units</span>
+                    </li>
+                    <li class="@(("Desert rose compound Electricity").Contains(pageName) ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=3" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
                         </a>
-                    </li>}
-                    </ul>
-                </li> 
-            }
-            if (hasDesertApartmentsAccess)
-            {
-                <li class="@(new List<string> {"Building Desert Apartments","unit Desert Apartments","Desert Apartments Blocked","Desert Apartments Dashboard", "Desert Apartments Contracts", "Desert Apartments Contract Expiry", "Desert Apartments Non Rented Units" ,"Desert Apartments Electricity","Desert Apartments Insurance ","Desert Apartments Archived Contracts","Desert Apartments Tenants","Desert Apartments Maintenance","Legal Desert Apartments"}.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Desert Apartments" data-filter-tags="Desert Apartments">
-                        <i class="fal fa-building"></i>
-                        <span class="nav-link-text">Desert Apartments</span>
-                    </a>
-                    <ul>
-                        <li class="@("Desert Apartments Dashboard".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/DesertApartment" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
-                                <span class="nav-link-text">Collections</span>
+                    </li>
+                    <li class="@("Desert rose compound Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=3" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("Desert Rose Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=3" title="Tenants" data-filter-tags="Desert Rose Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@(("Desert rose compound Maintenance").Contains(pageName) ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=3" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("Desert rose compound Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=3" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building Desert rose compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=3" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
                             </a>
                         </li>
-
-                        <li class="@("Desert Apartments Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundContracts?compoundID=7" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
-                                <span class="nav-link-text">Contracts</span>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit Desert rose compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=3" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
                             </a>
                         </li>
-                        <li class="@("Desert Apartments Archived Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=7" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
-                                <span class="nav-link-text">Archived Contracts</span>
-                            </a>
-                        </li>
-                        @if (hasLegalDesertAppartmentsAccess) { 
-                            <li class="@("Legal Desert Apartments".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?compoundID=7" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
-                                    <span class="nav-link-text">Legal</span>
-                                </a>
-                            </li>
-                        }
-                        @*<li class="@("Meadow Park Garden Contract Expiry".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/ContractExpiry?compoundID=2" title="Contracts Expiry" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Contracts Expiry</span>
-                            </a>
-                        </li>*@
-
-                        <li class="@("Desert Apartments Non Rented Units".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetNonRentedUnits?compoundID=7" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
-                                <span class="nav-link-text">Non Rented Units</span>
-                            </a>
-                        </li>
-                        <li class="@("Desert Apartments Electricity".Contains(pageName) ? "active" : "")">
-                            <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=7" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Electricity</span>
-                            </a>
-                        </li>
-                        <li class="@("Desert Apartments Insurance ".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundInsurance?compoundID=7" class="waves-effect waves-themed " data-filter-tags="Insurance ">
-                                <span class="nav-link-text">Insurance</span>
-                            </a>
-                        </li>
-                        <li class="@("Desert Apartments Tenants".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetTenants?compoundID=7" title="Tenants" data-filter-tags="Desert Apartments Garden Tenants">
-                                <span class="nav-link-text">Tenants</span>
-                            </a>
-                        </li>
-                        <li class="@("Desert Apartments Maintenance".Contains(pageName) ? "active" : "")">
-                            <a href="~/Maintenance/GetCompound?compoundID=7" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
-                                <span class="nav-link-text">Maintenance</span>
-                            </a>
-                        </li>
-                        <li class="@("Desert Apartments Blocked".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/Blocked?compoundID=7" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
-                                <span class="nav-link-text">Blocked</span>
-                            </a>
-                        </li>
-                        @if (hasAddBuildings)
-                        {
-                            <li class="@("Building Desert Apartments".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundBuildings/Index?IdCompound=7" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
-                                    <span class="nav-link-text">Add Buildings</span>
-                                </a>
-                            </li>
-                        }
-                        @if (hasAddUnits)
-                        {
-                            <li class="@("unit Desert Apartments".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundUnits/Index?IdCompound=7" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
-                                    <span class="nav-link-text">Add Units</span>
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </li> 
-            }
-            if (hasVilla24Access)
-            {
-                <li class="@(new List<string> { "Building 24 Villa","unit 24 Villa", "24 Villa Dashboard", "24 Villa Contracts", "24 Villa Contract Expiry", "24 Villa Non Rented Units" ,"24 Villa Electricity","24 Villa Insurance ","24 Villa Archived Contracts","24 Villa Tenants","24 Villa Maintenance","24 Villa Blocked","Legal 24 Villa"}.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="24 Villa" data-filter-tags="24 Villa">
-                        <i class="fal fa-building"></i>
-                        <span class="nav-link-text">24 Villa</span>
-                    </a>
-                    <ul>
-                        <li class="@("24 Villa Dashboard".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/Villa24" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
-                                <span class="nav-link-text">Collections</span>
-                            </a>
-                        </li>
-                        <li class="@("24 Villa Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundContracts?compoundID=5" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
-                                <span class="nav-link-text">Contracts</span>
-                            </a>
-                        </li>
-                        <li class="@("24 Villa Archived Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=5" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
-                                <span class="nav-link-text">Archived Contracts</span>
-                            </a>
-                        </li>
-                        @if (hasLegalVilla24Access) { 
-                            <li class="@("Legal 24 Villa".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?compoundID=5" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
-                                    <span class="nav-link-text">Legal</span>
-                                </a>
-                            </li>
-                        }
-                        @*<li class="@("24 Villa Contract Expiry".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/ContractExpiry?compoundID=5" title="Contracts Expiry" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Contracts Expiry</span>
-                            </a>
-                        </li>*@
-                        <li class="@("24 Villa Non Rented Units".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetNonRentedUnits?compoundID=5" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
-                                <span class="nav-link-text">Non Rented Units</span>
-                            </a>
-                        </li>
-                        <li class="@("24 Villa Electricity".Contains(pageName) ? "active" : "")">
-                            <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=5" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Electricity</span>
-                            </a>
-                        </li>
-                        <li class="@("24 Villa Insurance ".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundInsurance?compoundID=5" class="waves-effect waves-themed " data-filter-tags="Insurance ">
-                                <span class="nav-link-text">Insurance</span>
-                            </a>
-                        </li>
-                        <li class="@("24 Villa Tenants".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetTenants?compoundID=5" title="Tenants" data-filter-tags="24 Villa Tenants">
-                                <span class="nav-link-text">Tenants</span>
-                            </a>
-                        </li>
-                        <li class="@("24 Villa Maintenance".Contains(pageName) ? "active" : "")">
-                            <a href="~/Maintenance/GetCompound?compoundID=5" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
-                                <span class="nav-link-text">Maintenance</span>
-                            </a>
-                        </li>
-                        <li class="@("24 Villa Blocked".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/Blocked?compoundID=5" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
-                                <span class="nav-link-text">Blocked</span>
-                            </a>
-                        </li>
-                        @if (hasAddBuildings)
-                        {
-                            <li class="@("Building 24 Villa".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundBuildings/Index?IdCompound=5" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
-                                    <span class="nav-link-text">Add Buildings</span>
-                                </a>
-                            </li>
-                        }
-                        @if (hasAddUnits)
-                        {
-                            <li class="@("unit 24 Villa".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundUnits/Index?IdCompound=5" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
-                                    <span class="nav-link-text">Add Units</span>
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </li> 
-             }
-            if (hasVilla21Access)
-            {
-                <li class="@(new List<string> { "Building Opal Compound","unit Opal Compound","Opal Compound Dashboard", "Opal Compound Contracts", "Opal Compound Contract Expiry", "Opal Compound Non Rented Units","Opal Compound Insurance ","Opal Compound Electricity","Opal Compound Archived Contracts","Opal Compound Tenants","Opal Compound Maintenance","Opal Compound Blocked","Legal Opal Compound"}.Contains(pageName) ? "active open" : "")">
-                    <a href="#" title="Opal Compound" data-filter-tags="Opal Compound">
-                        <i class="fal fa-building"></i>
-                        <span class="nav-link-text">Opal Compound</span>
-                    </a>
-                    <ul>
-                        <li class="@("Opal Compound Dashboard".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/Villa21" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
-                                <span class="nav-link-text">Collections</span>
-                            </a>
-                        </li>
-
-                        <li class="@("Opal Compound Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundContracts?compoundID=6" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
-                                <span class="nav-link-text">Contracts</span>
-                            </a>
-                        </li>
-                        <li class="@("Opal Compound Archived Contracts".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=6" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
-                                <span class="nav-link-text">Archived Contracts</span>
-                            </a>
-                        </li>
-                        @if (hasLegalVilla21Access) { 
-                            <li class="@("Legal Opal Compound".Contains(pageName) ? "active" : "")">
-                                <a href="~/Legal/Index?compoundID=6" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
-                                    <span class="nav-link-text">Legal</span>
-                                </a>
-                            </li>
-                        }
-                        @*<li class="@("21 Villas Contract Expiry".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/ContractExpiry?compoundID=6" title="Contracts Expiry" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Contracts Expiry</span>
-                            </a>
-                        </li>*@
-
-                        <li class="@("Opal Compound Non Rented Units".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetNonRentedUnits?compoundID=6" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
-                                <span class="nav-link-text">Non Rented Units</span>
-                            </a>
-                        </li>
-                        <li class="@("Opal Compound Electricity".Contains(pageName)==true ? "active" : "")">
-                            <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=6" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
-                                <span class="nav-link-text">Electricity</span>
-                            </a>
-                        </li>
-                        <li class="@("Opal Compound Insurance ".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetCompoundInsurance?compoundID=6" class="waves-effect waves-themed " data-filter-tags="Insurance ">
-                                <span class="nav-link-text">Insurance</span>
-                            </a>
-                        </li>
-                        <li class="@("Opal Compound Tenants".Contains(pageName) ? "active" : "")">
-                            <a href="~/Home/GetTenants?compoundID=6" title="Tenants" data-filter-tags="Opal Compound Tenants">
-                                <span class="nav-link-text">Tenants</span>
-                            </a>
-                        </li>
-                        <li class="@("Opal Compound Maintenance".Contains(pageName)==true ? "active" : "")">
-                            <a href="~/Maintenance/GetCompound?compoundID=6" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
-                                <span class="nav-link-text">Maintenance</span>
-                            </a>
-                        </li>
-                        <li class="@("Opal Compound Blocked".Contains(pageName) ? "active" : "")">
-                            <a href="~/UnitRentContractCompound/Blocked?compoundID=6" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
-                                <span class="nav-link-text">Blocked</span>
-                            </a>
-                        </li>
-                        @if (hasAddBuildings)
-                        {
-                            <li class="@("Building Opal Compound".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundBuildings/Index?IdCompound=6" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
-                                    <span class="nav-link-text">Add Buildings</span>
-                                </a>
-                            </li>
-                         }
-                        @if (hasAddUnits)
-                        {
-                            <li class="@("unit Opal Compound".Contains(pageName) ? "active" : "")">
-                                <a href="~/CompoundUnits/Index?IdCompound=6" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
-                                    <span class="nav-link-text">Add Units</span>
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </li> 
-            }
-
-            if (hasBuildingAccess || hasBuildingHyamAlrashedAccess || hasBuildingsroohAccess || hasBuildingUKAccess || hasMeadowParkAccess || hasDesertRoseAccess || hasDaarResidenceAccess || hasVilla24Access || hasVilla21Access || hasDesertApartmentsAccess)
-            {
-                list = new List<string> { "Electricity", "Bulding water Meter" };
-    <li class="@(list.Contains(pageName) ? "active open" : "")">
-        <a href="#" title="Water and Electricity" data-filter-tags="Water and Electricity">
-            <i class="fal fa-power-off"></i>
-            <span class="nav-link-text">Water and Electricity</span>
-        </a>
-        <ul>
-            <li class="@("Bulding water Meter".Contains(pageName) ? "active" : "")">
-                <a href="~/BldMeterWater" title="Buildings Water Meters" data-filter-tags="">
-                    <span class="nav-link-text">Buildings Water Meters</span>
-                </a>
+                    }
+                </ul>
             </li>
-            <li class="@("Electricity".Contains(pageName) ? "active" : "")">
-                <a href="~/ElectricityMeterUnit" title="Electricity Meters" data-filter-tags="">
-                    <span class="nav-link-text">Electricity Meters</span>
+        }
+        if (hasMeadowParkAccess)
+        {
+            <li class="@(new List<string> { "unit  Meadow Park Garden","Building Meadow Park Garden","Meadow Park Garden Blocked","Meadow Park Garden Dashboard", "Meadow Park Garden Contracts", "Meadow Park Garden Contract Expiry", "Meadow Park Garden Non Rented Units" ,"Meadow Park Garden Electricity","Meadow Park Garden Insurance ","Meadow Park Garden Archived Contracts","Meadow Park Garden Tenants","Meadow Park Garden Maintenance","Legal Meadow Park Garden"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Meadow Park Garden" data-filter-tags="Meadow Park Garden">
+                    <i class="fal fa-building"></i>
+
+                    <span class="nav-link-text">Meadow Park Garden</span>
                 </a>
+                <ul>
+                    <li class="@("Meadow Park Garden  Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/MeadowPark" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+
+                    <li class="@("Meadow Park Garden Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=2" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Meadow Park Garden Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=2" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalMeadowParkAccess)
+                    {
+                        <li class="@("Legal Meadow Park Garden".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=2" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    <li class="@("Meadow Park Garden Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=2" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
+                            <span class="nav-link-text">Non Rented Units</span>
+                        </a>
+                    </li>
+                    <li class="@("Meadow Park Garden Electricity".Contains(pageName) ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=2" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
+                        </a>
+                    </li>
+                    <li class="@("Meadow Park Garden Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=2" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("Meadow Park Garden Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=2" title="Tenants" data-filter-tags="Meadow Park Garden Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("Meadow Park Garden Maintenance".Contains(pageName) ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=2" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("Meadow Park Garden Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=2" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building Meadow Park Garden".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=2" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit Meadow Park Garden".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=2" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
             </li>
-        </ul>
-    </li> list = new List<string> { "Not Tenants page", "Archived Tenants page" };
-    <li class="@(list.Contains(pageName) ? "active open" : "")">
-        <a href="#" title="Tenants" data-filter-tags="Tenants">
-            <i class="fal fa-users"></i>
-            <span class="nav-link-text">Tenants</span>
-        </a>
-        <ul>
-            <li class="@("Not Tenants page".Contains(pageName) ? "active" : "")">
-                <a href="~/Tenants" title="Tenants" data-filter-tags="Tenants">
+        }
+        if (hasDesertApartmentsAccess)
+        {
+            <li class="@(new List<string> {"Building Desert Apartments","unit Desert Apartments","Desert Apartments Blocked","Desert Apartments Dashboard", "Desert Apartments Contracts", "Desert Apartments Contract Expiry", "Desert Apartments Non Rented Units" ,"Desert Apartments Electricity","Desert Apartments Insurance ","Desert Apartments Archived Contracts","Desert Apartments Tenants","Desert Apartments Maintenance","Legal Desert Apartments"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Desert Apartments" data-filter-tags="Desert Apartments">
+                    <i class="fal fa-building"></i>
+                    <span class="nav-link-text">Desert Apartments</span>
+                </a>
+                <ul>
+                    <li class="@("Desert Apartments Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/DesertApartment" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+
+                    <li class="@("Desert Apartments Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=7" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Desert Apartments Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=7" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalDesertAppartmentsAccess)
+                    {
+                        <li class="@("Legal Desert Apartments".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=7" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    @*<li class="@("Meadow Park Garden Contract Expiry".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/ContractExpiry?compoundID=2" title="Contracts Expiry" class="waves-effect waves-themed ">
+                        <span class="nav-link-text">Contracts Expiry</span>
+                        </a>
+                        </li>*@
+
+                    <li class="@("Desert Apartments Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=7" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
+                            <span class="nav-link-text">Non Rented Units</span>
+                        </a>
+                    </li>
+                    <li class="@("Desert Apartments Electricity".Contains(pageName) ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=7" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
+                        </a>
+                    </li>
+                    <li class="@("Desert Apartments Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=7" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("Desert Apartments Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=7" title="Tenants" data-filter-tags="Desert Apartments Garden Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("Desert Apartments Maintenance".Contains(pageName) ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=7" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("Desert Apartments Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=7" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building Desert Apartments".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=7" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit Desert Apartments".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=7" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        if (hasVilla24Access)
+        {
+            <li class="@(new List<string> { "Building 24 Villa","unit 24 Villa", "24 Villa Dashboard", "24 Villa Contracts", "24 Villa Contract Expiry", "24 Villa Non Rented Units" ,"24 Villa Electricity","24 Villa Insurance ","24 Villa Archived Contracts","24 Villa Tenants","24 Villa Maintenance","24 Villa Blocked","Legal 24 Villa"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="24 Villa" data-filter-tags="24 Villa">
+                    <i class="fal fa-building"></i>
+                    <span class="nav-link-text">24 Villa</span>
+                </a>
+                <ul>
+                    <li class="@("24 Villa Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/Villa24" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+                    <li class="@("24 Villa Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=5" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("24 Villa Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=5" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalVilla24Access)
+                    {
+                        <li class="@("Legal 24 Villa".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=5" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    @*<li class="@("24 Villa Contract Expiry".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/ContractExpiry?compoundID=5" title="Contracts Expiry" class="waves-effect waves-themed ">
+                        <span class="nav-link-text">Contracts Expiry</span>
+                        </a>
+                        </li>*@
+                    <li class="@("24 Villa Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=5" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
+                            <span class="nav-link-text">Non Rented Units</span>
+                        </a>
+                    </li>
+                    <li class="@("24 Villa Electricity".Contains(pageName) ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=5" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
+                        </a>
+                    </li>
+                    <li class="@("24 Villa Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=5" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("24 Villa Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=5" title="Tenants" data-filter-tags="24 Villa Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("24 Villa Maintenance".Contains(pageName) ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=5" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("24 Villa Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=5" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building 24 Villa".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=5" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit 24 Villa".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=5" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        if (hasVilla21Access)
+        {
+            <li class="@(new List<string> { "Building Opal Compound","unit Opal Compound","Opal Compound Dashboard", "Opal Compound Contracts", "Opal Compound Contract Expiry", "Opal Compound Non Rented Units","Opal Compound Insurance ","Opal Compound Electricity","Opal Compound Archived Contracts","Opal Compound Tenants","Opal Compound Maintenance","Opal Compound Blocked","Legal Opal Compound"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Opal Compound" data-filter-tags="Opal Compound">
+                    <i class="fal fa-building"></i>
+                    <span class="nav-link-text">Opal Compound</span>
+                </a>
+                <ul>
+                    <li class="@("Opal Compound Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/Villa21" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+
+                    <li class="@("Opal Compound Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=6" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Opal Compound Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=6" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalVilla21Access)
+                    {
+                        <li class="@("Legal Opal Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=6" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    @*<li class="@("21 Villas Contract Expiry".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/ContractExpiry?compoundID=6" title="Contracts Expiry" class="waves-effect waves-themed ">
+                        <span class="nav-link-text">Contracts Expiry</span>
+                        </a>
+                        </li>*@
+
+                    <li class="@("Opal Compound Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=6" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
+                            <span class="nav-link-text">Non Rented Units</span>
+                        </a>
+                    </li>
+                    <li class="@("Opal Compound Electricity".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=6" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
+                        </a>
+                    </li>
+                    <li class="@("Opal Compound Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=6" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("Opal Compound Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=6" title="Tenants" data-filter-tags="Opal Compound Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("Opal Compound Maintenance".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=6" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("Opal Compound Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=6" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building Opal Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=6" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit Opal Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=6" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        if (hasOasisGardens)
+        {
+            <li class="@(new List<string> { "Building Oasis Gardens Compound","unit Oasis Gardens Compound","Oasis Gardens Compound Dashboard", "Oasis Gardens Compound Contracts", "Oasis Gardens Compound Contract Expiry", "Oasis Gardens Compound Non Rented Units","Oasis Gardens Compound Insurance ","Oasis Gardens Compound Electricity","Oasis Gardens Compound Archived Contracts","Oasis Gardens Compound Tenants","Oasis Gardens Compound Maintenance","Oasis Gardens Compound Blocked","Legal Oasis Gardens Compound"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Oasis Gardens Compound" data-filter-tags="Oasis Gardens Compound">
+                    <i class="fal fa-building"></i>
+                    <span class="nav-link-text">Oasis Gardens Compound</span>
+                </a>
+                <ul>
+                    <li class="@("Oasis Gardens Compound Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/OasisGardens" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+
+                    <li class="@("Oasis Gardens Compound Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=9" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Gardens Compound Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=9" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalOasisGardens)
+                    {
+                        <li class="@("Legal Oasis Gardens Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=9" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    @*<li class="@("21 Villas Contract Expiry".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/ContractExpiry?compoundID=6" title="Contracts Expiry" class="waves-effect waves-themed ">
+                        <span class="nav-link-text">Contracts Expiry</span>
+                        </a>
+                        </li>*@
+
+                    <li class="@("Oasis Gardens Compound Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=9" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
+                            <span class="nav-link-text">Non Rented Units</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Gardens Compound Electricity".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=9" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Gardens Compound Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=9" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Gardens Compound Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=9" title="Tenants" data-filter-tags="Opal Compound Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Gardens Compound Maintenance".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=9" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Gardens Compound Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=9" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building Opal Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=9" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit Oasis Gardens Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=9" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        if (hasOasisResorts)
+        {
+            <li class="@(new List<string> { "Building Oasis Resorts Compound","unit Oasis Resorts Compound","Oasis Resorts Compound Dashboard", "Oasis Resorts Compound Contracts", "Oasis Resorts Compound Contract Expiry", "Oasis Resorts Compound Non Rented Units","Oasis Resorts Compound Insurance ","Oasis Resorts Compound Electricity","Oasis Resorts Compound Archived Contracts","Oasis Resorts Compound Tenants","Oasis Resorts Compound Maintenance","Oasis Resorts Compound Blocked","Legal Oasis Resorts Compound"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Oasis Resorts Compound" data-filter-tags="Oasis Resorts Compound">
+                    <i class="fal fa-building"></i>
+                    <span class="nav-link-text">Oasis Resorts Compound</span>
+                </a>
+                <ul>
+                    <li class="@("Oasis Resorts Compound Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/OasisResorts" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+
+                    <li class="@("Oasis Resorts Compound Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=10" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Resorts Compound Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=10" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalOasisResorts)
+                    {
+                        <li class="@("Legal Oasis Resorts Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=6" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    @*<li class="@("21 Villas Contract Expiry".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/ContractExpiry?compoundID=6" title="Contracts Expiry" class="waves-effect waves-themed ">
+                        <span class="nav-link-text">Contracts Expiry</span>
+                        </a>
+                        </li>*@
+
+                    <li class="@("Oasis Resorts Compound Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=10" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
+                            <span class="nav-link-text">Non Rented Units</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Resorts Compound Electricity".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=10" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Resorts Compound Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=10" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Resorts Compound Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=10" title="Tenants" data-filter-tags="Opal Compound Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Resorts Compound Maintenance".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=10" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("Oasis Resorts Compound Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=10" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building Oasis Resorts Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=10" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit Oasis Resorts Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=10" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+        if (hasBuildingAccess || hasBuildingHyamAlrashedAccess || hasBuildingsroohAccess || hasBuildingUKAccess || hasMeadowParkAccess || hasDesertRoseAccess || hasDaarResidenceAccess || hasVilla24Access || hasVilla21Access || hasDesertApartmentsAccess)
+        {
+            list = new List<string> { "Electricity", "Bulding water Meter" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Water and Electricity" data-filter-tags="Water and Electricity">
+                    <i class="fal fa-power-off"></i>
+                    <span class="nav-link-text">Water and Electricity</span>
+                </a>
+                <ul>
+                    <li class="@("Bulding water Meter".Contains(pageName) ? "active" : "")">
+                        <a href="~/BldMeterWater" title="Buildings Water Meters" data-filter-tags="">
+                            <span class="nav-link-text">Buildings Water Meters</span>
+                        </a>
+                    </li>
+                    <li class="@("Electricity".Contains(pageName) ? "active" : "")">
+                        <a href="~/ElectricityMeterUnit" title="Electricity Meters" data-filter-tags="">
+                            <span class="nav-link-text">Electricity Meters</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            list = new List<string> { "Not Tenants page", "Archived Tenants page" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Tenants" data-filter-tags="Tenants">
+                    <i class="fal fa-users"></i>
                     <span class="nav-link-text">Tenants</span>
                 </a>
+                <ul>
+                    <li class="@("Not Tenants page".Contains(pageName) ? "active" : "")">
+                        <a href="~/Tenants" title="Tenants" data-filter-tags="Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("Archived Tenants page".Contains(pageName) ? "active" : "")">
+                        <a href="~/Tenants/ArchivedTenants" title="Archived Tenants" data-filter-tags="Archived Tenants">
+                            <span class="nav-link-text">Archived Tenants</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li class="@("Archived Tenants page".Contains(pageName) ? "active" : "")">
-                <a href="~/Tenants/ArchivedTenants" title="Archived Tenants" data-filter-tags="Archived Tenants">
-                    <span class="nav-link-text">Archived Tenants</span>
-                </a>
-            </li>
-        </ul>
-    </li> }
-            if (isAdmin || hasMeadowParkAccess || hasDesertRoseAccess || hasDaarResidenceAccess || hasVilla24Access || hasVilla21Access)
-            {
-                list = new List<string> { " compound page", "Compounds Rent Contracts", "Archived Compound Contracts" , "compounds" };
-    <li class="@(list.Contains(pageName) ? "active open" : "")">
-        <a href="#" title="Compounds" data-filter-tags="compounds">
-            <i class="fal fa-table"></i>
-            <span class="nav-link-text">Compounds</span>
-        </a>
-        <ul>
-            <li class="@("compounds".Contains(pageName) ? "active" : "")">
-                <a href="~/Compounds" title="Compounds" data-filter-tags="compounds">
+        }
+        if (isAdmin || hasMeadowParkAccess || hasDesertRoseAccess || hasDaarResidenceAccess || hasVilla24Access || hasVilla21Access)
+        {
+            list = new List<string> { " compound page", "Compounds Rent Contracts", "Archived Compound Contracts", "compounds" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Compounds" data-filter-tags="compounds">
+                    <i class="fal fa-table"></i>
                     <span class="nav-link-text">Compounds</span>
                 </a>
+                <ul>
+                    <li class="@("compounds".Contains(pageName) ? "active" : "")">
+                        <a href="~/Compounds" title="Compounds" data-filter-tags="compounds">
+                            <span class="nav-link-text">Compounds</span>
+                        </a>
+                    </li>
+                    <li class="@("Compounds Rent Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound" title="Compounds Rent Contracts" data-filter-tags="Compounds Rent Contracts">
+                            <span class="nav-link-text">Compounds Rent Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Archived Compound Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Archived" title="Archived Compound Contracts" data-filter-tags="Archived Compound Contracts">
+                            <span class="nav-link-text">Archived Compound Contracts</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li class="@("Compounds Rent Contracts".Contains(pageName) ? "active" : "")">
-                <a href="~/UnitRentContractCompound" title="Compounds Rent Contracts" data-filter-tags="Compounds Rent Contracts">
-                    <span class="nav-link-text">Compounds Rent Contracts</span>
+        }
+        if (isAdmin || isHR)
+        {
+            list = new List<string> { "Employees page", "WorkPlaces" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="IQAMA" data-filter-tags="operations">
+                    <i class="fal fa-edit"></i>
+                    <span class="nav-link-text">IQAMA</span>
                 </a>
+                <ul>
+                    <li class="@("Employees page".Contains(pageName) ? "active" : "")">
+                        <a href="~/Employees" title="Employees" data-filter-tags="">
+                            <span class="nav-link-text">Employees</span>
+                        </a>
+                    </li>
+                    <li class="@("WorkPlaces".Contains(pageName) ? "active" : "")">
+                        <a href="~/WorkPlaces" title="Workplaces" data-filter-tags="">
+                            <span class="nav-link-text">Workplaces</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li class="@("Archived Compound Contracts".Contains(pageName) ? "active" : "")">
-                <a href="~/UnitRentContractCompound/Archived" title="Archived Compound Contracts" data-filter-tags="Archived Compound Contracts">
-                    <span class="nav-link-text">Archived Compound Contracts</span>
+        }
+        if (isAdmin || hasPaymentlogsAccess)
+        {
+            list = new List<string> { "Register", "Positions page", "Owners", "Cities", "Districts", "Companies", "Mandoobs", "Payment logs" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Dashboard" data-filter-tags="">
+                    <i class="fal fa-plus-circle"></i>
+                    <span class="nav-link-text">Setup</span>
                 </a>
+                <ul>
+                    @if (isAdmin)
+                    {
+                        <li class="@("Payment logs".Contains(pageName) ? "active" : "")">
+                            <a asp-area="" asp-controller="PaymentLogs" asp-action="index" title="Register" data-filter-tags="register">
+                                <span class="nav-link-text">Payment Logs</span>
+                            </a>
+                        </li>
+                        <li class="@("Register".Contains(pageName) ? "active" : "")">
+                            <a asp-area="" asp-controller="Account" asp-action="Register" title="Register" data-filter-tags="register">
+                                <span class="nav-link-text">Register</span>
+                            </a>
+                        </li>
+                        <li class="@("Cities".Contains(pageName) ? "active" : "")">
+                            <a href="~/Cities" title="Cities" data-filter-tags="">
+                                <span class="nav-link-text">Cities</span>
+                            </a>
+                        </li>
+                        <li class="@("Districts".Contains(pageName) ? "active" : "")">
+                            <a href="~/Districts" title="Districts" data-filter-tags="">
+                                <span class="nav-link-text">Districts</span>
+                            </a>
+                        </li>
+                        <li class="@("Companies".Contains(pageName) ? "active" : "")">
+                            <a href="~/Companies" title="Companies" data-filter-tags="">
+                                <span class="nav-link-text">Companies</span>
+                            </a>
+                        </li>
+                        <li class="@("Positions page".Contains(pageName) ? "active" : "")">
+                            <a href="~/Tpositions" title="Positions" data-filter-tags="">
+                                <span class="nav-link-text">Positions</span>
+                            </a>
+                        </li>
+                        <li class="@("Mandoobs".Contains(pageName) ? "active" : "")">
+                            <a href="~/Mandoobs" title="Sales Representatives" data-filter-tags="">
+                                <span class="nav-link-text">Sales Representatives</span>
+                            </a>
+                        </li>
+                        <li class="@("Owners".Contains(pageName) ? "active" : "")">
+                            <a href="~/Owners" title="Owners" data-filter-tags="">
+                                <span class="nav-link-text">Owners</span>
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="@("Payment logs".Contains(pageName) ? "active" : "")">
+                            <a asp-area="" asp-controller="PaymentLogs" asp-action="index" title="Register" data-filter-tags="register">
+                                <span class="nav-link-text">Payment Logs</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
             </li>
-        </ul>
-    </li> }
-            if (isAdmin || isHR)
-            {
-                list = new List<string> { "Employees page", "WorkPlaces" };
-    <li class="@(list.Contains(pageName) ? "active open" : "")">
-        <a href="#" title="IQAMA" data-filter-tags="operations">
-            <i class="fal fa-edit"></i>
-            <span class="nav-link-text">IQAMA</span>
-        </a>
-        <ul>
-            <li class="@("Employees page".Contains(pageName) ? "active" : "")">
-                <a href="~/Employees" title="Employees" data-filter-tags="">
-                    <span class="nav-link-text">Employees</span>
+            list = new List<string> { "List All Users", "Roles" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Dashboard" data-filter-tags="">
+                    <i class="fal fa-user-secret"></i>
+                    <span class="nav-link-text">Permissions</span>
                 </a>
+                <ul>
+                    <li class="@("List All Users".Contains(pageName) ? "active" : "")">
+                        <a href="~/Manage/ListAppUsers" title="List Users" data-filter-tags="">
+                            <span class="nav-link-text">List Users</span>
+                        </a>
+                    </li>
+                    <li class="@("Roles".Contains(pageName) ? "active" : "")">
+                        <a href="~/ApplicationRoles" title="Roles" data-filter-tags="">
+                            <span class="nav-link-text">Roles</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li class="@("WorkPlaces".Contains(pageName) ? "active" : "")">
-                <a href="~/WorkPlaces" title="Workplaces" data-filter-tags="">
-                    <span class="nav-link-text">Workplaces</span>
-                </a>
-            </li>
-        </ul>
-    </li> }
-            if (isAdmin || hasPaymentlogsAccess)
-            {
-                list = new List<string> { "Register", "Positions page", "Owners", "Cities", "Districts", "Companies", "Mandoobs", "Payment logs" };
-    <li class="@(list.Contains(pageName) ? "active open" : "")">
-        <a href="#" title="Dashboard" data-filter-tags="">
-            <i class="fal fa-plus-circle"></i>
-            <span class="nav-link-text">Setup</span>
-        </a>
-        <ul>
-            @if(isAdmin){
-                <li class="@("Payment logs".Contains(pageName) ? "active" : "")">
-                    <a asp-area="" asp-controller="PaymentLogs" asp-action="index" title="Register" data-filter-tags="register">
-                        <span class="nav-link-text">Payment Logs</span>
-                    </a>
-                </li>
-                <li class="@("Register".Contains(pageName) ? "active" : "")">
-                    <a asp-area="" asp-controller="Account" asp-action="Register" title="Register" data-filter-tags="register">
-                        <span class="nav-link-text">Register</span>
-                    </a>
-                </li>
-                <li class="@("Cities".Contains(pageName) ? "active" : "")">
-                    <a href="~/Cities" title="Cities" data-filter-tags="">
-                        <span class="nav-link-text">Cities</span>
-                    </a>
-                </li>
-                <li class="@("Districts".Contains(pageName) ? "active" : "")">
-                    <a href="~/Districts" title="Districts" data-filter-tags="">
-                        <span class="nav-link-text">Districts</span>
-                    </a>
-                </li>
-                <li class="@("Companies".Contains(pageName) ? "active" : "")">
-                    <a href="~/Companies" title="Companies" data-filter-tags="">
-                        <span class="nav-link-text">Companies</span>
-                    </a>
-                </li>
-                <li class="@("Positions page".Contains(pageName) ? "active" : "")">
-                    <a href="~/Tpositions" title="Positions" data-filter-tags="">
-                        <span class="nav-link-text">Positions</span>
-                    </a>
-                </li>
-                <li class="@("Mandoobs".Contains(pageName) ? "active" : "")">
-                    <a href="~/Mandoobs" title="Sales Representatives" data-filter-tags="">
-                        <span class="nav-link-text">Sales Representatives</span>
-                    </a>
-                </li>
-                <li class="@("Owners".Contains(pageName) ? "active" : "")">
-                    <a href="~/Owners" title="Owners" data-filter-tags="">
-                        <span class="nav-link-text">Owners</span>
-                    </a>
-                </li>
-              }
-             else { 
-                 <li class="@("Payment logs".Contains(pageName) ? "active" : "")">
-                    <a asp-area="" asp-controller="PaymentLogs" asp-action="index" title="Register" data-filter-tags="register">
-                        <span class="nav-link-text">Payment Logs</span>
-                    </a>
-                </li>
-            }
-        </ul>
-    </li> list = new List<string> { "List All Users", "Roles" };
-    <li class="@(list.Contains(pageName) ? "active open" : "")">
-        <a href="#" title="Dashboard" data-filter-tags="">
-            <i class="fal fa-user-secret"></i>
-            <span class="nav-link-text">Permissions</span>
-        </a>
-        <ul>
-            <li class="@("List All Users".Contains(pageName) ? "active" : "")">
-                <a href="~/Manage/ListAppUsers" title="List Users" data-filter-tags="">
-                    <span class="nav-link-text">List Users</span>
-                </a>
-            </li>
-            <li class="@("Roles".Contains(pageName) ? "active" : "")">
-                <a href="~/ApplicationRoles" title="Roles" data-filter-tags="">
-                    <span class="nav-link-text">Roles</span>
-                </a>
-            </li>
-        </ul>
-    </li>}
-                }
-    </ul>
+        }
+    }
+</ul>

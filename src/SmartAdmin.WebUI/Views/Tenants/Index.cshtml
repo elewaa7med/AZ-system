@@ -103,6 +103,8 @@
                                                 <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.IdTenant>Details</a>
+                                                    <a class="dropdown-item" onclick="return confirm ('Are you sure ?')" asp-action="Archive" title="Archive" asp-route-id=@item.value.IdTenant>Archive</a>
+
                                                     <a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.value.IdTenant>Edit</a>
                                                     <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.IdTenant>Delete</a>
                                                 </div>

@@ -178,6 +178,10 @@ namespace SmartAdmin.WebUI.Data
         public DbSet<MasterBuildings> MasterBuildings { get; set; }
         public DbSet<Invoices> Invoices { get; set; }
         public DbSet<InvoiceRelatedPaymentDates> InvoiceRelatedPaymentDates { get; set; }
+        public DbSet<UnitRentContractOtherPayment> unitRentContractOtherPayment { get; set; }
+        public DbSet<TaxRate> TaxRate { get; set; }
+        public DbSet<TaxToProperttypes> taxToProperttypes { get; set; }
+        public DbSet<CompoundContracts> compoundContracts { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

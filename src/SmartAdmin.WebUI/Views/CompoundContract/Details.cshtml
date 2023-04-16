@@ -1,0 +1,85 @@
+﻿@model SmartAdmin.WebUI.Models.CompoundContracts
+
+@{
+    ViewData["Title"] = "Compound Contract Details";
+    ViewData["PageName"] = "Compounds Contracts";
+    ViewData["Heading"] = $"<i class='fal fa-th-list text-primary'></i> Compound Contract Details";
+    ViewData["Category1"] = "Compound Contract";
+    ViewData["PageDescription"] = "";
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-6" class="panel ">
+            <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                <h2>
+                    Compound Contract Details
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-9 ">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Compound Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" asp-for="CompoundName" class="form-control" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Lease Start Date *</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" value="@Model.dtLeaseStart.ToShortDateString()" class="form-control az-datepicker-3" asp-for="dtLeaseStart" autocomplete="off" disabled>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text fs-xl">
+                                            <i class="fal fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Lease End Date *</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" value="@Model.dtLeaseEnd.ToShortDateString()" class="form-control az-datepicker-3" asp-for="dtLeaseEnd" autocomplete="off" disabled>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text fs-xl">
+                                            <i class="fal fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Notes </label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" asp-for="Notes" disabled>
+                                    </textarea>
+                            </div>
+                        </div>
+                        @if (Model.contractImage != null)
+                        {
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Contract Image</label>
+                                <div class="col-sm-9">
+                                    <img src="@("http://systems.az-ltd.com/"+@Model.CurrentContractFile)" />
+                                    <br />
+                                    <a href="@("http://systems.az-ltd.com/"+@Model.CurrentContractFile)" download target="_blank">Download File</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="form-group  alert alert-primary alert-dismissible text-center">
+                <a class="btn btn-secondary ml-1 waves-effect waves-themed" asp-action="Index">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -246,7 +246,7 @@
                             <div class="form-group row">
                                 <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Paid Amount *</label>
                                 <div class="col-sm-9">
-                                    <input type="number" class="form-control" asp-for="paidAmount" required>
+                                    <input type="number" class="form-control" asp-for="paidAmount" value="0"  required>
                                 </div>
                             </div>
 
@@ -406,67 +406,67 @@
 
 
                             @*<div class="form-group row">
-                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Yearly Bill</label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" asp-for="WaterBillAmount" id="WaterBillAmount">
-                                    </div>
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Yearly Bill</label>
+                                <div class="col-sm-9">
+                                <input type="number" class="form-control" asp-for="WaterBillAmount" id="WaterBillAmount">
+                                </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Paid Amount</label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" asp-for="WaterPaidAmount" id="WaterPaidAmount">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Water Paid Amount</label>
+                                <div class="col-sm-9">
+                                <input type="number" class="form-control" asp-for="WaterPaidAmount" id="WaterPaidAmount">
 
-                                    </div>
+                                </div>
                                 </div>
 
 
                                 <div class="form-group row">
-                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
-                                        Water Remaining Amount
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" asp-for="WaterRemainingAmount" id="WaterRemainingAmount">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                Water Remaining Amount
+                                </label>
+                                <div class="col-sm-9">
+                                <input type="number" class="form-control" asp-for="WaterRemainingAmount" id="WaterRemainingAmount">
 
-                                    </div>
+                                </div>
                                 </div>*@
 
 
                             @*<div class="form-group row">
-                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
-                                        Initial Elec. Meter Reading
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control " asp-for="initialElectricityMeterReading">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
+                                Initial Elec. Meter Reading
+                                </label>
+                                <div class="col-sm-9">
+                                <input type="number" class="form-control " asp-for="initialElectricityMeterReading">
 
-                                    </div>
+                                </div>
                                 </div>*@
 
                             @*<div class="form-group row">
                                 <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">
-                                    Initial Water Meter Reading
+                                Initial Water Meter Reading
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="number" class="form-control" asp-for="initialWaterMeterReading" id="initialWaterMeterReading">
+                                <input type="number" class="form-control" asp-for="initialWaterMeterReading" id="initialWaterMeterReading">
 
                                 </div>
-                            </div>*@
+                                </div>*@
 
                             @*<div class="form-group row">
-                                    <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Departure Elec. Meter Reading</label>
-                                    <div class="col-sm-9">
-                                        <input class="form-control" asp-for="finalElectricityMeterReading" type="number">
+                                <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Departure Elec. Meter Reading</label>
+                                <div class="col-sm-9">
+                                <input class="form-control" asp-for="finalElectricityMeterReading" type="number">
 
-                                    </div>
+                                </div>
                                 </div>*@
 
                             @*<div class="form-group row">
                                 <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Departure Water Meter Reading</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control " asp-for="finalWaterMeterReading" type="number">
+                                <input class="form-control " asp-for="finalWaterMeterReading" type="number">
 
                                 </div>
-                            </div>*@
+                                </div>*@
 
                             <div class="form-group row">
                                 <label class="col-form-label col-sm-3 text-sm-right form-label" for="example-fileinput">Contract Image</label>
@@ -510,232 +510,232 @@
     <div class="modal-dialog">
         <div class="modal-content">
             @*<div class="modal-header">
-                    <div class="alert alert-info" role="alert">
-                        <a href="#" data-dismiss="modal" class="close">&times;</a>
-                        <h3 class="modal-title" >Building Image</h3>
-                    </div>
+                <div class="alert alert-info" role="alert">
+                <a href="#" data-dismiss="modal" class="close">&times;</a>
+                <h3 class="modal-title" >Building Image</h3>
+                </div>
                 </div>*@
             <div class="modal-body">
                 <img style="width:100%" src="~/assets/contracts/@Model.contractImage" alt="@Model.contractImage" />
             </div>
             @*<div class="modal-footer">
-                    <div class="alert alert-light" role="alert">
-                        <a href="#" data-dismiss="modal" class="close btn btn-default">Close</a>
-                    </div>
+                <div class="alert alert-light" role="alert">
+                <a href="#" data-dismiss="modal" class="close btn btn-default">Close</a>
+                </div>
                 </div>*@
         </div>
 
     </div>
 </div>
 @section ScriptsBlock{
-    <script>
-        $(function () {
-             SetPaymentMethods();
-            $("#paymentMethod").val('@Model.paymentMethod').trigger('change');
-            $("#IdBuilding").val('@Model.IdBuilding').trigger('change');
-            $("#IdTenant").val('@Model.IdTenant').trigger("change");
-            setTimeout(function () { $("#IdUnitCompound").val('@Model.IdUnitCompound').trigger("change"); }, 1000);
+<script>
+    $(function () {
+         SetPaymentMethods();
+        $("#paymentMethod").val('@Model.paymentMethod').trigger('change');
+        $("#IdBuilding").val('@Model.IdBuilding').trigger('change');
+        $("#IdTenant").val('@Model.IdTenant').trigger("change");
+        setTimeout(function () { $("#IdUnitCompound").val('@Model.IdUnitCompound').trigger("change"); }, 1000);
+    });
+     $('#IdBuilding').on('change', function () {
+            var items;
+            var url = '@Url.Content("~/")' + 'UnitRentContractCompound/getBuildingUnits';
+            $.getJSON(url, { IdBuilding: $('#IdBuilding').val(), unitID: $('#IdUnitCompound').val() }, function (data) {
+                $.each(data, function (i, row) {
+                    items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
+                });
+                if (items != null) {
+                    items = "<option >Select Apartment/Villa/Shop</option>" + items;
+                }
+                $('#IdUnitCompound').val(null).trigger('change');
+                $('#IdUnitCompound').empty();
+
+                $('#IdUnitCompound').html(items);
+                $('#IdUnitCompound').focus();
+
+
+                $("#lblArea").text("");
+                $("#lblBuilding").text("");
+                $("#lblDistrictCityCountry").text("");
+                $("#lblOwner").text("");
+            });
         });
-         $('#IdBuilding').on('change', function () {
-                var items;
-                var url = '@Url.Content("~/")' + 'UnitRentContractCompound/getBuildingUnits';
-                $.getJSON(url, { IdBuilding: $('#IdBuilding').val(), unitID: $('#IdUnitCompound').val() }, function (data) {
-                    $.each(data, function (i, row) {
-                        items += "<Option value='" + row.value + "'>" + row.text + "</Option>";
-                    });
-                    if (items != null) {
-                        items = "<option >Select Apartment/Villa/Shop</option>" + items;
-                    }
-                    $('#IdUnitCompound').val(null).trigger('change');
-                    $('#IdUnitCompound').empty();
 
-                    $('#IdUnitCompound').html(items);
-                    $('#IdUnitCompound').focus();
+     $('#IdUnitCompound').change(function () {
+            var url = '@Url.Content("~/")' + 'UnitRentContractCompound/getUnitInfo';
 
+            $.getJSON(url, { IdUnitCompound: $('#IdUnitCompound').val() }, function (data) {
+                if (data != null) {
 
+                    $("#lblArea").text(data.unitArea);
+                    $("#lblBuilding").text(data.buildingNo + "-" + data.buildingAddress);
+                    $("#lblDistrictCityCountry").text(data.district + "-" + data.city + "- " + data.country + "- " + data.compoundName);
+                    $("#lblOwner").text(data.owner);
+                    $("#ElectricityNumber").val(data.electricity_meter);
+                    $("#PaymentNumber").val(data.payment_number);
+                    $("#MeterStart").val(data.start_meter);
+                    $('[name ="TransferToTenanat"]')[0].val = data.transfer_tenant;
+                    $('[name ="TransferToTenanat"]')[0].checked = data.transfer_tenant;
+                }
+                else {
                     $("#lblArea").text("");
                     $("#lblBuilding").text("");
                     $("#lblDistrictCityCountry").text("");
                     $("#lblOwner").text("");
-                });
-            });
-
-         $('#IdUnitCompound').change(function () {
-                var url = '@Url.Content("~/")' + 'UnitRentContractCompound/getUnitInfo';
-
-                $.getJSON(url, { IdUnitCompound: $('#IdUnitCompound').val() }, function (data) {
-                    if (data != null) {
-
-                        $("#lblArea").text(data.unitArea);
-                        $("#lblBuilding").text(data.buildingNo + "-" + data.buildingAddress);
-                        $("#lblDistrictCityCountry").text(data.district + "-" + data.city + "- " + data.country + "- " + data.compoundName);
-                        $("#lblOwner").text(data.owner);
-                        $("#ElectricityNumber").val(data.electricity_meter);
-                        $("#PaymentNumber").val(data.payment_number);
-                        $("#MeterStart").val(data.start_meter);
-                        $('[name ="TransferToTenanat"]')[0].val = data.transfer_tenant;
-                        $('[name ="TransferToTenanat"]')[0].checked = data.transfer_tenant;
-                    }
-                    else {
-                        $("#lblArea").text("");
-                        $("#lblBuilding").text("");
-                        $("#lblDistrictCityCountry").text("");
-                        $("#lblOwner").text("");
-                        $("#ElectricityNumber").val('');
-                        $("#PaymentNumber").val('');
-                        $("#MeterStart").val('');
-                        $("#TransferToTenanat").val('');
-                    }
-                });
-            });
-
-         $('#IdTenant').change(function () {
-                var url = '@Url.Content("~/")' + 'UnitRentContractCompound/getTenantInfo';
-
-                $.getJSON(url, { IdTenant: $('#IdTenant').val() }, function (data) {
-                    if (data != null) {
-                        $("#lblIqamaNo").text(data.iqamaId);
-                        $("#lblMobileNo").text(data.mobileNumber);
-                        $("#lblWork").text(data.work) ;
-                        $("#lblCompanyPhone").text(data.companyPhone);
-                        $("#lblNationality").text(data.nationality);
-                    }
-                    else {
-                        $("#lblIqamaNo").text("");
-                        $("#lblMobileNo").text("");
-                        $("#lblWork").text("");
-                        $("#lblCompanyPhone").text("");
-                        $("#lblNationality").text("");
-                    }
-
-                });
-         });
-
-        //$('#yearlyRent').change(function () {
-        //    if ($('#yearlyRent').val().trim() != "" && $('#paidAmount').val().trim() != "")
-        //        $('#remainingAmount').val($('#yearlyRent').val() - $('#paidAmount').val());
-        //    else
-        //        $('#remainingAmount').val('');
-
-        //    SetPaymentMethods();
-        //});
-        //$('#paidAmount').change(function () {
-        //    if ($('#yearlyRent').val().trim() != "" && $('#paidAmount').val().trim() != "")
-        //        $('#remainingAmount').val($('#yearlyRent').val() - $('#paidAmount').val());
-        //    else
-        //        $('#remainingAmount').val('');
-
-        //    SetPaymentMethods();
-        //});
-
-        $('#yearlyRent, #paidAmount, #WaterBillAmount,#YearlyRentVm').change(function () {
-            var yearlyRent = parseFloat($("#yearlyRent").val());
-            var waterBillAmount = parseFloat($("#WaterBillAmount").val());
-            var paidAmount = parseFloat($('#paidAmount').val());
-            var YearlyRentVm = parseFloat($('#YearlyRentVm').val());
-            var LastContractRemainingAmountVal = parseFloat($('#LastContractRemainingAmount').val());
-
-            if (isNaN(yearlyRent)) {
-                $("#yearlyRent").val(0)
-                yearlyRent = 0;
-            }
-            if (isNaN(YearlyRentVm)) {
-                $("#YearlyRentVm").val(0)
-                YearlyRentVm = 0;
-            }
-            if (isNaN(waterBillAmount)) {
-                $("#WaterBillAmount").val(0)
-                waterBillAmount = 0;
-            }
-            if (isNaN(paidAmount)) {
-                $("#paidAmount").val(0)
-                paidAmount = 0;
-            }
-            if (isNaN(LastContractRemainingAmountVal)) {
-                $("#LastContractRemainingAmountVal").val(0)
-                LastContractRemainingAmountVal = 0;
-            }
-
-            $('#remainingAmount').val(LastContractRemainingAmountVal + YearlyRentVm + waterBillAmount - paidAmount);
-            $("#yearlyRent").val(YearlyRentVm + waterBillAmount);
-            $('#rentCommission').val(YearlyRentVm / 100);
-
-            SetPaymentMethods();
-        });
-
-        //$('#paidAmount,#yearlyRent ').change(function () {
-        //    var waterBillAmount = parseFloat($("#WaterBillAmount").val());
-        //    if (isNaN(WaterBillAmount)) {
-        //        $("#WaterBillAmount").val(0)
-        //    }
-        //    if ($('#LastContractRemainingAmount').val().trim() == "") {
-        //        $('#LastContractRemainingAmount').val(0)
-        //    }
-
-        //    if ($('#yearlyRent').val().trim() != "" && $('#paidAmount').val().trim() != "") {
-        //        var yearlyRentVal = parseInt($('#yearlyRent').val());
-        //        var paidAmountVal = parseInt($('#paidAmount').val());
-        //        var LastContractRemainingAmountVal = parseInt($('#LastContractRemainingAmount').val());
-        //        var total = (waterBillAmount+yearlyRentVal + LastContractRemainingAmountVal - paidAmountVal);
-        //        $('#remainingAmount').val(total);
-        //    }
-
-        //    else
-        //        $('#remainingAmount').val('');
-
-        //    SetPaymentMethods();
-        //});
-
-        $('#dtLeaseStart, #dtLeaseEnd').change(function () {
-            //   $('#leasePeriodInMonthes').val(monthDiff(new Date($('#dtLeaseStart').val().split('-').reverse().join('-')), new Date($('#dtLeaseEnd').val().split('-').reverse().join('-'))));
-            var fromDate = $('#dtLeaseStart').val().toString();
-            var toDate = $('#dtLeaseEnd').val().toString();
-            if (fromDate.trim() != "" && toDate.trim() != "")
-                $('#leasePeriodInMonthes').val(monthDiff(new Date(fromDate.slice(6, 10), fromDate.slice(3, 5), fromDate.slice(0, 2)),
-                    new Date(toDate.slice(6, 10), toDate.slice(3, 5), toDate.slice(0, 2))));
-            else
-                $('#leasePeriodInMonthes').val("");
-            SetPaymentMethods();
-        });
-
-        $('#WaterBillAmount , #WaterPaidAmount').change(function () {
-            if ($('#WaterBillAmount').val().trim() != "" && $('#WaterPaidAmount').val().trim() != "")
-                $('#WaterRemainingAmount').val($('#WaterBillAmount').val() - $('#WaterPaidAmount').val());
-            else
-                $('#WaterRemainingAmount').val('');
-
-        });
-
-        $('#UnitIncluded').change(function () {
-            if ($('#UnitIncluded').val().includes('1')) {
-                $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').val("");
-                $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').attr('readonly', true)
-            }
-            else {
-                $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').attr('readonly', false)
-            }
-        });
-        $("#VerifiedFromGovernment").change(function () {
-            if (this.checked) {
-                $('.ejar').hide();
-            }
-            else {
-                $('.ejar').show();
-            }
-        });
-        function back() {
-            var fallbackUrl = "/UnitRentContractCompound";
-            var prevPage = window.location.href;
-
-            window.history.go(-1);
-
-            setTimeout(function () {
-                if (window.location.href == prevPage) {
-                    window.location.href = fallbackUrl;
+                    $("#ElectricityNumber").val('');
+                    $("#PaymentNumber").val('');
+                    $("#MeterStart").val('');
+                    $("#TransferToTenanat").val('');
                 }
-            }, 500);
+            });
+        });
+
+     $('#IdTenant').change(function () {
+            var url = '@Url.Content("~/")' + 'UnitRentContractCompound/getTenantInfo';
+
+            $.getJSON(url, { IdTenant: $('#IdTenant').val() }, function (data) {
+                if (data != null) {
+                    $("#lblIqamaNo").text(data.iqamaId);
+                    $("#lblMobileNo").text(data.mobileNumber);
+                    $("#lblWork").text(data.work) ;
+                    $("#lblCompanyPhone").text(data.companyPhone);
+                    $("#lblNationality").text(data.nationality);
+                }
+                else {
+                    $("#lblIqamaNo").text("");
+                    $("#lblMobileNo").text("");
+                    $("#lblWork").text("");
+                    $("#lblCompanyPhone").text("");
+                    $("#lblNationality").text("");
+                }
+
+            });
+     });
+
+    //$('#yearlyRent').change(function () {
+    //    if ($('#yearlyRent').val().trim() != "" && $('#paidAmount').val().trim() != "")
+    //        $('#remainingAmount').val($('#yearlyRent').val() - $('#paidAmount').val());
+    //    else
+    //        $('#remainingAmount').val('');
+
+    //    SetPaymentMethods();
+    //});
+    //$('#paidAmount').change(function () {
+    //    if ($('#yearlyRent').val().trim() != "" && $('#paidAmount').val().trim() != "")
+    //        $('#remainingAmount').val($('#yearlyRent').val() - $('#paidAmount').val());
+    //    else
+    //        $('#remainingAmount').val('');
+
+    //    SetPaymentMethods();
+    //});
+
+    $('#yearlyRent, #paidAmount, #WaterBillAmount,#YearlyRentVm').change(function () {
+        var yearlyRent = parseFloat($("#yearlyRent").val());
+        var waterBillAmount = parseFloat($("#WaterBillAmount").val());
+        var paidAmount = parseFloat($('#paidAmount').val());
+        var YearlyRentVm = parseFloat($('#YearlyRentVm').val());
+        var LastContractRemainingAmountVal = parseFloat($('#LastContractRemainingAmount').val());
+
+        if (isNaN(yearlyRent)) {
+            $("#yearlyRent").val(0)
+            yearlyRent = 0;
         }
-    </script>
+        if (isNaN(YearlyRentVm)) {
+            $("#YearlyRentVm").val(0)
+            YearlyRentVm = 0;
+        }
+        if (isNaN(waterBillAmount)) {
+            $("#WaterBillAmount").val(0)
+            waterBillAmount = 0;
+        }
+        if (isNaN(paidAmount)) {
+            $("#paidAmount").val(0)
+            paidAmount = 0;
+        }
+        if (isNaN(LastContractRemainingAmountVal)) {
+            $("#LastContractRemainingAmountVal").val(0)
+            LastContractRemainingAmountVal = 0;
+        }
+
+        $('#remainingAmount').val(LastContractRemainingAmountVal + YearlyRentVm + waterBillAmount - paidAmount);
+        $("#yearlyRent").val(YearlyRentVm + waterBillAmount);
+        $('#rentCommission').val(YearlyRentVm / 100);
+
+        SetPaymentMethods();
+    });
+
+    //$('#paidAmount,#yearlyRent ').change(function () {
+    //    var waterBillAmount = parseFloat($("#WaterBillAmount").val());
+    //    if (isNaN(WaterBillAmount)) {
+    //        $("#WaterBillAmount").val(0)
+    //    }
+    //    if ($('#LastContractRemainingAmount').val().trim() == "") {
+    //        $('#LastContractRemainingAmount').val(0)
+    //    }
+
+    //    if ($('#yearlyRent').val().trim() != "" && $('#paidAmount').val().trim() != "") {
+    //        var yearlyRentVal = parseInt($('#yearlyRent').val());
+    //        var paidAmountVal = parseInt($('#paidAmount').val());
+    //        var LastContractRemainingAmountVal = parseInt($('#LastContractRemainingAmount').val());
+    //        var total = (waterBillAmount+yearlyRentVal + LastContractRemainingAmountVal - paidAmountVal);
+    //        $('#remainingAmount').val(total);
+    //    }
+
+    //    else
+    //        $('#remainingAmount').val('');
+
+    //    SetPaymentMethods();
+    //});
+
+    $('#dtLeaseStart, #dtLeaseEnd').change(function () {
+        //   $('#leasePeriodInMonthes').val(monthDiff(new Date($('#dtLeaseStart').val().split('-').reverse().join('-')), new Date($('#dtLeaseEnd').val().split('-').reverse().join('-'))));
+        var fromDate = $('#dtLeaseStart').val().toString();
+        var toDate = $('#dtLeaseEnd').val().toString();
+        if (fromDate.trim() != "" && toDate.trim() != "")
+            $('#leasePeriodInMonthes').val(monthDiff(new Date(fromDate.slice(6, 10), fromDate.slice(3, 5), fromDate.slice(0, 2)),
+                new Date(toDate.slice(6, 10), toDate.slice(3, 5), toDate.slice(0, 2))));
+        else
+            $('#leasePeriodInMonthes').val("");
+        SetPaymentMethods();
+    });
+
+    $('#WaterBillAmount , #WaterPaidAmount').change(function () {
+        if ($('#WaterBillAmount').val().trim() != "" && $('#WaterPaidAmount').val().trim() != "")
+            $('#WaterRemainingAmount').val($('#WaterBillAmount').val() - $('#WaterPaidAmount').val());
+        else
+            $('#WaterRemainingAmount').val('');
+
+    });
+
+    $('#UnitIncluded').change(function () {
+        if ($('#UnitIncluded').val().includes('1')) {
+            $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').val("");
+            $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').attr('readonly', true)
+        }
+        else {
+            $('#WaterBillAmount, #WaterPaidAmount, #WaterRemainingAmount').attr('readonly', false)
+        }
+    });
+    $("#VerifiedFromGovernment").change(function () {
+        if (this.checked) {
+            $('.ejar').hide();
+        }
+        else {
+            $('.ejar').show();
+        }
+    });
+    function back() {
+        var fallbackUrl = "/UnitRentContractCompound";
+        var prevPage = window.location.href;
+
+        window.history.go(-1);
+
+        setTimeout(function () {
+            if (window.location.href == prevPage) {
+                window.location.href = fallbackUrl;
+            }
+        }, 500);
+    }
+</script>
 }
 
 @{

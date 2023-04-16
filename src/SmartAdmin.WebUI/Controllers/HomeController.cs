@@ -88,6 +88,18 @@ namespace SmartAdmin.WebUI.Controllers
         {
             return GetCompound(new CompoundDTO { CompoundID = 6, CompoundName = "Opal Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
         }
+        public IActionResult OasisGardens(string representitveId = null)
+        {
+            return GetCompound(new CompoundDTO { CompoundID = 9, CompoundName = "Oasis Gardens Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
+        }
+        public IActionResult OasisResorts(string representitveId = null)
+        {
+            return GetCompound(new CompoundDTO { CompoundID = 10, CompoundName = "Oasis Resorts Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
+        }
+        public IActionResult Sanus(string representitveId = null)
+        {
+            return GetCompound(new CompoundDTO { CompoundID = 8, CompoundName = "Sanus Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
+        }
         public ActionResult GetNonRentedUnits(int compoundID)
         {
             return View("~/Views/Home/CompundNonRented.cshtml", GetCompoundData(compoundID));
@@ -140,6 +152,12 @@ namespace SmartAdmin.WebUI.Controllers
                 return new CompoundDTO { CompoundID = 6, CompoundName = "Opal Compound" };
             else if (compoundID == 7)
                 return new CompoundDTO { CompoundID = 7, CompoundName = "Desert Apartments" };
+            else if (compoundID == 8)
+                return new CompoundDTO { CompoundID = 8, CompoundName = "Sanus Compound" };
+            else if (compoundID == 9)
+                return new CompoundDTO { CompoundID = 9, CompoundName = "Oasis Gardens Compound" };
+            else if (compoundID == 10)
+                return new CompoundDTO { CompoundID = 10, CompoundName = "Oasis Resorts Compound" };
             return null;
         }
         #endregion
@@ -416,7 +434,7 @@ namespace SmartAdmin.WebUI.Controllers
             }
             var isAdmin = User.IsInRole("Admin") || User.IsInRole("AccountantManager") || User.IsInRole("Accountant");
             var filteredRows = !isAdmin ? (from DataRow myRow in tbl.Rows
-                                           where myRow[12].ToString() == _user.GetUserId(User) && ((int)myRow[8]) == id
+                                           where myRow[13].ToString() == _user.GetUserId(User) && ((int)myRow[8]) == id
                                            select myRow).ToList() :
                                          (from DataRow myRow in tbl.Rows where ((int)myRow[8]) == id select myRow).ToList();
             var value = filteredRows.Where(r => (int)r.ItemArray[8] == id).FirstOrDefault();
@@ -533,7 +551,7 @@ namespace SmartAdmin.WebUI.Controllers
         {
             var currentTime = DateTime.Now;
             var isAdmin = User.IsInRole("Admin") || User.IsInRole("AccountantManager") || User.IsInRole("Accountant");
-            var next30DaysTime = currentTime.AddMonths(1);
+            var next30DaysTime = currentTime.AddMonths(2);
             var pariallyPaidIds = _context.TUnitRentContract.Include(t => t.UnitRentContractPayments)
                                                          .Where(c => !c.Archived && c.remainingAmount > 0 && c.IdCompound == compoundID && c.AddedtoCourt == false &&
                                                                      c.UnitRentContractPayments.Any(p => !p.Paid && p.PaidAmount > 0 && p.DueDate < next30DaysTime))
@@ -545,9 +563,9 @@ namespace SmartAdmin.WebUI.Controllers
                                                   .Where(c => (isAdmin ? true : c.IdMandoob == _user.GetUserId(User)) && c.AddedtoCourt == false &&
                                                                !c.Archived && c.remainingAmount > 0 && c.IdCompound == compoundID &&
                                                                c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).MinOrDefault(p => p.DueDate) != null &&
-                                                               c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).AddDays(-30) <= currentTime &&
-                                                               c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).Subtract(currentTime).Days >= -15 &&
-                                                               c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).AddMonths(1) > currentTime &&
+                                                               c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).AddMonths(-2) <= currentTime &&
+                                                               c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).Subtract(currentTime).Days >= -60 &&
+                                                               c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).AddMonths(2) > currentTime &&
                                                                !pariallyPaidIds.Contains(c.IdRentContract) &&
                                                                (string.IsNullOrEmpty(representitveId) ? true : c.IdMandoob == representitveId))
                                                   .Select(t => new DueValue
@@ -558,12 +576,13 @@ namespace SmartAdmin.WebUI.Controllers
                                                       Mobile = t.mTenant.tenantMobile,
                                                       AnnualRent = t.yearlyRent,
                                                       RemainingRents = t.UnitRentContractPayments.Count(p => !p.Paid),
-                                                      Value = t.UnitRentContractPayments.Where(p => !p.Paid && p.DueDate.AddMonths(-1) <= currentTime && p.DueDate.AddMonths(1) > currentTime).Sum(p => p.RemainingAmount),
+                                                      Value = t.UnitRentContractPayments.Where(p => !p.Paid && p.DueDate.AddMonths(-2) <= currentTime && p.DueDate.AddMonths(2) > currentTime).Sum(p => p.RemainingAmount),
                                                       CollectionDate = t.UnitRentContractPayments.Where(p => !p.Paid).Min(p => p.DueDate).ToShortDateString(),
                                                       ExpiryDate = t.dtLeaseEnd.ToShortDateString(),
                                                       TotalDays = t.UnitRentContractPayments.Where(p => !p.Paid).Min(d => d.DueDate).Subtract(currentTime).Days,
                                                       Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
                                                       NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
+                                                      NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString(),
                                                       Mandoob = t.Mandoob.fullName,
                                                       MandoobID = t.IdMandoob,
                                                       PropertyType = t.mCompoundUnits.mPropertyType.PropertyTypeName
@@ -590,7 +609,7 @@ namespace SmartAdmin.WebUI.Controllers
                                                   .Where(c => (isAdmin ? true : c.IdMandoob == _user.GetUserId(User)) && c.AddedtoCourt == false &&
                                                                !c.Archived && c.remainingAmount > 0 && c.IdCompound == compoundID &&
                                                                c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).MinOrDefault(p => p.DueDate) != null &&
-                                                               c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).Subtract(currentTime).Days <= -16 &&
+                                                               c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).Subtract(currentTime).Days < -29 &&
                                                                !pariallyPaidIds.Contains(c.IdRentContract) &&
                                                                (string.IsNullOrEmpty(representitveId) ? true : c.IdMandoob == representitveId))
                                                   .Select(t => new DueValue
@@ -606,6 +625,7 @@ namespace SmartAdmin.WebUI.Controllers
                                                       ExpiryDate = t.dtLeaseEnd.ToShortDateString(),
                                                       TotalDays = t.UnitRentContractPayments.Where(p => !p.Paid).Min(d => d.DueDate).Subtract(currentTime).Days,
                                                       Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
+                                                      NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString(),
                                                       NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
                                                       Mandoob = t.Mandoob.fullName,
                                                       PropertyType = t.mCompoundUnits.mPropertyType.PropertyTypeName
@@ -672,7 +692,8 @@ namespace SmartAdmin.WebUI.Controllers
                                                           Building = t.mUnit.mBuilding.BuildingName,
                                                           Mandoob = t.Mandoob.fullName,
                                                           Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
-                                                          NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault()
+                                                          NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
+                                                          NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString()
                                                       }).OrderBy(t => t.TotalDays).ToList();
                 return Json(new DueViewModel
                 {
@@ -683,7 +704,7 @@ namespace SmartAdmin.WebUI.Controllers
             }
             else
             {
-                var next30DaysTime = currentTime.AddMonths(1);
+                var next30DaysTime = currentTime.AddMonths(2);
                 var due60PartiallyPaid = _context.TUnitRentContract.Where(x => x.mMasterBuilding == id).Include(t => t.UnitRentContractPayments)
                                                       .Include(t => t.mTenant)
                                                       .Where(c => !c.Archived && c.remainingAmount > 0 && !c.IdCompound.HasValue &&
@@ -696,9 +717,9 @@ namespace SmartAdmin.WebUI.Controllers
                                                       .Where(c => (isAdmin ? true : c.IdMandoob == _user.GetUserId(User)) && c.AddedtoCourt == false &&
                                                                    !c.Archived && c.remainingAmount > 0 && !c.IdCompound.HasValue &&
                                                                    c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).MinOrDefault(p => p.DueDate) != null &&
-                                                                   c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).AddMonths(-1) <= currentTime &&
-                                                                   c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).Subtract(currentTime).Days >= -15 &&
-                                                                   c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).AddMonths(1) > currentTime &&
+                                                                   c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).AddMonths(-2) <= currentTime &&
+                                                                   c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).Subtract(currentTime).Days >= -60 &&
+                                                                   c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).AddMonths(2) > currentTime &&
                                                                    !due60PartiallyPaid.Contains(c.IdRentContract) &&
                                                                    (string.IsNullOrEmpty(representitveId) ? true : c.IdMandoob == representitveId))
                                                       .Select(t => new DueValue
@@ -709,14 +730,16 @@ namespace SmartAdmin.WebUI.Controllers
                                                           Mobile = t.mTenant.tenantMobile,
                                                           AnnualRent = t.yearlyRent,
                                                           RemainingRents = t.UnitRentContractPayments.Count(p => !p.Paid),
-                                                          Value = t.UnitRentContractPayments.Where(p => !p.Paid && p.DueDate.AddMonths(-1) <= currentTime && p.DueDate.AddMonths(1) > currentTime).Sum(p => p.RemainingAmount),
+                                                          Value = t.UnitRentContractPayments.Where(p => !p.Paid && p.DueDate.AddMonths(-2) <= currentTime && p.DueDate.AddMonths(2) > currentTime).Sum(p => p.RemainingAmount),
                                                           CollectionDate = t.UnitRentContractPayments.Where(p => !p.Paid).Min(p => p.DueDate).ToShortDateString(),
                                                           ExpiryDate = t.dtLeaseEnd.ToShortDateString(),
                                                           TotalDays = t.UnitRentContractPayments.Where(p => !p.Paid).Min(d => d.DueDate).Subtract(currentTime).Days,
                                                           Building = t.mUnit.mBuilding.BuildingName,
                                                           Mandoob = t.Mandoob.fullName,
                                                           Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
-                                                          NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault()
+                                                          NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
+                                                          NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString()
+
                                                       }).OrderBy(t => t.TotalDays).ToList();
                 return Json(new DueViewModel
                 {
@@ -764,7 +787,8 @@ namespace SmartAdmin.WebUI.Controllers
                                                           Building = t.mUnit.mBuilding.BuildingName,
                                                           Mandoob = t.Mandoob.fullName,
                                                           Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
-                                                          NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault()
+                                                          NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
+                                                          NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString()
                                                       }).OrderBy(t => t.TotalDays).ToList();
                 return Json(new DueViewModel
                 {
@@ -786,7 +810,7 @@ namespace SmartAdmin.WebUI.Controllers
                                                       .Where(c => (isAdmin ? true : c.IdMandoob == _user.GetUserId(User)) && c.AddedtoCourt == false &&
                                                                   !c.Archived && c.remainingAmount > 0 && !c.IdCompound.HasValue &&
                                                                    c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).MinOrDefault(p => p.DueDate) != null &&
-                                                                   c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).Subtract(currentTime).Days <= -16 &&
+                                                                   c.UnitRentContractPayments.Where(p => !p.Paid && p.PaidAmount == 0).Min(p => p.DueDate).Subtract(currentTime).Days < -30 &&
                                                                    !due60PartiallyPaid.Contains(c.IdRentContract) &&
                                                                     !c.AddedtoCourt &&
                                                                    (string.IsNullOrEmpty(representitveId) ? true : c.IdMandoob == representitveId))
@@ -805,7 +829,8 @@ namespace SmartAdmin.WebUI.Controllers
                                                           Building = t.mUnit.mBuilding.BuildingName,
                                                           Mandoob = t.Mandoob.fullName,
                                                           Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
-                                                          NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault()
+                                                          NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
+                                                          NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString()
                                                       }).OrderBy(t => t.TotalDays).ToList();
                 return Json(new DueViewModel
                 {
@@ -861,6 +886,8 @@ namespace SmartAdmin.WebUI.Controllers
                                                       TotalDays = t.UnitRentContractPayments.Where(p => !p.Paid).Min(d => d.DueDate).Subtract(currentTime).Days,
                                                       Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
                                                       NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
+                                                      NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString(),
+
                                                       Mandoob = t.Mandoob.fullName,
                                                       PropertyType = t.mCompoundUnits.mPropertyType.PropertyTypeName
 
@@ -898,6 +925,7 @@ namespace SmartAdmin.WebUI.Controllers
                                                       ExpiryDate = t.dtLeaseEnd.ToShortDateString(),
                                                       TotalDays = t.UnitRentContractPayments.Where(p => !p.Paid).Min(d => d.DueDate).Subtract(currentTime).Days,
                                                       Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
+                                                      NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString(),
                                                       NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
                                                       Mandoob = t.Mandoob.fullName
 
@@ -975,6 +1003,12 @@ namespace SmartAdmin.WebUI.Controllers
                         break;
                     case 6:
                         ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.Villa21) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 7:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.DesertApartments) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 8:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.SanusCompound) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
                         break;
                     default:
                         break;
@@ -1088,7 +1122,9 @@ namespace SmartAdmin.WebUI.Controllers
                                                     Owner = y
                                                 }).OrderBy(e => e.Owner.GetDisplayOrder()).ThenByDescending(e => e.Name).ToList();
 
-            var groupsWithOneProperty = _context.TPropertyTypes.Where(p => p.IdPropertyType == 1 || p.IdPropertyType == 6 || p.IdPropertyType == 7 || p.IdPropertyType == 8).Select(p => p.PropertyTypeName)
+            var groupsWithOneProperty = _context.TPropertyTypes.Where(p => p.IdPropertyType == 1
+            || p.IdPropertyType == 6 || p.IdPropertyType == 7 || p.IdPropertyType == 8
+            ).Select(p => p.PropertyTypeName)
                                                 .ToList();
 
 
@@ -1457,8 +1493,72 @@ namespace SmartAdmin.WebUI.Controllers
                 }
                 model.ExpectedIncomes.Add(expectedIncome);
             }
+            if (isAdmin || (isAccountant || isMandoob) && HasAccess(Permission.SanusCompoundDashboard))
+            {
+                compoundName = "Sanus Compound";
+                model.Items.Add(new DashboardListItem
+                {
+                    Name = compoundName,
+                    BGColor = "bg-primary-200",
+                    Revenu = paymentLogs.Where(c => c.UnitRentContractPayment.UnitRentContract.IdCompound.Value == 8).Select(s => s.PaidAmount).DefaultIfEmpty(0).Sum(),
+                    RevenuOFDay = paymentLogsPerDay.Where(c => c.UnitRentContractPayment.UnitRentContract.IdCompound.Value == 8).Select(s => s.PaidAmount).DefaultIfEmpty(0).Sum(),
+                    ActionURL = "/Home/GetPaymentDetails?compoundID=8"
+                });
+                var group = units.Where(u => u.IdCompound == 8).GroupBy(g => new
+                {
+                    PropertyTypeName = GetName(g.PropertyTypeName),
+                    g.UnitOwner
+                });
+                model.UnitsSummary.Add(new CompoundUnitsSummary
+                {
+                    CompoundName = compoundName,
+                    Items = groups.Select(e => new CompoundUnitsSummaryDetail
+                    {
+                        Occupied = group.Where(a => a.Key.PropertyTypeName == e.Name && a.Key.UnitOwner == e.Owner).FirstOrDefault()?.Count(s => s.UnitRentContractID.HasValue) ?? 0,
+                        Vacant = group.Where(a => a.Key.PropertyTypeName == e.Name && a.Key.UnitOwner == e.Owner).FirstOrDefault()?.Count(s => !s.UnitRentContractID.HasValue) ?? 0,
+                        Type = $"{e.Name } {GetDisplayName(e.Owner.GetDisplayName())}"
+                    }).ToList()
+                });
+                model.UnitsPieChartSummary.Add(new UnitsPieChartSummary
+                {
+                    Occupied = units.Count(u => u.IdCompound == 8 && u.UnitRentContractID.HasValue),
+                    Vacant = units.Count(u => u.IdCompound == 8 && !u.UnitRentContractID.HasValue),
+                    PieChartName = compoundName,
+                    PieChartID = compoundName.Replace(" ", string.Empty).ToLower()
+                });
+                var expectedIncomeGroup = values.Where(c => c.UnitRentContract.IdCompound == 8)
+                                              .GroupBy(d => new { d.DueDate.Month, d.DueDate.Year })
+                                              .Select(m => new
+                                              {
+                                                  Month = new DateTime(m.Key.Year, m.Key.Month, 1).Month,
+                                                  Value = m.Select(S => S.Amount).DefaultIfEmpty(0).Sum()
+                                              }).ToList();
+                expectedIncome = new ExpectedIncome { CompoundName = compoundName };
+                for (int i = 0; i < monthsList.Count; i++)
+                {
+                    var e = monthsList[i];
+                    var total = expectedIncomeGroup.FirstOrDefault(a => a.Month == e.Month)?.Value ?? 0;
+                    expectedIncome.Items.Add(new ExpectedIncomeItem
+                    {
+                        MonthName = e.Name,
+                        Income = total
+                    });
+                    totalIncoms[i] += total;
+                }
+                model.ExpectedIncomes.Add(expectedIncome);
+            }
             if (isAdmin || (isAccountant || isMandoob) && HasAccess(Permission.BuildingDashboard))
             {
+                #region occupiedRegion
+                model.occupancyRegions = _context.Units.Include(x => x.mBuilding).ThenInclude(x => x.mDistrict)
+                    .GroupBy(x => x.mBuilding.IdDistrict).Select(x => new OccupancyRegion
+                    {
+                        Region = x.Select(z => z.mBuilding.mDistrict.DistrictName).FirstOrDefault(),
+                        AppartmentNumber = x.Where(z => z.isDeleted == false).Count(),
+                        occupiedNumber = x.Where(z => z.isRented == true && z.isDeleted == false).Count(),
+                        NonOccupiedNumber = x.Where(z => (z.isRented == false || z.isRented == null) && z.isDeleted == false).Count()
+                    }).ToList();
+                #endregion
 
                 #region buildings
                 compoundName = "Buildings";
@@ -1790,9 +1890,9 @@ namespace SmartAdmin.WebUI.Controllers
             _context.SaveChanges();
             return Json(new { val = "success" });
         }
-        public ActionResult GetPaymentDetails(int? compoundID = null, int? pageid = null, bool? TotalToday = null,string representitveId = null)
+        public ActionResult GetPaymentDetails(int? compoundID = null, int? pageid = null, bool? TotalToday = null, string representitveId = null)
         {
-            
+
             var isAdmin = User.IsInRole("Admin") || User.IsInRole("AccountantManager") || User.IsInRole("Accountant");
             representitveId = representitveId == "null" ? null : representitveId;
 
@@ -1807,27 +1907,27 @@ namespace SmartAdmin.WebUI.Controllers
                                                                      .Include(c => c.UnitRentContractPayment.UnitRentContract.mUnit)
                                                                      .Include(c => c.UnitRentContractPayment.UnitRentContract.mUnit.mBuilding);
 
-           var paymentDetailsAfterWhere = pageid != null ?  paymentDetails.Where(c => (isAdmin || c.UnitRentContractPayment.UnitRentContract.IdMandoob == userID) &&
+            var paymentDetailsAfterWhere = pageid != null ? paymentDetails.Where(c => (isAdmin || c.UnitRentContractPayment.UnitRentContract.IdMandoob == userID) &&
                                                                               c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month &&
                                                                               !c.UnitRentContractPayment.UnitRentContract.AddedtoCourt && !c.UnitRentContractPayment.UnitRentContract.Archived &&
                                                                               c.UnitRentContractPayment.UnitRentContract.mMasterBuilding == pageid
-                                                                              && c.PaidAmount > 0) 
-                                                         : compoundID != null ? paymentDetails.Where(c => (isAdmin || c.UnitRentContractPayment.UnitRentContract.IdMandoob == userID) &&
-                                                                              c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month &&
-                                                                              !c.UnitRentContractPayment.UnitRentContract.AddedtoCourt && !c.UnitRentContractPayment.UnitRentContract.Archived &&
-                                                                              c.UnitRentContractPayment.UnitRentContract.IdCompound == compoundID
-                                                                              && c.PaidAmount > 0) 
-                                                         : TotalToday == true ? paymentDetails.Where(c => (isAdmin || c.UnitRentContractPayment.UnitRentContract.IdMandoob == userID) &&
-                                                                             c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month &&
-                                                                             !c.UnitRentContractPayment.UnitRentContract.AddedtoCourt && !c.UnitRentContractPayment.UnitRentContract.Archived &&
-                                                                              c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month && 
-                                                                             c.PaymentDate.ToShortDateString() == currentDate.ToShortDateString()
-                                                                             && c.PaidAmount > 0)
-                                                         : paymentDetails.Where(c => (isAdmin || c.UnitRentContractPayment.UnitRentContract.IdMandoob == userID) &&
+                                                                              && c.PaidAmount > 0)
+                                                          : compoundID != null ? paymentDetails.Where(c => (isAdmin || c.UnitRentContractPayment.UnitRentContract.IdMandoob == userID) &&
                                                                                c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month &&
                                                                                !c.UnitRentContractPayment.UnitRentContract.AddedtoCourt && !c.UnitRentContractPayment.UnitRentContract.Archived &&
-                                                                               c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month
-                                                                               && c.PaidAmount > 0);
+                                                                               c.UnitRentContractPayment.UnitRentContract.IdCompound == compoundID
+                                                                               && c.PaidAmount > 0)
+                                                          : TotalToday == true ? paymentDetails.Where(c => (isAdmin || c.UnitRentContractPayment.UnitRentContract.IdMandoob == userID) &&
+                                                                              c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month &&
+                                                                              !c.UnitRentContractPayment.UnitRentContract.AddedtoCourt && !c.UnitRentContractPayment.UnitRentContract.Archived &&
+                                                                               c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month &&
+                                                                              c.PaymentDate.ToShortDateString() == currentDate.ToShortDateString()
+                                                                              && c.PaidAmount > 0)
+                                                          : paymentDetails.Where(c => (isAdmin || c.UnitRentContractPayment.UnitRentContract.IdMandoob == userID) &&
+                                                                                c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month &&
+                                                                                !c.UnitRentContractPayment.UnitRentContract.AddedtoCourt && !c.UnitRentContractPayment.UnitRentContract.Archived &&
+                                                                                c.PaymentDate.Year == currentDate.Year && c.PaymentDate.Month == currentDate.Month
+                                                                                && c.PaidAmount > 0);
             var result = paymentDetailsAfterWhere.OrderByDescending(b => b.PaymentDate)
                                                                      .Select(c => new PaymentLogDTO
                                                                      {
@@ -1847,12 +1947,61 @@ namespace SmartAdmin.WebUI.Controllers
                 ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions), "Id", "fullName", string.IsNullOrEmpty(representitveId) ? null : representitveId);
                 ViewBag.RepresentitveId = representitveId;
             }
-            if(representitveId != null)
+            if (representitveId != null)
             {
                 result = result.Where(x => x.Mandoob == representitveId).ToList();
             }
             string name = compoundID.HasValue ? _context.TCompounds.Where(c => c.IdCompound == compoundID).Select(c => c.compoundName).FirstOrDefault() : "Buildings";
             return View(new PaymentLogViewModel { PaymentLogs = result, Name = name });
+        }
+        public ActionResult ExpectedPaymentDetails(ExpectedPaymentDetails model)
+        {
+            var isAdmin = User.IsInRole("Admin") || User.IsInRole("AccountantManager") || User.IsInRole("Accountant");
+            //representitveId = representitveId == "null" ? null : representitveId;
+            DateTime.TryParse(model.start, out DateTime start);
+            DateTime.TryParse(model.end, out DateTime end);
+            var userID = _user.GetUserId(User);
+            
+            var paymentDetails = _context.TUnitRentContractPayments.Where(x => x.DueDate >= start && x.DueDate <= end);
+            var paymentDetailsAfterWhere = model.pageId != null ? paymentDetails.Where(c => (isAdmin || c.UnitRentContract.IdMandoob == userID) &&
+                                                                              !c.UnitRentContract.AddedtoCourt && !c.UnitRentContract.Archived &&
+                                                                              c.UnitRentContract.mMasterBuilding == model.pageId &&
+                                                                       c.UnitRentContract.dtLeaseEnd >= DateTime.Now)
+                                                          : model.compoundId != null ? paymentDetails.Where(c => (isAdmin || c.UnitRentContract.IdMandoob == userID) &&
+                                                                               !c.UnitRentContract.AddedtoCourt && !c.UnitRentContract.Archived &&
+                                                                               c.UnitRentContract.IdCompound == model.compoundId &&
+                                                                      c.UnitRentContract.dtLeaseEnd >= DateTime.Now)
+                                                          : paymentDetails.Where(c => (isAdmin || c.UnitRentContract.IdMandoob == userID) &&
+                                                                               !c.UnitRentContract.AddedtoCourt && !c.UnitRentContract.Archived &&
+                                                                       c.UnitRentContract.dtLeaseEnd >= DateTime.Now);
+          
+
+            var result = paymentDetailsAfterWhere.OrderBy(b => b.DueDate)
+                                                                     .Select(c => new PaymentLogDTO
+                                                                     {
+                                                                         PaidBy = string.IsNullOrEmpty(c.UserID) ? string.Empty : c.User.fullName,
+                                                                         PaidAmount = c.Amount,
+                                                                         PaymentDate = c.DueDate.ToShortDateString(),
+                                                                         Mandoob = c.UnitRentContract.Mandoob.fullName,
+                                                                         ContractNumber = c.UnitRentContract.contractNumber,
+                                                                         ContractID = c.UnitRentContractID,
+                                                                         IsBuilding = !c.UnitRentContract.IdCompound.HasValue,
+                                                                         Building = c.UnitRentContract.mCompoundUnits != null ? c.UnitRentContract.mCompoundUnits.mCompoundBuilding.BuildingNumber : c.UnitRentContract.mUnit.mBuilding.BuildingName,
+                                                                         Unit = c.UnitRentContract.mCompoundUnits != null ? c.UnitRentContract.mCompoundUnits.UnitNumber : c.UnitRentContract.mUnit.UnitNumber,
+                                                                     }).ToList();
+            //if (isAdmin)
+            //{
+            //    var mandoobUsersIDs = _user.GetUsersInRoleAsync("Mandoob").Result.Select(u => u.Id);
+            //    ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions), "Id", "fullName", string.IsNullOrEmpty(representitveId) ? null : representitveId);
+            //    ViewBag.RepresentitveId = representitveId;
+            //}
+            //if (representitveId != null)
+            //{
+            //    result = result.Where(x => x.Mandoob == representitveId).ToList();
+            //}
+
+            string name = model.compoundId.HasValue ? _context.TCompounds.Where(c => c.IdCompound == model.compoundId).Select(c => c.compoundName).FirstOrDefault() : model.pageId.HasValue ? "Buildings" : "All";
+            return Json( result);
         }
         private bool HasAccess(Permission permission)
         {
@@ -1907,6 +2056,8 @@ namespace SmartAdmin.WebUI.Controllers
             ViewBag.id = id;
             return View(tenants);
         }
+        
+       
     }
     public class Tenant
     {
@@ -1946,6 +2097,7 @@ namespace SmartAdmin.WebUI.Controllers
         public string MandoobPhone { get; internal set; }
         public string MandoobID { get; set; }
         public string PropertyType { get; set; }
+        public string NoteDate { get; set; }
     }
     public class DueDatesWithValues
     {
@@ -1996,6 +2148,14 @@ namespace SmartAdmin.WebUI.Controllers
         public List<ExpectedIncome> ExpectedIncomes { get; set; } = new List<ExpectedIncome>();
         public List<decimal> TotalExpectedIncome { get; set; } = new List<decimal>();
         public List<string> MonthsNames { get; set; }
+        public List<OccupancyRegion> occupancyRegions { get; set; }
+    }
+    public class OccupancyRegion
+    {
+        public string Region { get; set; }
+        public int AppartmentNumber { get; set; }
+        public int occupiedNumber { get; set; }
+        public int NonOccupiedNumber { get; set; }
     }
     public class CompoundUnitsSummary
     {
@@ -2075,5 +2235,12 @@ namespace SmartAdmin.WebUI.Controllers
     {
         public string MonthName { get; set; }
         public decimal Income { get; set; }
+    }
+    public class ExpectedPaymentDetails
+    {
+        public string start { get; set; }
+        public string end { get; set; }
+        public int? pageId { get; set; }
+        public int? compoundId { get; set; }
     }
 }

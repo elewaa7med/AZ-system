@@ -387,5 +387,6 @@ namespace SmartAdmin.WebUI.Models
 
         public ICollection<Invoices> invoices { get; set; }
         public virtual ICollection<UnitRentContractAllPaymentLogs> UnitRentContractAllPaymentLogs { get; set; }
+        public virtual ICollection<UnitRentContractOtherPayment> UnitRentContractOtherPayment { get; set; }
     }
 }

@@ -1,8 +1,9 @@
 ﻿@inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-@inject Microsoft.Extensions.Configuration.IConfiguration  _con
+@inject Microsoft.Extensions.Configuration.IConfiguration _con
 @model SmartAdmin.WebUI.Controllers.DashboardViewModel
-@{ ViewData["Title"] = "Dashboard";
+@{
+    ViewData["Title"] = "Dashboard";
     ViewData["PageName"] = "Dashboards";
     var user = UserManager.GetUserAsync(User).Result;
     var isAdmin = UserManager.IsInRoleAsync(user, "Admin").Result;
@@ -19,7 +20,9 @@
     var hasDaarResidenceAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DaarResidenceDashboard })).Succeeded);
     var hasVilla24Access = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Villa24Dashboard })).Succeeded);
     var hasVilla21Access = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Villa21Dashboard })).Succeeded);
-    var hasDesertApartmentsDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertApartmentsDashboard })).Succeeded); }
+    var hasSanusCompoundAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.SanusCompoundDashboard })).Succeeded);
+    var hasDesertApartmentsDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertApartmentsDashboard })).Succeeded);
+}
 <div class="row">
     <div class="col-sm-6 col-xl-6">
         <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
@@ -52,82 +55,192 @@
 <div class="row">
     @foreach (var item in Model.Items)
     {
-<div class="col-sm-6 col-xl-2">
-    <div class="p-3 @item.BGColor rounded overflow-hidden position-relative text-white mb-g">
-        <div class="">
-            <a href="@item.ActionURL" class="text-white">
-                <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                    <span class="format"> @item.Revenu</span>
-                    <small class="m-0 l-h-n"> <h3 class="fw-500"> @item.Name </h3> </small>
-                </h3>
-            </a>
+        <div class="col-sm-6 col-xl-2">
+            <div class="p-3 @item.BGColor rounded overflow-hidden position-relative text-white mb-g">
+                <div class="">
+                    <a href="@item.ActionURL" class="text-white">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            <span class="format"> @item.Revenu</span>
+                            <small class="m-0 l-h-n"> <h3 class="fw-500"> @item.Name </h3> </small>
+                        </h3>
+                    </a>
+                </div>
+                <i class="fal fa-money-bill position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
+            </div>
         </div>
-        <i class="fal fa-money-bill position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
-    </div>
-</div>}
+    }
 </div>
 @if (Model.UnitsSummary.Count > 0)
 {
-<div class="row">
-    <div class="col-lg-12">
-        <button class="btn btn-primary waves-effect waves-themed float-right mb-g" onclick="PrintElem()">Print</button>
+    <div class="row">
+        <div class="col-lg-12">
+            <button class="btn btn-primary waves-effect waves-themed float-right mb-g" onclick="PrintElem()">Print</button>
+        </div>
     </div>
-</div>
-                <div class="row" id="toPrint">
-                    @foreach (var item in Model.UnitsSummary)
-                    {
-    <div class="col-xl-4 toPrintDiv">
-        <div id="panel-5" class="panel">
-            <div class="panel-hdr">
-                <h2>
-                    @item.CompoundName <span class="fw-300"><i></i></span>
-                </h2>
-                <div class="panel-toolbar">
-                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
-                    <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+    <div class="row" id="toPrint">
+        @foreach (var item in Model.UnitsSummary)
+        {
+            <div class="col-xl-4 toPrintDiv">
+                <div id="panel-5" class="panel">
+                    <div class="panel-hdr">
+                        <h2>
+                            @item.CompoundName <span class="fw-300"><i></i></span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                            <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <div class="frame-wrap">
+                                <table class="table table-bordered table-hover m-0 table-striped">
+                                    <thead class="thead-themed">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Occupied</th>
+                                            <th> Vacant</th>
+                                            <th class="text-info ">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var record in item.Items)
+                                        {
+                                            if (record.Type.Trim().Contains("Shop ") || record.Type.Trim().Contains("Store ") || record.Type.Trim().Contains("Warehouse ")) { continue; }
+                                            <tr>
+                                                <th>@record.Type</th>
+                                                <td>@record.Occupied</td>
+                                                <td>@record.Vacant</td>
+                                                <th class="text-info ">@record.Total</th>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th class="text-danger ">   Total  </th>
+                                            <td class="text-danger "> @item.TotalOccupied </td>
+                                            <td class="text-danger ">@item.TotalVacant</td>
+                                            <th class="text-danger ">@item.Total</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="panel-container show">
-                <div class="panel-content">
-                    <div class="frame-wrap">
-                        <table class="table table-bordered table-hover m-0 table-striped">
-                            <thead class="thead-themed">
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Occupied</th>
-                                    <th> Vacant</th>
-                                    <th class="text-info ">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var record in item.Items)
-                                {
-                                    if (record.Type.Trim().Contains("Shop ") || record.Type.Trim().Contains("Store ") || record.Type.Trim().Contains("Warehouse ")) { continue; }
-            <tr>
-                <th>@record.Type</th>
-                <td>@record.Occupied</td>
-                <td>@record.Vacant</td>
-                <th class="text-info ">@record.Total</th>
-            </tr>}
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th class="text-danger ">   Total  </th>
-                                    <td class="text-danger "> @item.TotalOccupied </td>
-                                    <td class="text-danger ">@item.TotalVacant</td>
-                                    <th class="text-danger ">@item.Total</th>
-                                </tr>
-                            </tfoot>
-                        </table>
+        }
+    </div>
+}
+@if (Model.occupancyRegions != null && Model.occupancyRegions.Count() > 0)
+{
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-5" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Occupancy of apartments Due Region
+                        <span class="fw-300"><i></i></span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <div class="frame-wrap">
+                            <table class="table table-bordered table-hover m-0 table-striped">
+                                <thead class="thead-themed">
+                                    <tr>
+                                        <th>Region</th>
+                                        <th>Total Appartment</th>
+                                        <th>occupied</th>
+                                        <th>non occupied</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.occupancyRegions)
+                                    {
+                                        <tr>
+                                            <td>@item.Region</td>
+                                            <td>@item.AppartmentNumber</td>
+                                            <td>@item.occupiedNumber</td>
+                                            <td>@item.NonOccupiedNumber</td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>}
-                </div>}
+
+    </div>
+}
 @if (Model.ExpectedIncomes.Count > 0)
 {
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-5" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Expected Income <span class="fw-300"><i></i></span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <div class="frame-wrap">
+                            <table class="table table-bordered table-hover m-0 table-striped">
+                                <thead class="thead-themed">
+                                    <tr>
+                                        <th></th>
+                                        @foreach (var month in Model.MonthsNames)
+                                        {
+                                            <th>@month</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ExpectedIncomes)
+                                    {
+                                        <tr>
+                                            <td>@item.CompoundName</td>
+                                            @foreach (var record in item.Items)
+                                            {
+                                                <td class="format">@record.Income</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td>Total</td>
+                                        @foreach (var item in Model.TotalExpectedIncome)
+                                        {
+                                            <td class="format">@item</td>
+                                        }
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
 <div class="row">
     <div class="col-xl-12">
         <div id="panel-5" class="panel">
@@ -141,350 +254,442 @@
                     <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
                 </div>
             </div>
-            <div class="panel-container show">
-                <div class="panel-content">
-                    <div class="frame-wrap">
-                        <table class="table table-bordered table-hover m-0 table-striped">
-                            <thead class="thead-themed">
-                                <tr>
-                                    <th></th>
-                                    @foreach (var month in Model.MonthsNames)
-                                    {
-                    <th>@month</th>}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.ExpectedIncomes)
-                                {
-                <tr>
-                    <td>@item.CompoundName</td>
-                    @foreach (var record in item.Items)
-                    {
-<td class="format">@record.Income</td>}
-                </tr>}
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>Total</td>
-                                    @foreach (var item in Model.TotalExpectedIncome)
-                                    {
-                    <td class="format">@item</td>}
-                                </tr>
-                            </tfoot>
-                        </table>
+            <div class="panel-container show row m-5">
+                <div class="col-sm-3">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">Start Date *</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="text" value="" class="form-control az-datepicker-3" autocomplete="off" required="" data-val="true" data-val-required="The Lease Start Date field is required." id="start-date" name="start-date">
+                                <div class="input-group-append">
+                                    <span class="input-group-text fs-xl">
+                                        <i class="fal fa-calendar-alt"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="start-data-invalid-feedback invalid-feedback field-validation-valid" data-valmsg-for="dtLeaseStart" data-valmsg-replace="false">
+                                Please enter a message in the textarea.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">End Date *</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="text" value="" class="form-control az-datepicker-3" autocomplete="off" required="" data-val="true" data-val-required="The Lease Start Date field is required." id="end-date" name="end-date">
+                                <div class="input-group-append">
+                                    <span class="input-group-text fs-xl">
+                                        <i class="fal fa-calendar-alt"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="end-data-invalid-feedback invalid-feedback field-validation-valid" data-valmsg-for="dtLeaseStart" data-valmsg-replace="false">
+                                Please enter a message in the textarea.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-form-label col-sm-3 text-sm-right form-label">location</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <select class="select2 form-control w-100 select2-hidden-accessible" id="location">
+                                    <option value="">All</option>
+                                    <option value="2" select-type="building">Buildings Srooh</option>
+                                    <option value="3" select-type="building">Buildings Hyam Alrasheed</option>
+                                    <option value="4" select-type="building">Buildings Uk</option>
+                                    <option value="1" select-type="building">Buildings</option>
+
+                                    <option value="4" select-type="compound">Daar Residence</option>
+                                    <option value="3" select-type="compound">Desert Rose</option>
+                                    <option value="2" select-type="compound">Meadow Park garden</option>
+                                    <option value="7" select-type="compound">Desert Appartements</option>
+                                    <option value="5" select-type="compound">24 Villa</option>
+                                    <option value="6" select-type="compound">Opal Compound</option>
+                                    <option value="8" select-type="compound">Sanus Compound</option>
+                                </select>
+                            </div>
+                            <span class="location invalid-feedback field-validation-valid" data-valmsg-for="dtLeaseStart" data-valmsg-replace="false">
+                                Please enter a message in the textarea.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <input type="button" value="Show" id="show-expected" />
+                </div>
+            </div>
+            <div class="row expected-income" style="display:none">
+                <div class="col-xl-12">
+                    <div id="panel-1">
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                <table id="ExpectedPaymentTable" class="table  table-bordered table-hover table-striped w-100">
+                                    <thead class="bg-primary-600">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Building</th>
+                                            <th>Unit</th>
+                                            <th>Contract Number</th>
+                                            <th>Amount</th>
+                                            <th>Paid By</th>
+                                            <th>Due Date</th>
+                                            <th>Representative</th>
+                                            <th class="noExport">Contract</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ExpectedPaymentBody">
+                                    </tbody>
+                                    <tfoot id="ExpectedPaymentFooter">
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-</div>}
+
 <div class="row">
     @foreach (var item in Model.UnitsPieChartSummary)
     {
-<div class="col-xl-4">
-    <div id="panel-9" class="panel">
-        <div class="panel-hdr">
-            <h2>
-                @item.PieChartName
-            </h2>
-            <div class="panel-toolbar">
-                <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
-                <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+        <div class="col-xl-4">
+            <div id="panel-9" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        @item.PieChartName
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <div id="@item.PieChartID" class="pieChart" data-vacant="@item.Vacant" data-occupied="@item.Occupied" style="width:100%; height:300px;"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="panel-container show">
-            <div class="panel-content">
-                <div id="@item.PieChartID" class="pieChart" data-vacant="@item.Vacant" data-occupied="@item.Occupied" style="width:100%; height:300px;"></div>
-            </div>
-        </div>
-    </div>
-</div>}
+    }
 </div>
 @if (Model.RepresentativeTable.ShowTable)
 {
-<div class="row">
-    <div class="col-xl-12">
-        <div id="panel-1" class="panel">
-            <div class="panel-hdr">
-                <h2 style="font-size: 150%; ">
-                    <span class="icon-stack icon-stack-lg">
-                        <i class="base-2 icon-stack-3x color-primary-400"></i>
-                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
-                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
-                    </span>   <span class="fw-500  text-primary">  Representatives  </span>
-                </h2>
-                <div class="panel-toolbar">
-                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2 style="font-size: 150%; ">
+                        <span class="icon-stack icon-stack-lg">
+                            <i class="base-2 icon-stack-3x color-primary-400"></i>
+                            <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                            <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                        </span>   <span class="fw-500  text-primary">  Representatives  </span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-container show">
-                <div class="panel-content">
-                    <!-- datatable start -->
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <!-- datatable start -->
                     <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
-                        <thead class="bg-primary-600">
-                            <tr>
-                                <th>#</th>
-                                <th>Representative </th>
-                                <th>Collected amounts </th>
-                                <th>Target amounts </th>
-                                <th>Difference </th>
-                                <th>New contracts </th>
-                                <th>Renewed contracts </th>
-                                <th>Commission </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.RepresentativeTable.Items.Select((v, i) => new { value = v, index = i }))
-                            {
-            <tr>
-                <td> @(item.index+1) </td>
-                <td> @item.value.Name</td>
-                <td> <span class="format">@item.value.CollectedAmount</span> SAR </td>
-                <td> <span class="format">@item.value.DueAmount</span> SAR </td>
-                <td> <span class="format">@item.value.Difference</span> SAR </td>
-                <td> @item.value.NewContracts </td>
-                <td> @item.value.RenewedContracts </td>
-                <td><span class="format">@item.value.Commission</span> SAR </td>
-            </tr>}
-                        </tbody>
-                        <tfoot class="thead-themed">
-                            <tr>
-                                <th class="text-danger ">Total</th>
-                                <th> </th>
-                                <th class="text-danger "> <span class="format">@Model.RepresentativeTable.TotalCollectedAmount</span> SAR</th>
-                                <th class="text-danger "> <span class="format">@Model.RepresentativeTable.TotalTargetAmount</span> SAR</th>
-                                <th class="text-danger "> <span class="format">@Model.RepresentativeTable.TotalDifferenceAmount</span> SAR</th>
-                                <th class="text-danger ">@Model.RepresentativeTable.TotalNewContracts </th>
-                                <th class="text-danger">@Model.RepresentativeTable.TotalRenewedContracts</th>
-                                <th class="text-danger"> <span class="format">@Model.RepresentativeTable.TotalCommission</span> SAR</th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                    <!-- datatable end -->
+                            <thead class="bg-primary-600">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Representative </th>
+                                    <th>Collected amounts </th>
+                                    <th>Target amounts </th>
+                                    <th>Difference </th>
+                                    <th>New contracts </th>
+                                    <th>Renewed contracts </th>
+                                    <th>Commission </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.RepresentativeTable.Items.Select((v, i) => new { value = v, index = i }))
+                                {
+                                    <tr>
+                                        <td> @(item.index+1) </td>
+                                        <td> @item.value.Name</td>
+                                        <td> <span class="format">@item.value.CollectedAmount</span> SAR </td>
+                                        <td> <span class="format">@item.value.DueAmount</span> SAR </td>
+                                        <td> <span class="format">@item.value.Difference</span> SAR </td>
+                                        <td> @item.value.NewContracts </td>
+                                        <td> @item.value.RenewedContracts </td>
+                                        <td><span class="format">@item.value.Commission</span> SAR </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="thead-themed">
+                                <tr>
+                                    <th class="text-danger ">Total</th>
+                                    <th> </th>
+                                    <th class="text-danger "> <span class="format">@Model.RepresentativeTable.TotalCollectedAmount</span> SAR</th>
+                                    <th class="text-danger "> <span class="format">@Model.RepresentativeTable.TotalTargetAmount</span> SAR</th>
+                                    <th class="text-danger "> <span class="format">@Model.RepresentativeTable.TotalDifferenceAmount</span> SAR</th>
+                                    <th class="text-danger ">@Model.RepresentativeTable.TotalNewContracts </th>
+                                    <th class="text-danger">@Model.RepresentativeTable.TotalRenewedContracts</th>
+                                    <th class="text-danger"> <span class="format">@Model.RepresentativeTable.TotalCommission</span> SAR</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <!-- datatable end -->
+                </div>
                 </div>
             </div>
         </div>
     </div>
-</div>}
+}
 @if (isAdmin)
 {
-<div class="row">
-    <div class="col-lg-12">
-        <div id="panel-2" class="panel">
-            <div class="panel-hdr">
-                <h2>
-                    Representatives
-                </h2>
-                <div class="panel-toolbar w-25">
-                    <select class="select2Edited  w-100" id="representativesIDs" asp-items="ViewBag.Representatives">
-                        <option value="" disabled selected>Select Representative</option>
-                    </select>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="panel-2" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Representatives
+                    </h2>
+                    <div class="panel-toolbar w-25">
+                        <select class="select2Edited  w-100" id="representativesIDs" asp-items="ViewBag.Representatives">
+                            <option value="" disabled selected>Select Representative</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-container show">
-                <div class="panel-content poisition-relative">
-                    @*<div class="p-1 position-absolute pos-right pos-top mt-3 mr-3 z-index-cloud d-flex align-items-center justify-content-center">
+                <div class="panel-container show">
+                    <div class="panel-content poisition-relative">
+                        @*<div class="p-1 position-absolute pos-right pos-top mt-3 mr-3 z-index-cloud d-flex align-items-center justify-content-center">
                             <div class="border-faded border-top-0 border-left-0 border-bottom-0 py-2 pr-4 mr-3 hidden-sm-down">
-                                <div class="text-right fw-500 l-h-n d-flex flex-column">
-                                    <div class="h3 m-0 d-flex align-items-center justify-content-end">
-                                        <div class='icon-stack mr-2'>
-                                            <i class="base base-7 icon-stack-3x opacity-100 color-success-600"></i>
-                                            <i class="base base-7 icon-stack-2x opacity-100 color-success-500"></i>
-                                            <i class="fal fa-arrow-up icon-stack-1x opacity-100 color-white"></i>
-                                        </div>
-                                        $44.34 / GE
-                                    </div>
-                                    <span class="m-0 fs-xs text-muted">Increased Profit as per redux margins and estimates</span>
-                                </div>
+                            <div class="text-right fw-500 l-h-n d-flex flex-column">
+                            <div class="h3 m-0 d-flex align-items-center justify-content-end">
+                            <div class='icon-stack mr-2'>
+                            <i class="base base-7 icon-stack-3x opacity-100 color-success-600"></i>
+                            <i class="base base-7 icon-stack-2x opacity-100 color-success-500"></i>
+                            <i class="fal fa-arrow-up icon-stack-1x opacity-100 color-white"></i>
+                            </div>
+                            $44.34 / GE
+                            </div>
+                            <span class="m-0 fs-xs text-muted">Increased Profit as per redux margins and estimates</span>
+                            </div>
                             </div>
                             <div class="js-easy-pie-chart color-info-400 position-relative d-inline-flex align-items-center justify-content-center" data-percent="35" data-piesize="95" data-linewidth="10" data-scalelength="5">
-                                <div class="js-easy-pie-chart color-success-400 position-relative position-absolute pos-left pos-right pos-top pos-bottom d-flex align-items-center justify-content-center" data-percent="65" data-piesize="60" data-linewidth="5" data-scalelength="1" data-scalecolor="#fff">
-                                    <div class="position-absolute pos-top pos-left pos-right pos-bottom d-flex align-items-center justify-content-center fw-500 fs-xl text-dark">78%</div>
-                                </div>
+                            <div class="js-easy-pie-chart color-success-400 position-relative position-absolute pos-left pos-right pos-top pos-bottom d-flex align-items-center justify-content-center" data-percent="65" data-piesize="60" data-linewidth="5" data-scalelength="1" data-scalecolor="#fff">
+                            <div class="position-absolute pos-top pos-left pos-right pos-bottom d-flex align-items-center justify-content-center fw-500 fs-xl text-dark">78%</div>
                             </div>
-                        </div>*@
-                    <div id="container" style="width:100%; height:300px;"></div>
+                            </div>
+                            </div>*@
+                        <div id="container" style="width:100%; height:300px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>}
+}
 <div class="row">
     @if (hasBuildingAccess)
     {
-<div class="col-lg-12">
-    <div id="panel-1" class="panel">
-        <div class="panel-hdr">
-            <h2>
-                Buildings
-            </h2>
-        </div>
-        <div class="panel-container show">
-            <div class="panel-content bg-subtlelight-fade">
-                <div id="building-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+        <div class="col-lg-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Buildings
+                    </h2>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content bg-subtlelight-fade">
+                        <div id="building-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>}
+    }
     @if (hasMeadowParkAccess)
     {
-<div class="col-lg-12">
-    <div id="panel-1" class="panel">
-        <div class="panel-hdr">
-            <h2>
-                Meadow Park Garden
-            </h2>
-        </div>
-        <div class="panel-container show">
-            <div class="panel-content bg-subtlelight-fade">
-                <div id="meadow-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+        <div class="col-lg-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Meadow Park Garden
+                    </h2>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content bg-subtlelight-fade">
+                        <div id="meadow-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>}
+    }
     @if (hasDaarResidenceAccess)
     {
-<div class="col-lg-12">
-    <div id="panel-1" class="panel">
-        <div class="panel-hdr">
-            <h2>
-                Daar Residence
-            </h2>
-        </div>
-        <div class="panel-container show">
-            <div class="panel-content bg-subtlelight-fade">
-                <div id="daar-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+        <div class="col-lg-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Daar Residence
+                    </h2>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content bg-subtlelight-fade">
+                        <div id="daar-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>}
+    }
     @if (hasDesertRoseAccess)
     {
-<div class="col-lg-12">
-    <div id="panel-1" class="panel">
-        <div class="panel-hdr">
-            <h2>
-                Desert Rose
-            </h2>
-        </div>
-        <div class="panel-container show">
-            <div class="panel-content bg-subtlelight-fade">
-                <div id="desert-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+        <div class="col-lg-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Desert Rose
+                    </h2>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content bg-subtlelight-fade">
+                        <div id="desert-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>}
+    }
     @if (hasVilla24Access)
     {
-<div class="col-lg-12">
-    <div id="panel-1" class="panel">
-        <div class="panel-hdr">
-            <h2>
-                24 Villa
-            </h2>
-        </div>
-        <div class="panel-container show">
-            <div class="panel-content bg-subtlelight-fade">
-                <div id="villa24-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+        <div class="col-lg-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        24 Villa
+                    </h2>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content bg-subtlelight-fade">
+                        <div id="villa24-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>}
+    }
     @if (hasVilla21Access)
     {
-<div class="col-lg-12">
-    <div id="panel-1" class="panel">
-        <div class="panel-hdr">
-            <h2>
-                Opal Compound
-            </h2>
-        </div>
-        <div class="panel-container show">
-            <div class="panel-content bg-subtlelight-fade">
-                <div id="villa21-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+        <div class="col-lg-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Opal Compound
+                    </h2>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content bg-subtlelight-fade">
+                        <div id="villa21-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>}
+    }
+    @if (hasSanusCompoundAccess)
+    {
+        <div class="col-lg-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Sanus Compound
+                    </h2>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content bg-subtlelight-fade">
+                        <div id="SanusCompound-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
     @if (hasDesertApartmentsDashboardAccess)
     {
-<div class="col-lg-12">
-    <div id="panel-1" class="panel">
-        <div class="panel-hdr">
-            <h2>
-                Desert Apartments
-            </h2>
-        </div>
-        <div class="panel-container show">
-            <div class="panel-content bg-subtlelight-fade">
-                <div id="DesertApartments-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+        <div class="col-lg-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Desert Apartments
+                    </h2>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content bg-subtlelight-fade">
+                        <div id="DesertApartments-dashboard" class="w-100 mt-4" style="height: 300px"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>}
+    }
 </div>
 
 @section ScriptsBlock{
-    <script src="~/js/statistics/d3/d3.js"></script>
-    <script src="~/js/statistics/c3/c3.js"></script>
-    <script src="~/js/statistics/demo-data/demo-c3.js"></script>
-    <script>
-        function PrintElem() {
-            var mywindow = window.open('', 'PRINT', 'height=400,width=600');
-            mywindow.document.write('<html><head><title>Units</title>');
-            mywindow.document.write('<link rel="stylesheet" media="screen, print" href="@($"{_con["BaseUrl"]}/css/vendors.bundle.css")" />');
-            mywindow.document.write('<link rel="stylesheet" media="screen, print" href="@($"{_con["BaseUrl"]}/css/app.bundle.css")" />');
-            mywindow.document.write('<link rel="stylesheet" media="screen, print" href="@($"{_con["BaseUrl"]}/css/themes/cust-theme-3.css")" />');
-            mywindow.document.write('<style>' +
-                '@@media print {'+
-                'div.toPrintDiv { page-break-inside: avoid;}'+
-            '}'+
-                '</style >');
-            mywindow.document.write('</head><body >');
-            mywindow.document.write(document.getElementById("toPrint").innerHTML);
-            mywindow.document.write('</body></html>');
+<script src="~/js/statistics/d3/d3.js"></script>
+<script src="~/js/statistics/c3/c3.js"></script>
+<script src="~/js/statistics/demo-data/demo-c3.js"></script>
+<script>
+    function PrintElem() {
+        var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+        mywindow.document.write('<html><head><title>Units</title>');
+        mywindow.document.write('<link rel="stylesheet" media="screen, print" href="@($"{_con["BaseUrl"]}/css/vendors.bundle.css")" />');
+        mywindow.document.write('<link rel="stylesheet" media="screen, print" href="@($"{_con["BaseUrl"]}/css/app.bundle.css")" />');
+        mywindow.document.write('<link rel="stylesheet" media="screen, print" href="@($"{_con["BaseUrl"]}/css/themes/cust-theme-3.css")" />');
+        mywindow.document.write('<style>' +
+            '@@media print {'+
+            'div.toPrintDiv { page-break-inside: avoid;}'+
+        '}'+
+            '</style >');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(document.getElementById("toPrint").innerHTML);
+        mywindow.document.write('</body></html>');
 
-            mywindow.document.close(); // necessary for IE >= 10
-            mywindow.focus(); // necessary for IE >= 10*/
-            setTimeout(function () {
-                mywindow.print();
-                mywindow.close();
-                return true;
-            }, 1000);
-        }
-        var colors = [color.success._500, color.danger._500, color.info._500, color.primary._500, color.warning._500]
-        function getTooltip(label, x, y) {
-            return "Expected " + numberWithCommas(y);
-        }
-        function getTooltipForRepresentitaves(label, x, y) {
-            return label + " " + numberWithCommas(y);
-        }
-        function intializePieChart(vacant, occupied, barChartID) {
-            c3.generate({
-                bindto: barChartID,
-                data: {
-                    columns: [
-                        ['Occupied', occupied],
-                        ['Vacant', vacant],
-                    ],
-                    type: 'pie'
-                },
-                color: {
-                    pattern: colors
-                }
-            })
-        }
-        $(function () {
-            initializeCustomDataTable('.az-datatable2');
-            $('.pieChart').each(function () {
-                var $elem = $(this);
-                intializePieChart($elem.attr("data-vacant"), $elem.attr("data-occupied"), "#" + $elem.attr("id"));
-            });
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+        setTimeout(function () {
+            mywindow.print();
+            mywindow.close();
+            return true;
+        }, 1000);
+    }
+    var colors = [color.success._500, color.danger._500, color.info._500, color.primary._500, color.warning._500]
+    function getTooltip(label, x, y) {
+        return "Expected " + numberWithCommas(y);
+    }
+    function getTooltipForRepresentitaves(label, x, y) {
+        return label + " " + numberWithCommas(y);
+    }
+    function intializePieChart(vacant, occupied, barChartID) {
+        c3.generate({
+            bindto: barChartID,
+            data: {
+                columns: [
+                    ['Occupied', occupied],
+                    ['Vacant', vacant],
+                ],
+                type: 'pie'
+            },
+            color: {
+                pattern: colors
+            }
+        })
+    }
+    $(function () {
+        initializeCustomDataTable('.az-datatable2');
+        $('.pieChart').each(function () {
+            var $elem = $(this);
+            intializePieChart($elem.attr("data-vacant"), $elem.attr("data-occupied"), "#" + $elem.attr("id"));
         });
-    </script>
+    });
+</script>
     @if (hasBuildingAccess)
     {
 <script>
@@ -558,196 +763,317 @@
             }
         });
     });
-</script>}
+</script>
+}
     @if (isAdmin)
     {
 <script>
-            $('#representativesIDs').change(function () {
-                $.get('@Url.Action("GetRepresentitaveDashboard")', { representitaveID: $(this).val() }, function (result) {
-                    $('#container').html('');
-                    var targetData = [];
-                    var actualData = [];
-                    $.each(result, function (index, value) {
-                        var date = new Date(value.seconds); // some mock date
-                        var milliseconds = date.getTime();
-                        targetData.push([milliseconds, value.target]);
-                        actualData.push([milliseconds, value.actual]);
-                    });
-                    debugger;
-                    $.plot($('#container'), [
-                        {
-                            data: targetData,
-                            label: 'Target',
-                            color: color.success._200
-                        },
-                        {
-                            data: actualData,
-                            label: 'Actual',
-                            color: color.info._200
-                        }],
-                        {
-                            series:
-                            {
-                                lines:
-                                {
-                                    show: true,
-                                    lineWidth: 2,
-                                    fill: true,
-                                    fillColor:
-                                    {
-                                        colors: [
-                                            {
-                                                opacity: 0
-                                            },
-                                            {
-                                                opacity: 0.5
-                                            }]
-                                    }
-                                },
-                                shadowSize: 0
-                            },
-                            points:
-                            {
-                                show: true,
-                            },
-                            legend:
-                            {
-                                noColumns: 1,
-                                position: 'nw'
-                            },
-                            grid:
-                            {
-                                hoverable: true,
-                                clickable: true,
-                                borderColor: '#ddd',
-                                tickColor: '#ddd',
-                                aboveData: true,
-                                borderWidth: 0,
-                                labelMargin: 5,
-                                backgroundColor: 'transparent'
-                            },
-                            yaxis:
-                            {
-                                tickLength: 1,
-                                min: 0,
-                                color: '#eee'
-                            },
-                            xaxis:
-                            {
-                                mode: "time",
-                                timeBase: "milliseconds",
-                                tickLength: 1,
-                                color: '#eee',
-                                font:
-                                {
-                                    size: 10,
-                                    color: '#999'
-                                }
-                            },
-                            tooltip: true,
-                            tooltipOpts:
-                            {
-                                content: getTooltipForRepresentitaves,
-                                cssClass: 'tooltip-inner',
-                                defaultTheme: false
-                            },
-                        });
-                });
+    $('#representativesIDs').change(function () {
+        $.get('@Url.Action("GetRepresentitaveDashboard")', { representitaveID: $(this).val() }, function (result) {
+            $('#container').html('');
+            var targetData = [];
+            var actualData = [];
+            $.each(result, function (index, value) {
+                var date = new Date(value.seconds); // some mock date
+                var milliseconds = date.getTime();
+                targetData.push([milliseconds, value.target]);
+                actualData.push([milliseconds, value.actual]);
             });
-</script>}
-    <script>
-        $(function () {
-            columnNumberWithCommas('format');
-            fillCompoundsCharts();
-        })
-        var fillCompoundsCharts = function () {
-            if ("@hasMeadowParkAccess" == "True") {
-                fillCompoundsChart(2, 'meadow-dashboard','Meadow Park Garden');
-            }
-            if ("@hasDaarResidenceAccess" == "True") {
-                fillCompoundsChart(4, 'daar-dashboard','Daar Residence');
-            }
-            if ("@hasDesertRoseAccess" == "True") {
-                 fillCompoundsChart(3, 'desert-dashboard','Desert Rose');
-            }
-            if ("@hasVilla24Access" == "True") {
-                 fillCompoundsChart(5, 'villa24-dashboard','24 Villa');
-             }
-             if ("@hasVilla21Access" == "True"){
-                 fillCompoundsChart(6, 'villa21-dashboard','Opal Compound');
-            }
-            if ("@hasDesertApartmentsDashboardAccess" == "True") {
-                fillCompoundsChart(7, 'DesertApartments-dashboard', 'Desert Apartments');
-             }
-        }
-        function fillCompoundsChart(compoundId, canvasId,label) {
-            $.get('/Home/GetCompoundsDashboard', { compoundID: compoundId }, function (result) {
-                var buildingData = [];
-                $.each(result, function (index, value) {
-                    var date = new Date(value.seconds); // some mock date
-                    var milliseconds = date.getTime();
-                    buildingData.push([milliseconds, value.value]);
-                });
-                var data = [{
-                    label: label,
-                    data: buildingData,
-                    color: color.info._400,
-                    bars:
+            debugger;
+            $.plot($('#container'), [
+                {
+                    data: targetData,
+                    label: 'Target',
+                    color: color.success._200
+                },
+                {
+                    data: actualData,
+                    label: 'Actual',
+                    color: color.info._200
+                }],
+                {
+                    series:
+                    {
+                        lines:
+                        {
+                            show: true,
+                            lineWidth: 2,
+                            fill: true,
+                            fillColor:
+                            {
+                                colors: [
+                                    {
+                                        opacity: 0
+                                    },
+                                    {
+                                        opacity: 0.5
+                                    }]
+                            }
+                        },
+                        shadowSize: 0
+                    },
+                    points:
                     {
                         show: true,
-                        align: "center",
-                        barWidth: 10 * 30 * 60 * 1000 * 80,
-                        lineWidth: 0,
-                        fillColor: {
-                            colors: [color.primary._500, color.primary._900]
-                        },
-                        fillColor:
-                        {
-                            colors: [
-                                {
-                                    opacity: 0.9
-                                },
-                                {
-                                    opacity: 0.1
-                                }]
-                        }
                     },
-                    highlightColor: 'rgba(255,255,255,0.3)',
-                    shadowSize: 0
-                }];
-                var options = {
+                    legend:
+                    {
+                        noColumns: 1,
+                        position: 'nw'
+                    },
                     grid:
                     {
                         hoverable: true,
                         clickable: true,
-                        tickColor: '#f2f2f2',
-                        borderWidth: 1,
-                        borderColor: '#f2f2f2'
+                        borderColor: '#ddd',
+                        tickColor: '#ddd',
+                        aboveData: true,
+                        borderWidth: 0,
+                        labelMargin: 5,
+                        backgroundColor: 'transparent'
+                    },
+                    yaxis:
+                    {
+                        tickLength: 1,
+                        min: 0,
+                        color: '#eee'
+                    },
+                    xaxis:
+                    {
+                        mode: "time",
+                        timeBase: "milliseconds",
+                        tickLength: 1,
+                        color: '#eee',
+                        font:
+                        {
+                            size: 10,
+                            color: '#999'
+                        }
                     },
                     tooltip: true,
                     tooltipOpts:
                     {
-                        content: getTooltip,
+                        content: getTooltipForRepresentitaves,
                         cssClass: 'tooltip-inner',
                         defaultTheme: false
                     },
-                    xaxis:
-                    {
-                        mode: "time"
-                    },
-                    yaxes:
-                    {
-                        //tickFormatter: function (val, axis) {
-                        //    return "$" + val;
-                        //},
-                        //max: 1200
-                    }
-                };
-                var d = [data[0]];
-                if (d.length > 0) {
-                    $.plot($("#" + canvasId), d, options);
-                }
-            });
+                });
+        });
+    });
+</script>
+}
+<script>
+    $(function () {
+        columnNumberWithCommas('format');
+        fillCompoundsCharts();
+    })
+    var fillCompoundsCharts = function () {
+        if ("@hasMeadowParkAccess" == "True") {
+            fillCompoundsChart(2, 'meadow-dashboard','Meadow Park Garden');
         }
-    </script>
+        if ("@hasDaarResidenceAccess" == "True") {
+            fillCompoundsChart(4, 'daar-dashboard','Daar Residence');
+        }
+        if ("@hasDesertRoseAccess" == "True") {
+             fillCompoundsChart(3, 'desert-dashboard','Desert Rose');
+        }
+        if ("@hasVilla24Access" == "True") {
+             fillCompoundsChart(5, 'villa24-dashboard','24 Villa');
+         }
+         if ("@hasVilla21Access" == "True"){
+             fillCompoundsChart(6, 'villa21-dashboard','Opal Compound');
+         }
+        if ("@hasDesertApartmentsDashboardAccess" == "True") {
+            fillCompoundsChart(7, 'DesertApartments-dashboard', 'Desert Apartments');
+         }
+        if ("@hasSanusCompoundAccess" == "True"){
+             fillCompoundsChart(8, 'SanusCompound-dashboard','Sanus Compound');
+        }
+
+    }
+    function fillCompoundsChart(compoundId, canvasId,label) {
+        $.get('/Home/GetCompoundsDashboard', { compoundID: compoundId }, function (result) {
+            var buildingData = [];
+            $.each(result, function (index, value) {
+                var date = new Date(value.seconds); // some mock date
+                var milliseconds = date.getTime();
+                buildingData.push([milliseconds, value.value]);
+            });
+            var data = [{
+                label: label,
+                data: buildingData,
+                color: color.info._400,
+                bars:
+                {
+                    show: true,
+                    align: "center",
+                    barWidth: 10 * 30 * 60 * 1000 * 80,
+                    lineWidth: 0,
+                    fillColor: {
+                        colors: [color.primary._500, color.primary._900]
+                    },
+                    fillColor:
+                    {
+                        colors: [
+                            {
+                                opacity: 0.9
+                            },
+                            {
+                                opacity: 0.1
+                            }]
+                    }
+                },
+                highlightColor: 'rgba(255,255,255,0.3)',
+                shadowSize: 0
+            }];
+            var options = {
+                grid:
+                {
+                    hoverable: true,
+                    clickable: true,
+                    tickColor: '#f2f2f2',
+                    borderWidth: 1,
+                    borderColor: '#f2f2f2'
+                },
+                tooltip: true,
+                tooltipOpts:
+                {
+                    content: getTooltip,
+                    cssClass: 'tooltip-inner',
+                    defaultTheme: false
+                },
+                xaxis:
+                {
+                    mode: "time"
+                },
+                yaxes:
+                {
+                    //tickFormatter: function (val, axis) {
+                    //    return "$" + val;
+                    //},
+                    //max: 1200
+                }
+            };
+            var d = [data[0]];
+            if (d.length > 0) {
+                $.plot($("#" + canvasId), d, options);
+            }
+        });
+    }
+    
+    $("#show-expected").click(()=>{
+         var startDate = $("#start-date").val(),
+         lastDate = $("#end-date").val(),
+         location = $("#location").val(),
+         type = $("#location :selected").attr("select-type");
+
+         $(".start-data-invalid-feedback").hide();
+         $(".end-data-invalid-feedback").hide();
+         $(".location").hide();
+       if(!startDate){
+            $(".start-data-invalid-feedback").text("Start Date must have Date");
+            $(".start-data-invalid-feedback").show();
+            return;
+
+       }
+        if(!lastDate){
+            $(".end-data-invalid-feedback").text("End Date must have Date");
+            $(".end-data-invalid-feedback").show();
+            return;
+
+       }
+        if(!location){
+            $(".location").text("location must Value");
+            $(".location").show();
+            return;
+
+       }
+
+       if(startDate > lastDate){
+            $(".start-data-invalid-feedback").text("Start Date must  be before End Date");
+            $(".start-data-invalid-feedback").show();
+            console.log("start > last")
+            return;
+        }
+
+        var url = null;
+         if(type === "compound"){
+             url = '@Url.Content("~/")' +"Home/ExpectedPaymentDetails?start="+startDate+"&end="+lastDate+"&compoundID="+location
+         }else if(type === "building"){
+             url = '@Url.Content("~/")' +"Home/ExpectedPaymentDetails?start="+startDate+"&end="+lastDate+"&pageid="+location
+         }else{
+             url = '@Url.Content("~/")' + "Home/ExpectedPaymentDetails?start="+startDate+"&end="+lastDate
+         }
+        $.getJSON(url,{}, function (data) {
+                var newhtmlduerents = "";
+                var total = 0;
+                $(".expected-income").html(`
+                     <div class="col-xl-12">
+                    <div id="panel-1">
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                <table id="ExpectedPaymentTable" class="table  table-bordered table-hover table-striped w-100">
+                                    <thead class="bg-primary-600">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Building</th>
+                                            <th>Unit</th>
+                                            <th>Contract Number</th>
+                                            <th>Amount</th>
+                                            <th>Paid By</th>
+                                            <th>Due Date</th>
+                                            <th>Representative</th>
+                                            <th class="noExport">Contract</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ExpectedPaymentBody">
+                                    </tbody>
+                                    <tfoot id="ExpectedPaymentFooter">
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `);
+                
+
+                $.each(data, function (i, row) {
+                    newhtmlduerents += '<tr> ' +
+                        '<td>' + (parseInt(i) + 1) + '</td> ' +
+                        '<td> ' + row.building + ' </td>' +
+                        '<td> ' + row.unit + ' </td>' +
+                        '<td> ' + row.contractNumber + ' </td>' +
+                        '<td class="formatNumber"> ' + numberWithCommas(row.paidAmount) + ' </td>' +
+                        '<td> ' + row.paidBy + ' </td>' +
+                        '<td> ' + row.paymentDate + ' </td>' +
+                        '<td> ' + row.mandoob + ' </td>' +
+                        '<td>' +
+                        '<a href="'+ (row.isBuilding ? '/UnitRentContract/Details/' : '/UnitRentContractCompound/Details/') + row.contractID + '" title="Contract" class="btn btn-secondary waves-effect waves-themed">Contract</a>' +
+                        '</td>' +
+                         '</tr>';
+                    total += row.paidAmount;
+                });
+
+                $("#ExpectedPaymentFooter").html(`<tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th class="formatNumber">`+numberWithCommas(total)+`</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            </tr>`);
+                $('#ExpectedPaymentBody').html(newhtmlduerents);
+
+                $(".expected-income").show();
+                reinitializeDataTable("ExpectedPaymentTable");
+                initializeFilteredDataTable("ExpectedPaymentTable");
+                columnNumberWithCommas('formatNumber');
+            });
+
+    });
+</script>
 }

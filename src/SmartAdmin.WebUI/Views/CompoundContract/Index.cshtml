@@ -1,0 +1,87 @@
+﻿@model IEnumerable<SmartAdmin.WebUI.Models.CompoundContracts>
+
+@{
+    ViewData["Title"] = "Compounds Contracts";
+    ViewData["PageName"] = "Compounds Contracts";
+    ViewData["Heading"] = "<i class='fal fa-th-list text-primary'></i> Compounds Contracts";
+    ViewData["Category1"] = "Compounds Contracts";
+    ViewData["PageDescription"] = "";
+}
+
+<div class="row mb-3">
+    <div class="col">
+        <div class="panel-tag">
+            <p>
+                <a asp-action="Create" class="btn btn-primary btn-lg btn-block waves-effect waves-themed">
+                    <span>Add New Compound Contract</span>
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="panel-1" class="panel">
+    <div class="panel-hdr">
+        <h2 style="font-size: 150%; ">
+            <span class="icon-stack icon-stack-lg">
+                <i class="base-2 icon-stack-3x color-primary-400"></i>
+                <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+            </span>   <span class="fw-500  text-primary"> Total Contracts :  </span> &nbsp;<span class="color-danger-500"> @Model.Count()  </span>
+        </h2>
+        <div class="panel-toolbar" id="selectContainer">
+        </div>
+        <div class="panel-toolbar">
+            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+
+        </div>
+    </div>
+    <div class="panel-container show">
+        <div class="panel-content">
+            <!-- datatable start -->
+            <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+                <thead class="bg-primary-600">
+                    <tr>
+                        <th>#</th>
+                        <th>Compound Name</th>
+                        <th>Lease start Date </th>
+                        <th>Lease end Date </th>
+                        <th class="noExport">Operations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Select((value, i) => new { i, value }))
+                    {
+                        <tr>
+                            <td>
+                                @(item.i + 1 )
+                            </td>
+                             <td>
+                                @item.value.CompoundName
+                            </td>
+                            <td>
+                                @item.value.dtLeaseStart.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.value.dtLeaseEnd.ToShortDateString()
+                            </td>
+                            <td>
+                                <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-action="Details" title="Details" asp-route-id=@item.value.Id>Details</a>
+                                            @*<a class="dropdown-item" asp-action="Edit" title="Edit" asp-route-id=@item.value.Id>Edit</a>*@
+                                            <a class="dropdown-item" asp-action="Delete" title="Delete" asp-route-id=@item.value.Id>Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

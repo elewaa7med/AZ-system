@@ -37,16 +37,24 @@
                         <th>Unit </th>
                         <th>Type </th>
                         <th>Yearly Rent </th>
+                        <th>Paid Amount</th>
+                        <th>Remaning Amount</th>
                         <th>Tenant </th>
+                        <th>Id/Iqama number </th>
+                        <th>Phone Number </th>
+                        <th>Emergency Phone Number </th>
                         <th>Representative </th>
                         <th>Leas start Date </th>
                         <th>Lease Rent in Months </th>
                         <th>Lease end Date </th>
+                        <th>Payment Method</th>
                         <th class="noExport">Operations</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @{ string block = "", Unblock = "";}
+                    @{
+                        string block = "", Unblock = "";
+                    }
                     @foreach (var item in Model.Select((value, i) => new { i, value }))
                     {
                         block = item.value.Blocked ? "style=display:none" : "style=display:block";
@@ -67,8 +75,23 @@
                             <td class="formatNumber">
                                 @(item.value.yearlyRent-(item.value.WaterBillAmount??0))
                             </td>
+                            <td class="formatNumber">
+                                @item.value.paidAmount
+                            </td>
+                            <td class="formatNumber">
+                                @item.value.remainingAmount
+                            </td>
                             <td>
                                 @item.value.mTenant?.tenantName
+                            </td>
+                            <td>
+                                @item.value.mTenant?.tenantMobile
+                            </td>
+                            <td>
+                                @item.value.mTenant?.IqamaNo
+                            </td>
+                            <td>
+                                @item.value.mTenant?.emergencyPhone
                             </td>
                             <td>
                                 @item.value.Mandoob?.fullName
@@ -81,6 +104,28 @@
                             </td>
                             <td>
                                 @item.value.dtLeaseEnd.ToShortDateString()
+                            </td>
+                            <td>
+                                @if (@item.value.paymentMethod == 1)
+                                {
+                                    <span>Every (1) Month</span>
+                                } 
+                                else if(@item.value.paymentMethod == 2)
+                                {
+                                    <span>Every (3) Three Months</span>
+                                }
+                                else if (@item.value.paymentMethod == 3)
+                                {
+                                    <span>Every (4) Four Months</span>
+                                }
+                                else if (@item.value.paymentMethod == 4)
+                                {
+                                    <span>Every (6) Six Months</span>
+                                }
+                                else if (@item.value.paymentMethod  == 5)
+                                {
+                                    <span>Every (12) Twelve Months</span>
+                                }
                             </td>
                             <td>
                                 <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
@@ -116,7 +161,9 @@
                                             {
                                                 <a class="dropdown-item" asp-action="Notes" asp-controller="UnitRentContractCompound" asp-route-id=@item.value.IdRentContract> Notes</a>
                                             }
-                                            <a class="dropdown-item block" @block data-id="@item.value.IdRentContract" id="block-@item.value.IdRentContract" >Block</a>
+                                            <a class="dropdown-item" asp-action="UnitHistory" title="Details" asp-route-unitId=@item.value.IdUnitCompound>Unit History</a>
+                                            <a class="dropdown-item" asp-action="TenantHistory" title="Details" asp-route-TenentId=@item.value.IdTenant>Tenant History</a>
+                                            <a class="dropdown-item block" @block data-id="@item.value.IdRentContract" id="block-@item.value.IdRentContract">Block</a>
                                             <a class="dropdown-item unblock" @Unblock data-id="@item.value.IdRentContract" id="unblock-@item.value.IdRentContract">Un Block</a>
                                             <a class="dropdown-item" target="_blank" asp-action="ContractPrint" asp-controller="UnitRentContractCompound" asp-route-id=@item.value.IdRentContract> Print</a>
                                         </div>
@@ -133,6 +180,12 @@
                         <td></td>
                         <td></td>
                         <td class="formatNumber">@(Model.Sum(x=>x.yearlyRent) - (Model.Sum(x=>x.WaterBillAmount) ?? 0))</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -182,4 +235,5 @@
             $(this).text(numberWithCommas($(this).text()));
         });
     });
+
 </script>

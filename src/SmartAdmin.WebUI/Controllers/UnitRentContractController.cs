@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using ZXing;
+using ZXing.QrCode;
 
 namespace SmartAdmin.WebUI.Controllers
 {
@@ -26,19 +32,19 @@ namespace SmartAdmin.WebUI.Controllers
     public class UnitRentContractController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        private readonly IHostingEnvironment _env;
         private readonly UserManager<ApplicationUser> _user;
-
         private readonly IFileProvider _fileProvider;
         NumberToTextLogic _numberToTextLogic;
-        public UnitRentContractController(ApplicationDbContext context, UserManager<ApplicationUser> user, IFileProvider fileProvider)
+        public UnitRentContractController(ApplicationDbContext context, UserManager<ApplicationUser> user, IFileProvider fileProvider, IHostingEnvironment env)
         {
             _context = context;
             _user = user;
             _fileProvider = fileProvider;
             _numberToTextLogic = new NumberToTextLogic(new CurrencyInfoLogic(Currency.SaudiArabia));
+            _env = env;
         }
-        
+
         public async Task<IActionResult> Index(int id, string representitveId = null)
         {
             representitveId = representitveId == "null" ? null : representitveId;
@@ -63,10 +69,10 @@ namespace SmartAdmin.WebUI.Controllers
                 .Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(representitveId) ? null : representitveId);
                 ViewBag.RepresentitveId = representitveId;
             }
-
-            return View(await applicationDbContext.Where(e => e.AddedtoCourt == false && e.mMasterBuilding == id).ToListAsync());
+            var result = await applicationDbContext.Include(x => x.Mandoob).Where(e => e.AddedtoCourt == false && e.mMasterBuilding == id).ToListAsync();
+            return View(result);
         }
-        
+
         //display all archived contract in Table like (index)
         public async Task<IActionResult> Archived(int id, string representitveId = null)
         {
@@ -158,7 +164,7 @@ namespace SmartAdmin.WebUI.Controllers
             ViewBag.id = unitRentContract.mMasterBuilding;
             return View(unitRentContract);
         }
-        
+
         public async Task<IActionResult> Create(int id)
         {
             string IdCreated = "";
@@ -211,7 +217,7 @@ namespace SmartAdmin.WebUI.Controllers
                     }
 
                     if (unitRentContract.UnitIncluded != null && unitRentContract.UnitIncluded.Any())
-                    { 
+                    {
                         for (int i = 0; i < unitRentContract.UnitIncluded.Count; i++)
                         {
                             switch (unitRentContract.UnitIncluded[i])
@@ -239,7 +245,7 @@ namespace SmartAdmin.WebUI.Controllers
                     var paymentsCount = 0;
                     DateTime lastPay = new DateTime();
                     //add water to yearly rent
-                    var yearlyRent = unitRentContract.YearlyRentVm + (unitRentContract.WaterBillAmount?? 0);
+                    var yearlyRent = unitRentContract.YearlyRentVm + (unitRentContract.WaterBillAmount ?? 0);
                     if (unitRentContract.paymentMethod == 1)
                     {
                         var rent = yearlyRent / unitRentContract.leasePeriodInMonthes.Value;
@@ -382,7 +388,7 @@ namespace SmartAdmin.WebUI.Controllers
             return View(unitRentContract);
         }
 
-       
+
         public async Task<IActionResult> Edit(int pageid, int? id)
         {
             if (!id.HasValue)
@@ -426,7 +432,7 @@ namespace SmartAdmin.WebUI.Controllers
                                   orderby m.DistrictName, m.BuildingName
                                   select m).ToListAsync();
             base.ViewData["IdBuildingsDDL"] = new SelectList(building, "IdBuilding", "buildingInfo", unitRentContract.mUnit.IdBuilding);
-                                                                                                                                            //tog get current rented unit also so it can be displayed            
+            //tog get current rented unit also so it can be displayed            
             base.ViewData["IdUnit"] = new SelectList(_context.Units.Where((Units m) => m.IdBuilding == unitRentContract.mUnit.IdBuilding && (m.isRented != true || m.IdUnit == unitRentContract.IdUnit)), "IdUnit", "UnitNumber", unitRentContract.IdUnit);
             base.ViewData["IdCreated"] = new SelectList(_context.Users, "Id", "fullName", unitRentContract.IdCreated);
             base.ViewData["IdModified"] = new SelectList(_context.Users, "Id", "fullName", unitRentContract.IdModified);
@@ -443,7 +449,7 @@ namespace SmartAdmin.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UnitRentContract unitRentContract, IFormFile contractImageFile)
         {
-            
+
             if (id != unitRentContract.IdRentContract)
             {
                 return NotFound();
@@ -469,7 +475,7 @@ namespace SmartAdmin.WebUI.Controllers
                             unit.isRented = true;
                             _context.Update(unit);
                         }
-                       
+
 
                         unitRentContract.dtModified = DateTime.Now;
                         string modifiedBy = null;
@@ -504,7 +510,7 @@ namespace SmartAdmin.WebUI.Controllers
                         DateTime date = new DateTime();
                         //add water to yearly rent
                         var yearlyRent = unitRentContract.YearlyRentVm + (unitRentContract.WaterBillAmount ?? 0);
-
+                        unitRentContract.UnitRentContractPayments = _context.TUnitRentContractPayments.Include(x => x.InvoiceRelatedPaymentDates).Where(x => x.UnitRentContractID == unitRentContract.IdRentContract).ToList();
 
                         switch (unitRentContract.paymentMethod)
                         {
@@ -664,36 +670,31 @@ namespace SmartAdmin.WebUI.Controllers
             try
             {
                 unitRentContract = await _context.TUnitRentContract.Include(u => u.mUnit).SingleOrDefaultAsync((UnitRentContract m) => m.IdRentContract == id);
+                Tenants tenant = await _context.TTenants.Where(x => x.IdTenant == unitRentContract.IdTenant).FirstOrDefaultAsync();
+                tenant.Archived = true;
                 if (unitRentContract.mUnit != null && !unitRentContract.Archived)
                 {
                     unitRentContract.mUnit.isRented = false;
                     unitRentContract.mUnit.UnitRentContractID = null;
                     unitRentContract.mUnit.IdRentContract = null;
                 }
-                //_context.Database.ExecuteSqlCommand($"Update TUnitRentContract set PrevIdRentContract = null where IdRentContract={id}");
-                // H1 ----------------------
                 if (unitRentContract.Archived)
                 {
                     returnTo = "Archived";
+
                 }
                 else
                 {
                     returnTo = "index";
                 }
-                //-----------------
-
                 _context.TUnitRentContract.Remove(unitRentContract);
+                _context.TTenants.Update(tenant);
                 await _context.SaveChangesAsync();
-                //await setRentInfoInAllUnits();
-
-                // H1
                 TempData["success"] = "Operation is done successfully";
             }
             catch (Exception ex)
             {
                 TempData["AlertSaveErr"] = "There is an Error when Delete . Please correct and try again.";
-
-                // H1 : temp
                 TempData["devex"] = ex.Message + " / " + ex.InnerException?.Message ?? "";
             }
             return RedirectToAction(returnTo, new { id = unitRentContract.mMasterBuilding });
@@ -706,7 +707,7 @@ namespace SmartAdmin.WebUI.Controllers
 
         public async Task<JsonResult> getBuildingUnits(int IdBuilding, int? unitID = null)
         {
-            var result = await _context.Units.Where(e => e.IdBuilding == IdBuilding && e.UnitOwner != Enums.UnitOwner.Saad && (e.IdUnit == unitID || e.isRented != true)).OrderBy(e => e.UnitNumber)
+            var result = await _context.Units.Where(e => e.IdBuilding == IdBuilding && e.UnitOwner != Enums.UnitOwner.xSaad && (e.IdUnit == unitID || e.isRented != true)).OrderBy(e => e.UnitNumber)
                 .Select(e => new
                 {
                     e.IdUnit,
@@ -799,7 +800,7 @@ namespace SmartAdmin.WebUI.Controllers
             {
                 unitRentContract = await _context.TUnitRentContract.Include(u => u.mUnit).SingleOrDefaultAsync((UnitRentContract m) => m.IdRentContract == id);
                 Units currnetUnit = await _context.Units.FindAsync(unitRentContract.mUnit.IdUnit);
-
+                var tenant = await _context.TTenants.Where(x => x.IdTenant == unitRentContract.IdTenant).FirstOrDefaultAsync();
                 if (currnetUnit != null)
                 {
                     currnetUnit.isRented = false;
@@ -807,6 +808,7 @@ namespace SmartAdmin.WebUI.Controllers
                     await _context.SaveChangesAsync();
                 }
                 unitRentContract.Archived = true;
+                tenant.Archived = true;
                 await _context.SaveChangesAsync();
                 TempData["success"] = "Operation completed successfully";
             }
@@ -824,6 +826,7 @@ namespace SmartAdmin.WebUI.Controllers
             try
             {
                 unitRentContract = await _context.TUnitRentContract.Include(u => u.mUnit).SingleOrDefaultAsync((UnitRentContract m) => m.IdRentContract == id);
+                var tenant = await _context.TTenants.Where(x => x.IdTenant == unitRentContract.IdTenant).FirstOrDefaultAsync();
 
                 Units currnetUnit = await _context.Units.FindAsync(unitRentContract.mUnit.IdUnit);
                 if (currnetUnit != null)
@@ -837,6 +840,7 @@ namespace SmartAdmin.WebUI.Controllers
                     currnetUnit.UnitRentContractID = unitRentContract.IdRentContract;
                 }
                 unitRentContract.Archived = false;
+                tenant.Archived = false;
                 await _context.SaveChangesAsync();
                 TempData["success"] = "Operation completed successfully";
             }
@@ -989,6 +993,7 @@ namespace SmartAdmin.WebUI.Controllers
                                     break;
                             }
                             var oldContract = _context.TUnitRentContract.Include(t => t.mUnit).SingleOrDefault(c => c.contractNumber == PrevContractNum);
+                            var tenant = _context.TTenants.Where(x => x.Archived == true).FirstOrDefault();
                             var unit = oldContract.mUnit;
                             if (unit != null)
                             {
@@ -1068,11 +1073,38 @@ namespace SmartAdmin.WebUI.Controllers
 
         public IActionResult Invoice(int InvoiceId)
         {
+
+            var writer = new QRCodeWriter();
+            string returnvalue = EncryptString(InvoiceId.ToString(), ConstantValue.EncriptionKey);
+            var resultibt = writer.encode(ConstantValue.BaseUrl + ConstantValue.globalInvoicePath + returnvalue, BarcodeFormat.QR_CODE, 200, 200);
+
+            var matrix = resultibt;
+            int scale = 2;
+
+            Bitmap result = new Bitmap(matrix.Width * scale, matrix.Height * scale);
+            for (int x = 0; x < matrix.Height; x++)
+            {
+                for (int y = 0; y < matrix.Width; y++)
+                {
+                    Color pixel = matrix[x, y] ? Color.Black : Color.White;
+                    for (int i = 0; i < scale; i++)
+                        for (int j = 0; j < scale; j++)
+                            result.SetPixel(x * scale + i, y * scale + j, pixel);
+                }
+            }
+            string WebRootPath = _env.WebRootPath;
+            result.Save(WebRootPath + "\\QRs\\QR" + InvoiceId + ".png");
+            ViewBag.Url = "\\QRs\\QR" + InvoiceId + ".png";
             Invoices Model = _context.Invoices.
                 Include(x => x.invoiceRelatedPaymentDates).ThenInclude(x => x.unitRentContractPayment).ThenInclude(x => x.UnitRentContract).ThenInclude(x => x.mUnit).ThenInclude(x => x.mBuilding).FirstOrDefault(x => x.Id == InvoiceId);
             Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.mTenant = _context.TTenants.Include(x => x.mCompany).FirstOrDefault(x => x.IdTenant == Model.invoiceRelatedPaymentDates.FirstOrDefault().unitRentContractPayment.UnitRentContract.IdTenant);
+
+
             return View("Invoice_2", Model);
         }
+
+
+
         public IActionResult Payment(int id)
         {
             RentContractPaymentDTO payments = new RentContractPaymentDTO
@@ -1102,7 +1134,31 @@ namespace SmartAdmin.WebUI.Controllers
                                            : p.UnitRentContract.mCompoundUnits.mCompoundBuilding.BuildingNumber,
                                        pageid = p.UnitRentContract.mMasterBuilding,
                                    }).ToList(),
-                InvoicesList = _context.Invoices.Where(x => x.ContractId == id && x.Status == null).ToList()
+                RentContractOtherPaymentList = _context.unitRentContractOtherPayment
+                                   .Where(c => c.UnitRentContractID == id)
+                                   .OrderBy(c => c.PaymentDate)
+                                   .Select(p => new RentContractOtherPayment
+                                   {
+                                       ID = p.ID,
+                                       Commession = p.Commession,
+                                       Insurence = p.Insurence,
+                                       OtherPayment = p.OtherPayment,
+                                       MonyType = p.MonyType,
+                                       PaidAmount = p.PaidAmount,
+                                       Note = p.Note,
+                                       User = p.User != null ? p.User.fullName : string.Empty,
+                                       PaymentDate = p.PaymentDate,
+                                       TenantName = p.UnitRentContract.mTenant.tenantName,
+                                       UnitNumber = p.UnitRentContract.IdUnit != null
+                                           ? p.UnitRentContract.mUnit.UnitNumber
+                                           : p.UnitRentContract.mCompoundUnits.UnitNumber,
+
+                                       BuldingNumber = p.UnitRentContract.IdUnit != null
+                                           ? p.UnitRentContract.mUnit.mBuilding.BuildingName
+                                           : p.UnitRentContract.mCompoundUnits.mCompoundBuilding.BuildingNumber,
+                                       pageid = p.UnitRentContract.mMasterBuilding,
+                                   }).ToList(),
+                InvoicesList = _context.Invoices.Include(x => x.UnitRentContractOtherPayment).Where(x => x.ContractId == id && x.Status == null).ToList()
 
             };
             if (payments.RentContractPaymentList.Count() == 0 || payments == null)
@@ -1114,6 +1170,264 @@ namespace SmartAdmin.WebUI.Controllers
             return View(payments);
         }
 
+        #region otherpayment
+        public IActionResult EditOtherPayment(int OtherPaymentId)
+        {
+            RentContractOtherPayment otherPayment = _context.unitRentContractOtherPayment
+                                   .Where(c => c.ID == OtherPaymentId)
+                                   .OrderBy(c => c.PaymentDate)
+                                   .Select(p => new RentContractOtherPayment
+                                   {
+                                       ID = p.ID,
+                                       UnitRentContractID = p.UnitRentContractID,
+                                       Commession = p.Commession,
+                                       Insurence = p.Insurence,
+                                       OtherPayment = p.OtherPayment,
+                                       OtherPaymentText = p.OtherPaymentText,
+                                       PaidAmount = p.PaidAmount,
+                                       Note = p.Note,
+                                       User = p.User != null ? p.User.fullName : string.Empty,
+                                       PaymentDate = p.PaymentDate,
+                                       TenantName = p.UnitRentContract.mTenant.tenantName,
+                                       UnitNumber = p.UnitRentContract.IdUnit != null
+                                           ? p.UnitRentContract.mUnit.UnitNumber
+                                           : p.UnitRentContract.mCompoundUnits.UnitNumber,
+
+                                       BuldingNumber = p.UnitRentContract.IdUnit != null
+                                           ? p.UnitRentContract.mUnit.mBuilding.BuildingName
+                                           : p.UnitRentContract.mCompoundUnits.mCompoundBuilding.BuildingNumber,
+                                       pageid = p.UnitRentContract.mMasterBuilding,
+                                       MonyType = p.MonyType,
+                                       PaymentMehtod = _context.Invoices.Where(x => x.UnitRentContractOtherPayment.ID == OtherPaymentId).Select(x => x.PaymentMehtod).FirstOrDefault(),
+                                       checkVisaNumber = _context.Invoices.Where(x => x.UnitRentContractOtherPayment.ID == OtherPaymentId).Select(x => x.checkVisaNumber).FirstOrDefault()
+                                   }).FirstOrDefault();
+            if (otherPayment == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["PaymentMethod"] = Enums.GetEnumAsSelectListWithSelectedValue<Enums.PaymentMehtod>(otherPayment.PaymentMehtod);
+            ViewData["MonyType"] = Enums.GetEnumAsSelectListWithSelectedValue<Enums.MonyType>(otherPayment.MonyType);
+            return View(otherPayment);
+        }
+
+        [HttpPost]
+        public IActionResult EditOtherPayment(RentContractOtherPayment model)
+        {
+
+            UnitRentContractOtherPayment otherPayment = _context.unitRentContractOtherPayment
+                                   .Where(c => c.ID == model.ID).FirstOrDefault();
+            otherPayment.Insurence = model.Insurence;
+            otherPayment.Commession = model.Commession;
+            otherPayment.OtherPayment = model.OtherPayment;
+            otherPayment.OtherPaymentText = model.OtherPaymentText;
+            otherPayment.PaidAmount = model.Insurence + model.Commession + model.OtherPayment;
+            otherPayment.MonyType = model.MonyType;
+            otherPayment.Note = model.Note;
+            _context.Update(otherPayment);
+            Invoices InvoicesEntity = _context.Invoices
+                                   .Where(c => c.UnitRentContractOtherPayment.ID == model.ID).FirstOrDefault();
+            InvoicesEntity.Payment = model.Insurence + model.Commession + model.OtherPayment;
+            InvoicesEntity.checkVisaNumber = (model.PaymentMehtod == 1 || model.PaymentMehtod == 2) ? null : model.checkVisaNumber;
+            InvoicesEntity.PaymentMehtod = model.PaymentMehtod;
+            _context.Update(InvoicesEntity);
+            _context.SaveChanges();
+            return RedirectToAction("Payment", new { id = model.UnitRentContractID });
+        }
+
+        public IActionResult DeleteOtherPayment(int OtherPaymentId)
+        {
+            RentContractOtherPayment otherPayment = _context.unitRentContractOtherPayment
+                                   .Where(c => c.ID == OtherPaymentId)
+                                   .OrderBy(c => c.PaymentDate)
+                                   .Select(p => new RentContractOtherPayment
+                                   {
+                                       ID = p.ID,
+                                       UnitRentContractID = p.UnitRentContractID,
+                                       Commession = p.Commession,
+                                       Insurence = p.Insurence,
+                                       OtherPayment = p.OtherPayment,
+                                       OtherPaymentText = p.OtherPaymentText,
+                                       PaidAmount = p.PaidAmount,
+                                       Note = p.Note,
+                                       User = p.User != null ? p.User.fullName : string.Empty,
+                                       PaymentDate = p.PaymentDate,
+                                       TenantName = p.UnitRentContract.mTenant.tenantName,
+                                       UnitNumber = p.UnitRentContract.IdUnit != null
+                                           ? p.UnitRentContract.mUnit.UnitNumber
+                                           : p.UnitRentContract.mCompoundUnits.UnitNumber,
+
+                                       BuldingNumber = p.UnitRentContract.IdUnit != null
+                                           ? p.UnitRentContract.mUnit.mBuilding.BuildingName
+                                           : p.UnitRentContract.mCompoundUnits.mCompoundBuilding.BuildingNumber,
+                                       pageid = p.UnitRentContract.mMasterBuilding,
+                                       MonyType = p.MonyType,
+                                       PaymentMehtod = _context.Invoices.Where(x => x.UnitRentContractOtherPayment.ID == OtherPaymentId).Select(x => x.PaymentMehtod).FirstOrDefault(),
+                                       checkVisaNumber = _context.Invoices.Where(x => x.UnitRentContractOtherPayment.ID == OtherPaymentId).Select(x => x.checkVisaNumber).FirstOrDefault()
+                                   }).FirstOrDefault();
+            if (otherPayment == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["PaymentMethod"] = Enums.GetEnumAsSelectListWithSelectedValue<Enums.PaymentMehtod>(otherPayment.PaymentMehtod);
+            ViewData["MonyType"] = Enums.GetEnumAsSelectListWithSelectedValue<Enums.MonyType>(otherPayment.MonyType);
+            return View(otherPayment);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteOtherPayment(RentContractOtherPayment model)
+        {
+
+            UnitRentContractOtherPayment otherPayment = _context.unitRentContractOtherPayment
+                                   .Where(c => c.ID == model.ID).FirstOrDefault();
+
+            _context.Remove(otherPayment);
+            Invoices InvoicesEntity = _context.Invoices
+                                   .Where(c => c.UnitRentContractOtherPayment.ID == model.ID).FirstOrDefault();
+            InvoicesEntity.Status = 1;
+            _context.Update(InvoicesEntity);
+            _context.SaveChanges();
+            return RedirectToAction("Payment", new { id = model.UnitRentContractID });
+        }
+
+        public IActionResult PartiallyPayOther(int ContractId)
+        {
+            var payment = _context.TUnitRentContract.Where(x => x.IdRentContract == ContractId)
+                    .Include(e => e.UnitRentContractPayments)
+                    .Include(e => e.invoices)
+                    .Include(e => e.mTenant)
+                    .Include(e => e.mCompound)
+                    .Include(e => e.mCompoundUnits)
+                    .Include(e => e.mUnit)
+                    .Include(e => e.mUnit.mBuilding)
+                    .Select(p => new RentContractOtherPayment()
+                    {
+                        UnitRentContractID = p.IdRentContract,
+                        pageid = p.mMasterBuilding,
+                        TenantName = p.mTenant.tenantName,
+                        UnitNumber = p.IdUnit != null
+                                       ? p.mUnit.UnitNumber
+                                       : p.mCompoundUnits.UnitNumber,
+                        BuldingNumber = p.IdUnit != null
+                                       ? p.mUnit.mBuilding.BuildingName
+                                       : p.mCompound.compoundName,
+                        InvoiceId = "E-" + (_context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault() == null ? 5000 : _context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault().InvoiceId + 1)
+                    }).FirstOrDefault();
+            ViewData["PaymentMethod"] = Enums.GetEnumAsSelectList<Enums.PaymentMehtod>();
+            ViewData["MonyType"] = Enums.GetEnumAsSelectList<Enums.MonyType>();
+            if (payment == null)
+            {
+                return NotFound();
+            }
+            return View(payment);
+        }
+
+        [HttpPost]
+        public IActionResult PartiallyPayOther(RentContractOtherPayment model)
+        {
+            UnitRentContractOtherPayment otherpayment = new UnitRentContractOtherPayment();
+            otherpayment.Commession = model.Commession;
+            otherpayment.Insurence = model.Insurence;
+            otherpayment.OtherPayment = model.OtherPayment;
+            otherpayment.PaidAmount = model.Commession + model.Insurence + model.OtherPayment;
+            otherpayment.MonyType = model.MonyType;
+            otherpayment.PaymentDate = DateTime.Now;
+            otherpayment.UnitRentContractID = model.UnitRentContractID;
+            otherpayment.Note = model.Note;
+            otherpayment.UserID = _user.GetUserId(base.HttpContext.User);
+            otherpayment.OtherPaymentText = model.OtherPaymentText;
+            _context.Add(otherpayment);
+
+            Invoices InvoicesEntity = new Invoices();
+            InvoicesEntity.ContractId = model.UnitRentContractID;
+            InvoicesEntity.Payment = model.Commession + model.Insurence + model.OtherPayment;
+            InvoicesEntity.PaymentDate = DateTime.Now;
+            InvoicesEntity.PaymentMehtod = model.PaymentMehtod;
+            InvoicesEntity.checkVisaNumber = model.checkVisaNumber;
+            InvoicesEntity.Status = null;
+            InvoicesEntity.isOtherPayment = true;
+            InvoicesEntity.UnitRentContractOtherPayment = otherpayment;
+            InvoicesEntity.InvoiceId = _context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault() == null ? 5000 : _context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault().InvoiceId + 1;
+            _context.Add(InvoicesEntity);
+
+
+
+            //UnitRentContractAllPaymentLogs unitRentContractAllPaymentLogs = new UnitRentContractAllPaymentLogs();
+            //unitRentContractAllPaymentLogs.Action = "Add (Other) Payment";
+            //unitRentContractAllPaymentLogs.AllPaidAmount = model.Commession + model.Insurence + model.Insurence;
+            //unitRentContractAllPaymentLogs.UnitRentContractID = model.UnitRentContractID;
+            //unitRentContractAllPaymentLogs.PaymentDate = DateTime.Now;
+            //unitRentContractAllPaymentLogs.UserID = _user.GetUserId(base.HttpContext.User);
+            //unitRentContractAllPaymentLogs.InvoiceID = InvoicesEntity.Id;
+            //_context.Add(unitRentContractAllPaymentLogs);
+
+            //var payment = _context.TUnitRentContractPayments
+            //    .Where(m => m.UnitRentContractID == model.UnitRentContractID && m.Paid == false)
+            //    .Include(m => m.UnitRentContract).OrderBy(x => x.DueDate).ToList();
+            //foreach (var pay in payment)
+            //{
+            //    int PaidValue = pay.RemainingAmount >= model.PaidAmount ? model.PaidAmount : pay.RemainingAmount;
+            //    pay.PaidAmount += PaidValue;
+            //    pay.Paid = pay.PaidAmount == pay.Amount;
+            //    pay.UnitRentContract.remainingAmount -= PaidValue;
+            //    pay.UnitRentContract.paidAmount += PaidValue;
+            //    pay.Note = model.Note;
+            //    pay.PaymentDate = DateTime.Now;
+            //    pay.UserID = _user.GetUserId(base.HttpContext.User);
+            //    pay.UnitRentContractPaymentLogs.Add(new UnitRentContractPaymentLog
+            //    {
+            //        PaymentDate = DateTime.Now,
+            //        PaidAmount = PaidValue,
+            //        UserID = _user.GetUserId(base.HttpContext.User),
+            //    });
+
+            //    InvoiceRelatedPaymentDates InvoiceRelatedPaymentDatesEntity = new InvoiceRelatedPaymentDates();
+            //    InvoiceRelatedPaymentDatesEntity.Amount = PaidValue;
+            //    InvoiceRelatedPaymentDatesEntity.InvoiceId = InvoicesEntity.Id;
+            //    InvoiceRelatedPaymentDatesEntity.UnitRentContractPaymentId = pay.ID;
+            //    InvoiceRelatedPaymentDatesEntity.PaymentState = pay.Paid;
+            //    _context.Add(InvoiceRelatedPaymentDatesEntity);
+            //    model.PaidAmount -= PaidValue;
+            //    if (model.PaidAmount == 0)
+            //    {
+            //        break;
+            //    }
+            //}
+            _context.SaveChanges();
+            return RedirectToAction("Payment", new { id = model.UnitRentContractID });
+        }
+
+        public IActionResult OtherInvoice(int InvoiceId)
+        {
+            var writer = new QRCodeWriter();
+            var resultibt = writer.encode(ConstantValue.BaseUrl + ConstantValue.globalOtherInvoicePath + EncryptString(InvoiceId.ToString(), ConstantValue.EncriptionKey), BarcodeFormat.QR_CODE, 200, 200);
+
+            var matrix = resultibt;
+            int scale = 2;
+
+            Bitmap result = new Bitmap(matrix.Width * scale, matrix.Height * scale);
+            for (int x = 0; x < matrix.Height; x++)
+            {
+                for (int y = 0; y < matrix.Width; y++)
+                {
+                    Color pixel = matrix[x, y] ? Color.Black : Color.White;
+                    for (int i = 0; i < scale; i++)
+                        for (int j = 0; j < scale; j++)
+                            result.SetPixel(x * scale + i, y * scale + j, pixel);
+                }
+            }
+            string WebRootPath = _env.WebRootPath;
+
+            Invoices Model = _context.Invoices.Include(x => x.UnitRentContractOtherPayment).ThenInclude(x => x.UnitRentContract).ThenInclude(x => x.mUnit).ThenInclude(x => x.mBuilding).FirstOrDefault(x => x.UnitRentContractOtherPayment.ID == InvoiceId);
+            Model.UnitRentContractOtherPayment.UnitRentContract.mTenant = _context.TTenants.Include(x => x.mCompany).FirstOrDefault(x => x.IdTenant == Model.UnitRentContractOtherPayment.UnitRentContract.IdTenant);
+            result.Save(WebRootPath + "\\QRs\\QR" + Model.Id + ".png");
+            ViewBag.Url = "\\QRs\\QR" + Model.Id + ".png";
+            return View("OtherInvoice_2", Model);
+        }
+        #endregion
+
+
 
         public IActionResult PartiallyPay(int ContractId)
         {
@@ -1123,7 +1437,7 @@ namespace SmartAdmin.WebUI.Controllers
                     .Include(e => e.mTenant)
                     .Include(e => e.mCompound)
                     .Include(e => e.mCompoundUnits)
-                    .Include(e => e.mUnit)
+                    .Include(e => e.mUnit).ThenInclude(x => x.mPropertyType)
                     .Include(e => e.mUnit.mBuilding)
                     .Select(p => new RentContractPayment()
                     {
@@ -1140,6 +1454,8 @@ namespace SmartAdmin.WebUI.Controllers
                         BuldingNumber = p.IdUnit != null
                                        ? p.mUnit.mBuilding.BuildingName
                                        : p.mCompound.compoundName,
+                        PropertyTypeId = p.mUnit.IdPropertyType,
+                        PaymentDate = _context.Invoices.Where(x => x.ContractId == ContractId && x.Status != 0).OrderByDescending(x => x.InvoiceId).Select(x => x.PaymentDate).FirstOrDefault(),
                         InvoiceId = "E-" + (_context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault() == null ? 5000 : _context.Invoices.OrderByDescending(x => x.InvoiceId).FirstOrDefault().InvoiceId + 1)
                     }).FirstOrDefault();
             ViewData["PaymentMethod"] = Enums.GetEnumAsSelectList<Enums.PaymentMehtod>();
@@ -1156,7 +1472,7 @@ namespace SmartAdmin.WebUI.Controllers
             Invoices InvoicesEntity = new Invoices();
             InvoicesEntity.ContractId = model.UnitRentContractID;
             InvoicesEntity.Payment = model.PaidAmount;
-            InvoicesEntity.PaymentDate = DateTime.Now;
+            InvoicesEntity.PaymentDate = model.PaymentDate ?? DateTime.Now;
             InvoicesEntity.PaymentMehtod = model.PaymentMehtod;
             InvoicesEntity.checkVisaNumber = model.checkVisaNumber;
             InvoicesEntity.Status = null;
@@ -1167,7 +1483,7 @@ namespace SmartAdmin.WebUI.Controllers
             unitRentContractAllPaymentLogs.Action = "Add Payment";
             unitRentContractAllPaymentLogs.AllPaidAmount = model.PaidAmount;
             unitRentContractAllPaymentLogs.UnitRentContractID = model.UnitRentContractID;
-            unitRentContractAllPaymentLogs.PaymentDate = DateTime.Now;
+            unitRentContractAllPaymentLogs.PaymentDate = model.PaymentDate ?? DateTime.Now;
             unitRentContractAllPaymentLogs.UserID = _user.GetUserId(base.HttpContext.User);
             unitRentContractAllPaymentLogs.InvoiceID = InvoicesEntity.Id;
             _context.Add(unitRentContractAllPaymentLogs);
@@ -1177,26 +1493,38 @@ namespace SmartAdmin.WebUI.Controllers
                 .Include(m => m.UnitRentContract).OrderBy(x => x.DueDate).ToList();
             foreach (var pay in payment)
             {
+                var taxtoProperties = _context.taxToProperttypes.Include(x => x.TaxRate).Where(x => x.PropertyTypesId == model.PropertyTypeId && pay.DueDate >= x.TaxRate.StartApplingDate && (x.TaxRate.EndApplingDate == null || pay.DueDate <= x.TaxRate.StartApplingDate));
                 int PaidValue = pay.RemainingAmount >= model.PaidAmount ? model.PaidAmount : pay.RemainingAmount;
                 pay.PaidAmount += PaidValue;
                 pay.Paid = pay.PaidAmount == pay.Amount;
                 pay.UnitRentContract.remainingAmount -= PaidValue;
                 pay.UnitRentContract.paidAmount += PaidValue;
                 pay.Note = model.Note;
-                pay.PaymentDate = DateTime.Now;
+                pay.PaymentDate = model.PaymentDate ?? DateTime.Now;
                 pay.UserID = _user.GetUserId(base.HttpContext.User);
                 pay.UnitRentContractPaymentLogs.Add(new UnitRentContractPaymentLog
                 {
-                    PaymentDate = DateTime.Now,
+                    PaymentDate = model.PaymentDate ?? DateTime.Now,
                     PaidAmount = PaidValue,
                     UserID = _user.GetUserId(base.HttpContext.User),
                 });
-               
+
                 InvoiceRelatedPaymentDates InvoiceRelatedPaymentDatesEntity = new InvoiceRelatedPaymentDates();
                 InvoiceRelatedPaymentDatesEntity.Amount = PaidValue;
                 InvoiceRelatedPaymentDatesEntity.InvoiceId = InvoicesEntity.Id;
                 InvoiceRelatedPaymentDatesEntity.UnitRentContractPaymentId = pay.ID;
                 InvoiceRelatedPaymentDatesEntity.PaymentState = pay.Paid;
+                if (taxtoProperties != null && taxtoProperties.Count() > 0)
+                {
+                    TaxToProperttypes taxtoProperty = null;
+                    if (taxtoProperties.Count() > 1)
+                        taxtoProperty = taxtoProperties.FirstOrDefault(x => x.TaxRate.EndApplingDate != null);
+                    else
+                        taxtoProperty = taxtoProperties.FirstOrDefault();
+                    InvoiceRelatedPaymentDatesEntity.TaxAmount = Math.Round((decimal)(PaidValue * taxtoProperty.TaxRate.Rate / 100), 2);
+                    InvoiceRelatedPaymentDatesEntity.TaxRateId = taxtoProperty.TaxRate.Id;
+
+                }
                 _context.Add(InvoiceRelatedPaymentDatesEntity);
                 model.PaidAmount -= PaidValue;
                 if (model.PaidAmount == 0)
@@ -1204,6 +1532,14 @@ namespace SmartAdmin.WebUI.Controllers
                     break;
                 }
             }
+            var rentContract = _context.TUnitRentContract.Include(x => x.Legal).FirstOrDefault(x => x.IdRentContract == model.UnitRentContractID);
+
+            rentContract.AddedtoCourt = false;
+            rentContract.LegalId = null;
+            _context.Update(rentContract);
+            var legalEntity = rentContract.Legal;
+            if (legalEntity != null)
+                _context.Legals.Remove(legalEntity);
             _context.SaveChanges();
             return RedirectToAction("Payment", new { id = model.UnitRentContractID });
         }
@@ -1313,7 +1649,7 @@ namespace SmartAdmin.WebUI.Controllers
         public IActionResult UndoAllPayments(int contractId)
         {
             var Invoice = _context.Invoices.Where(x => x.ContractId == contractId && x.Status == null).Include(x => x.invoiceRelatedPaymentDates);
-            
+
             if (Invoice != null)
             {
 
@@ -1358,7 +1694,7 @@ namespace SmartAdmin.WebUI.Controllers
                 payment.Paid = false;
                 _context.UnitRentContractPaymentLogs.RemoveRange(payment.UnitRentContractPaymentLogs.ToList());
             }
-           
+
             _context.SaveChanges();
             UpdateLastPayment(contractId, GetLastPaymentData(payments.FirstOrDefault().UnitRentContract.paymentMethod, payments.FirstOrDefault().UnitRentContract.dtLeaseStart));
             return RedirectToAction("Payment", new { id = contractId });
@@ -1410,9 +1746,11 @@ namespace SmartAdmin.WebUI.Controllers
             _context.UnitRentContractPaymentLogs.RemoveRange(payments.SelectMany(p => p.UnitRentContractPaymentLogs).ToList());
             _context.TUnitRentContractPayments.RemoveRange(payments);
             var modifiedBy = _user.GetUserId(HttpContext.User);
-            var paidAmount = unitRentContract.paidAmount;
+            
+            int paidAmount = unitRentContract.paidAmount;
             int remainingLastContact = unitRentContract.LastContractRemainingAmount;
             int payedFromRemainingLastContact = 0;
+
             //decimal InvoicePayment = invoice.Payment;
             if (unitRentContract.LastContractRemainingAmount > 0)
             {
@@ -1428,43 +1766,31 @@ namespace SmartAdmin.WebUI.Controllers
                 }
 
             }
-            var month = 0;
+
+            int month = 0;
+            unitRentContract.UnitRentContractPayments.Clear();
             for (int i = 0; i < paymentsCount; i++)
             {
-                if (i == paymentsCount - 1)
-                {
-                    rent = unitRentContract.yearlyRent - rent * i;
-                }
-
                 var coverAllRent = rent <= paidAmount;
                 var rentValue = PaidAmount(rent, paidAmount);
                 unitRentContract.UnitRentContractPayments.Add(new UnitRentContractPayment
                 {
-                    Amount = rent + remainingLastContact,
-                    DueDate = unitRentContract.dtLeaseStart.AddMonths(month) /*unitRentContract.mMasterBuilding == 4 ? unitRentContract.dtLeaseStart.AddDays(month) :*/,
+                    Amount = i == paymentsCount - 1 ? (unitRentContract.yearlyRent - rent * i) + remainingLastContact : rent + remainingLastContact,
+                    DueDate = unitRentContract.dtLeaseStart.AddMonths(month),
                     PaidAmount = rentValue + payedFromRemainingLastContact,
-                    UserID = modifiedBy,
                     Paid = coverAllRent,
-                    PaymentDate = DateTime.Now,
+                    UserID = modifiedBy,
+                    PaymentDate = InvoicesForSameContract.Count() != 0 ? InvoicesForSameContract.LastOrDefault().PaymentDate : DateTime.Now,
                     Note = (remainingLastContact > 0) ? $"Êã ÇÖÇÝÉ ãÊÃÎÑÇÊ ÇáÚÞÏ ÇáÓÇÈÞ ÈÞíãÉ({ remainingLastContact }) æÊã ÏÝÚ ãäåÇ({ payedFromRemainingLastContact}) æÇáãÊÈÞí Úáíå ãä ÇáãÊÃÎÑÇÊ({remainingLastContact - payedFromRemainingLastContact})" : "",
                     UnitRentContractPaymentLogs = new List<UnitRentContractPaymentLog>
                     {
                         new UnitRentContractPaymentLog
                         {
-                            PaidAmount= rentValue + payedFromRemainingLastContact,
-                            PaymentDate=DateTime.Now,
+                            PaidAmount=rentValue + payedFromRemainingLastContact,
+                            PaymentDate=InvoicesForSameContract.Count() != 0 ? InvoicesForSameContract.LastOrDefault().PaymentDate: DateTime.Now,
                             UserID=modifiedBy
                         }
-                    },
-                    //InvoiceRelatedPaymentDates = new List<InvoiceRelatedPaymentDates>
-                    //{
-                    //   new InvoiceRelatedPaymentDates()
-                    //   {
-                    //       Amount =  InvoicePayment < rent + remainingLastContact ? InvoicePayment :  rent + remainingLastContact,
-                    //       InvoiceId = invoice.Id,
-                    //       PaymentState = coverAllRent,
-                    //   }
-                    //}
+                    }
                 });
                 paidAmount -= rentValue;
                 month += incrmentStep;
@@ -1472,38 +1798,107 @@ namespace SmartAdmin.WebUI.Controllers
                 payedFromRemainingLastContact = 0;
             }
 
+
             int counter = 0;
-            remainingLastContact = unitRentContract.LastContractRemainingAmount;
+            decimal RemainUnitRentContractAmount = 0;
             var invoiceRelatedPaymentDates = _context.InvoiceRelatedPaymentDates.Include(x => x.unitRentContractPayment).Where(x => x.unitRentContractPayment.UnitRentContractID == unitRentContract.IdRentContract).ToList();
             invoiceRelatedPaymentDates.ToList().ForEach(x => x.Status = 0);
             foreach (var invoice in InvoicesForSameContract)
             {
-                decimal InvoicePayment = invoice.Payment;
-                while (InvoicePayment > 0)
+                decimal invoicePayment = invoice.Payment;
+                UnitRentContractPayment NewUnitRentContract = unitRentContract.UnitRentContractPayments.OrderBy(x => x.DueDate).ElementAt(counter);
+                NewUnitRentContract.InvoiceRelatedPaymentDates = NewUnitRentContract.InvoiceRelatedPaymentDates ?? new List<InvoiceRelatedPaymentDates>();
+                if (RemainUnitRentContractAmount == 0)
                 {
-                    var unitRentContractPayment = unitRentContract.UnitRentContractPayments.OrderBy(x => x.DueDate).ElementAt(counter);
-                    unitRentContractPayment.InvoiceRelatedPaymentDates = invoiceRelatedPaymentDates.Where(x => x.Status == null).ToList() ?? new List<InvoiceRelatedPaymentDates>();
-                    decimal currentPaidifListHaveValue = unitRentContractPayment.Amount - unitRentContractPayment.InvoiceRelatedPaymentDates.Sum(x => x.Amount);
-                    unitRentContractPayment.InvoiceRelatedPaymentDates.Add(
-                        new InvoiceRelatedPaymentDates()
-                        {
-                            Amount = InvoicePayment < (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount) ? InvoicePayment : (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.PaidAmount),
-                            InvoiceId = invoice.Id,
-                            PaymentState = InvoicePayment >= (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount),
-                        });
-                    if (InvoicePayment < (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount))
+                    RemainUnitRentContractAmount = NewUnitRentContract.Amount;
+                }
+
+                if (invoicePayment == RemainUnitRentContractAmount)
+                {
+                    NewUnitRentContract.InvoiceRelatedPaymentDates.Add(new InvoiceRelatedPaymentDates()
                     {
-                        invoiceRelatedPaymentDates.Add(unitRentContractPayment.InvoiceRelatedPaymentDates.LastOrDefault());
-                        break;
-                    }
-                    else
+                        Amount = invoicePayment,
+                        InvoiceId = invoice.Id,
+                        PaymentState = true
+                    });
+                    RemainUnitRentContractAmount = 0;
+                    counter++;
+                    continue;
+                }
+                else if (invoicePayment > RemainUnitRentContractAmount)
+                {
+                    decimal Remaininvoice = 0;
+                    NewUnitRentContract.InvoiceRelatedPaymentDates.Add(new InvoiceRelatedPaymentDates()
                     {
-                        invoiceRelatedPaymentDates.Add(unitRentContractPayment.InvoiceRelatedPaymentDates.LastOrDefault());
-                        InvoicePayment = InvoicePayment - (unitRentContractPayment.InvoiceRelatedPaymentDates.Count() > 0 ? currentPaidifListHaveValue : unitRentContractPayment.Amount);
+                        Amount = RemainUnitRentContractAmount,
+                        InvoiceId = invoice.Id,
+                        PaymentState = true
+                    });
+                    Remaininvoice = invoicePayment - RemainUnitRentContractAmount;
+                    RemainUnitRentContractAmount = 0;
+                    while (Remaininvoice > 0)
+                    {
                         counter++;
+                        NewUnitRentContract = unitRentContract.UnitRentContractPayments.OrderBy(x => x.DueDate).ElementAt(counter);
+                        NewUnitRentContract.InvoiceRelatedPaymentDates = NewUnitRentContract.InvoiceRelatedPaymentDates ?? new List<InvoiceRelatedPaymentDates>();
+                        if (RemainUnitRentContractAmount == 0)
+                        {
+                            RemainUnitRentContractAmount = NewUnitRentContract.Amount;
+                        }
+                        if (Remaininvoice == RemainUnitRentContractAmount)
+                        {
+                            NewUnitRentContract.InvoiceRelatedPaymentDates.Add(new InvoiceRelatedPaymentDates()
+                            {
+                                Amount = RemainUnitRentContractAmount,
+                                InvoiceId = invoice.Id,
+                                PaymentState = true
+                            });
+                            RemainUnitRentContractAmount = 0;
+                            counter++;
+                            break;
+                        }
+
+                        else if (Remaininvoice > RemainUnitRentContractAmount)
+                        {
+                            NewUnitRentContract.InvoiceRelatedPaymentDates.Add(new InvoiceRelatedPaymentDates()
+                            {
+                                Amount = RemainUnitRentContractAmount,
+                                InvoiceId = invoice.Id,
+                                PaymentState = true
+                            });
+                            Remaininvoice = Remaininvoice - RemainUnitRentContractAmount;
+                            continue;
+                        }
+
+                        else if (Remaininvoice < RemainUnitRentContractAmount)
+                        {
+                            NewUnitRentContract.InvoiceRelatedPaymentDates.Add(new InvoiceRelatedPaymentDates()
+                            {
+                                Amount = Remaininvoice,
+                                InvoiceId = invoice.Id,
+                                PaymentState = false
+
+                            });
+                            RemainUnitRentContractAmount = RemainUnitRentContractAmount - Remaininvoice;
+                            break;
+                        }
                     }
+
+
+                }
+                else if (invoicePayment < RemainUnitRentContractAmount)
+                {
+                    NewUnitRentContract.InvoiceRelatedPaymentDates.Add(new InvoiceRelatedPaymentDates()
+                    {
+                        Amount = invoicePayment,
+                        InvoiceId = invoice.Id,
+                        PaymentState = false
+                    });
+                    RemainUnitRentContractAmount = RemainUnitRentContractAmount - invoicePayment;
+                    continue;
                 }
             }
+
             return unitRentContract.UnitRentContractPayments.Where(d => d.Paid).OrderByDescending(p => p.DueDate).FirstOrDefault()?.DueDate ?? unitRentContract.dtLeaseStart.AddMonths(-incrmentStep);
         }
         #endregion
@@ -1627,7 +2022,50 @@ namespace SmartAdmin.WebUI.Controllers
 
             return new { English = "Months", Arabic = "شهر" };
         }
+
+        public ActionResult UnitHistory(int unitId)
+        {
+            var Result = _context.TUnitRentContract.Include((UnitRentContract u) => u.mCreatedBy).Include((UnitRentContract u) => u.mModifiedBy).Include((UnitRentContract u) => u.mTenant)
+                         .Include((UnitRentContract u) => u.mUnit)
+                         .ThenInclude((Units m) => m.mBuilding).Include((UnitRentContract x) => x.Mandoob).Where(x => x.IdUnit == unitId);
+            return View(Result);
+
+        }
+
+        public ActionResult TenantHistory(int TenentId)
+        {
+            var Result = _context.TUnitRentContract.Include((UnitRentContract u) => u.mCreatedBy).Include((UnitRentContract u) => u.mModifiedBy).Include((UnitRentContract u) => u.mTenant)
+                       .Include((UnitRentContract u) => u.mUnit)
+                       .ThenInclude((Units m) => m.mBuilding).Include((UnitRentContract x) => x.Mandoob).Where(x => x.IdTenant == TenentId);
+            return View(Result);
+        }
+
+        [NonAction]
+        public static string EncryptString(string text, string keyString)
+        {
+            byte[] clearBytes = Encoding.Unicode.GetBytes(text);
+            using (Aes encryptor = Aes.Create())
+            {
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(keyString, new byte[] {
+                0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76
+            });
+                encryptor.Key = pdb.GetBytes(32);
+                encryptor.IV = pdb.GetBytes(16);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(clearBytes, 0, clearBytes.Length);
+                        cs.Close();
+                    }
+                    text = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            return text;
+        }
     }
+
+
     public class PrintUnitContractDTO
     {
         public string ContractNo { get; set; }

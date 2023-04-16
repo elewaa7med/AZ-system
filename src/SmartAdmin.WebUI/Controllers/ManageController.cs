@@ -564,8 +564,11 @@ namespace SmartAdmin.WebUI.Controllers
 
                     foreach (var payment in _context.TUnitRentContractPayments.Where(e => e.UserID == Id))
                         payment.UserID = replaceId;
+                    foreach (var AllPaymentLogs in _context.unitRentContractAllPaymentLogs.Where(e => e.UserID == Id))
+                        AllPaymentLogs.UserID = replaceId; 
+                    foreach (var Maintenance in _context.Maintenances.Where(e => e.UserID == Id))
+                        Maintenance.UserID = replaceId;
                 }
-
                 _context.UserPermissions.RemoveRange(_context.UserPermissions.Where(u => u.UserId == Id).ToList());
                 _context.SaveChanges();
                 await _userManager.DeleteAsync(_usr);

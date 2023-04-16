@@ -1,0 +1,165 @@
+﻿@model SmartAdmin.WebUI.Models.DTO.RentContractOtherPayment
+@{ ViewData["Title"] = "Edit Other Pay";
+    ViewData["PageName"] = "Unit rent contracts " + Model.pageid;
+    ViewData["Heading"] = "<i class='fal fa-badge-dollar text-primary'></i>Pay";
+    ViewData["Category1"] = "Units";
+    ViewData["PageDescription"] = ""; }
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="panel-tag">
+                        <h4>
+                            <span class="color-info-800"> Tanenet Name : </span> <span class="color-fusion-800 ">
+                                @Model.TenantName
+                            </span>
+                        </h4>
+                        <h4>
+                            <span class="color-info-800">  Bulding Number : </span>
+                            <span class="color-fusion-800 ">
+                                @Model.BuldingNumber
+                            </span>
+                        </h4>
+                        <h4>
+                            <span class="color-info-800">  Unit Number : </span>
+                            <span class="color-fusion-800 "> @Model.UnitNumber </span>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form asp-action="DeleteOtherPayment" class="was-validated">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="ID" />
+    <input type="hidden" asp-for="UnitRentContractID" />
+    @if (ViewBag.AlertSaveErr != null)
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">
+                    <i class="fal fa-times"></i>
+                </span>
+            </button>
+            <div class="d-flex flex-start w-100">
+                <div class="d-flex flex-fill">
+                    <div class="flex-fill">
+                        <p>  @ViewBag.AlertSaveErr</p>
+                    </div>
+                </div>
+            </div>
+        </div>}
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-6" class="panel ">
+                <div class="panel-hdr bg-primary-700 bg-success-gradient">
+                    <h2>
+                        Other Payment
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 ">
+                            
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-4 text-sm-right form-label">commssion Amount * </label>
+                                <div class="col-sm-8">
+                                    <input asp-for="Commession" value="@Model.Commession" type="number" class="form-control"disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-4 text-sm-right form-label">Insurence Amount * </label>
+                                <div class="col-sm-8">
+                                    <input asp-for="Insurence" value="@Model.Insurence" type="number" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-4 text-sm-right form-label">Other Payment Amount * </label>
+                                <div class="col-sm-8">
+                                    <input asp-for="OtherPayment" value="@Model.OtherPayment" type="number" class="form-control" disabled>
+                                </div>
+                            </div><div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-4 text-sm-right form-label">Other Payment Name * </label>
+                                <div class="col-sm-8">
+                                    <input asp-for="OtherPaymentText" value="@Model.OtherPaymentText" type="text" class="form-control" disabled>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-4 text-sm-right form-label">Mony Flow * </label>
+                                <div class="col-sm-8">
+                                    <select asp-for="MonyType" asp-selected="" class="select2 form-control w-100" asp-items="@ViewBag.MonyType" required disabled>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-4 text-sm-right form-label">Paymnet Method * </label>
+                                <div class="col-sm-8">
+                                    <select onchange="ChangePaymetMehtod()" asp-for="PaymentMehtod" class="select2 form-control w-100" asp-items="@ViewBag.PaymentMethod" required disabled>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="checkVisaDiv" style="display:none;">
+                                <label for="inputEmail3" class="col-form-label col-sm-4 text-sm-right form-label" id="CheckVisaNumberlabel" disabled>
+
+                                </label>
+                                <div class="col-sm-8">
+                                    <input asp-for="checkVisaNumber" value="@Model.checkVisaNumber" type="number" class="form-control" disabled>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label col-sm-4 text-sm-right form-label">Comments</label>
+                                <div class="col-sm-8">
+                                    <textarea asp-for="Note" class="form-control" type="text" disabled>
+                                        @Model.Note
+                                     </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group  alert alert-primary alert-dismissible text-center">
+                    <button class="btn btn-primary ml-auto waves-effect waves-themed" type="submit">Delete</button>
+                    <button type="button" class="btn btn-secondary ml-1 waves-effect waves-themed" onclick="back()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section ScriptsBlock{
+<script>
+    function back() {
+        var fallbackUrl = "/UnitRentContract/Payment?id=" + $("#UnitRentContractID").val();
+        var prevPage = window.location.href;
+        window.history.go(-1);
+        setTimeout(function () {
+            if (window.location.href == prevPage) {
+                window.location.href = fallbackUrl;
+            }
+        }, 500);
+    }
+    function ChangePaymetMehtod() {
+        if ($("#PaymentMehtod").val() == 3 || $("#PaymentMehtod").val() == 4 || $("#PaymentMehtod").val() == 5) {
+            $("#checkVisaDiv").show();
+            $("#checkVisaNumber").attr("Required", "Required");
+            $("#PaymentMehtod").val() == 3 ? $("#CheckVisaNumberlabel").text("Check Number") : $("#CheckVisaNumberlabel").text("Transform Number");
+        } else {
+            $("#checkVisaDiv").hide();
+            $("#checkVisaNumber").removeAttr("Required");
+        }
+    }
+</script>
+}
+
+

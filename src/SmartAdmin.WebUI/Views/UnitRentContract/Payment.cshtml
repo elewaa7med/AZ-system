@@ -171,6 +171,97 @@
             </div>
         </div>
     </div>
+
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2 style="font-size:150%;">
+                    <span class="icon-stack icon-stack-lg">
+                        <i class="base-2 icon-stack-3x color-primary-400"></i>
+                        <i class="base-3 icon-stack-2x color-primary-600 opacity-70"></i>
+                        <i class="fal fa-lightbulb icon-stack-1x text-white opacity-90"></i>
+                    </span>
+                    <span class="fw-500  text-primary"> Other Payments   </span>
+                </h2>
+                <div class="panel-toolbar">
+                    <a class="btn btn-success waves-effect waves-themed" asp-action="PartiallyPayOther" title="Pay" asp-route-pageid="@ViewBag.id" asp-route-ContractId=@ViewBag.ContractId style="margin:0px 20px;padding:9px 40px;font-weight:bold;">Pay</a>
+                    <button class="btn btn-panel ml-2" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                </div>
+
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 az-datatable">
+
+                        <thead class="bg-primary-600">
+                            <tr>
+                                <th>#</th>
+                                <th>Insurence</th>
+                                <th>Commession</th>
+                                <th>Other</th>
+                                <th>Total Paid</th>
+                                <th>MonyFlow </th>
+                                <th>payment  Date </th>
+                                <th>User </th>
+                                <th>Comments </th>
+                                <th class="noExport">Operations</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model.RentContractOtherPaymentList.Select((value, i) => new { i, value }))
+                            {
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td class="paid format">
+                                        @item.value.Insurence
+                                    </td>
+                                    <td class="paid format">
+                                        @item.value.Commession
+                                    </td>
+                                    <td class="paid format">
+                                        @item.value.OtherPayment
+                                    </td>
+                                    <td class="paid format">
+                                        @item.value.PaidAmount
+                                    </td>
+                                    <td>
+                                        @Enum.GetName(typeof(Enums.MonyType), item.value.MonyType)
+                                    </td>
+                                    <td>
+                                        @item.value.PaymentDate?.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        @item.value.User
+                                    </td>
+                                    <td title="@(item.value.Note??"")">
+                                        @(item.value.Note?.Length>100? item.value.Note?.Substring(0,100)+"....": item.value?.Note)
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="EditOtherPayment" title="EditOtherPayment" asp-route-OtherPaymentId=@item.value.ID asp-route-pageid="@ViewBag.id">Edit</a>
+                                                    <a class="dropdown-item" asp-action="DeleteOtherPayment" title="DeleteOtherPayment" asp-route-pageid="@ViewBag.id" asp-route-OtherPaymentId=@item.value.ID>Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     @if (Model.InvoicesList != null && Model.InvoicesList.Count() > 0)
     {
         <div class="col-xl-12">
@@ -201,45 +292,41 @@
                                     <th>Payment Date</th>
                                     <th>Paid Amount  </th>
                                     <th>Payment Method</th>
+                                    <th>Type</th>
                                     <th>Operation </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.InvoicesList.Select((value, i) => new { i, value }))
                                 {
-                                    <tr>
-                                        <td>
-                                            @(item.i + 1 )
-                                        </td>
-                                        <td>
-                                            @("E-"+item.value.InvoiceId)
-                                        </td>
-                                        <td>
-                                            @item.value.PaymentDate.ToShortDateString()
-                                        </td>
-                                        <td class="format">
-                                            @item.value.Payment
-                                        </td>
-                                        <td>
-                                            @Enum.GetName(typeof(Enums.PaymentMehtod), item.value.PaymentMehtod)
-                                        </td>
+                                <tr>
+                                    <td>
+                                        @(item.i + 1 )
+                                    </td>
+                                    <td>
+                                        @("E-"+item.value.InvoiceId)
+                                    </td>
+                                    <td>
+                                        @item.value.PaymentDate.ToShortDateString()
+                                    </td>
+                                    <td class="format">
+                                        @item.value.Payment
+                                    </td>
+                                    <td>
+                                        @Enum.GetName(typeof(Enums.PaymentMehtod), item.value.PaymentMehtod)
+                                    </td>
+                                    <td>
+                                        @(item.value.isOtherPayment == true? "Other Payment" : "installments")
+                                    </td>
 
-                                        <td>
-                                            <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
-                                                <div class="btn-group" role="group">
-                                                    <a class="btn btn-success" asp-action="Invoice" title="Show Invoice" asp-route-InvoiceId=@item.value.Id>show Invoice</a>
-                                                    @*<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
-                                                        <div class="dropdown-menu">
-                                                            @if (canPay)
-                                                            {
-                                                                <a class="dropdown-item" asp-action="PartiallyPay" title="Pay" asp-route-id=@item.value.ID asp-route-pageid="@ViewBag.id" asp-route-fullPay="true">Pay</a>
-                                                            }
-
-                                                        </div>*@
-                                                </div>
+                                    <td>
+                                        <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                                <a class="btn btn-success" asp-action=@(item.value.isOtherPayment == true? "OtherInvoice" : "Invoice") title="Show Invoice" asp-route-InvoiceId=@(item.value.isOtherPayment == true? item.value.UnitRentContractOtherPayment.ID : item.value.Id)>show Invoice</a>
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>

@@ -25,5 +25,7 @@ namespace SmartAdmin.WebUI.Models
 			get;
 			set;
 		}
+		public virtual ICollection<TaxToProperttypes> TaxToProperttypes { get; set; }
+
 	}
 }
