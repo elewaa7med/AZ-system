@@ -137,6 +137,8 @@ namespace SmartAdmin.WebUI
             services.AddMvc(options => options.Filters.Add<ViewBagFilter>());
             WkHtmlToPdf.Preload(_env);
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
+            services.AddHostedService<Worker>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -83,9 +83,7 @@ namespace SmartAdmin.WebUI.Authorization
         [System.ComponentModel.DisplayName("Building")]
         BuildingAccountant = 12,
 
-        [Display(Name = "Sanus Compound")]
-        [System.ComponentModel.DisplayName("Sanus Compound")]
-        SanusAccountant = 51,
+        
 
         [Display(Name = "Building srooh")]
         [System.ComponentModel.DisplayName("Building")]
@@ -98,6 +96,10 @@ namespace SmartAdmin.WebUI.Authorization
         [Display(Name = "Building UK")]
         [System.ComponentModel.DisplayName("Building")]
         BuildingUK = 37,
+
+        [Display(Name = "Building Al Bandariyah")]
+        [System.ComponentModel.DisplayName("Building")]
+        BuildingAlBandariyah = 57,
 
         [Display(Name = "Desert Rose")]
         [System.ComponentModel.DisplayName("Compounds")]
@@ -119,6 +121,14 @@ namespace SmartAdmin.WebUI.Authorization
         [System.ComponentModel.DisplayName("Compounds")]
         Villa21 = 17,
 
+        [Display(Name = "Aleimad")]
+        [System.ComponentModel.DisplayName("Compounds")]
+        Aleimad = 59,
+
+        [Display(Name = "Sanus Compound")]
+        [System.ComponentModel.DisplayName("Sanus Compound")]
+        SanusAccountant = 51,
+
         [Display(Name = "Legal")]
         [System.ComponentModel.DisplayName("Other")]
         Legal = 18,
@@ -130,6 +140,10 @@ namespace SmartAdmin.WebUI.Authorization
         [Display(Name = "Legal UK")]
         [System.ComponentModel.DisplayName("Other")]
         LegalUK = 38,
+
+        [Display(Name = "Legal AlBandariyah")]
+        [System.ComponentModel.DisplayName("Other")]
+        LegalAlBandariyah = 58,
 
         [Display(Name = "Legal Hyam Alrashed")]
         [System.ComponentModel.DisplayName("Other")]
@@ -252,5 +266,9 @@ namespace SmartAdmin.WebUI.Authorization
         [Display(Name = "Legal Oasis Resorts Compound")]
         [System.ComponentModel.DisplayName("Other")]
         LegalOasisResortsCompound = 56,
+        
+        [Display(Name = "Legal Aleimad Compound")]
+        [System.ComponentModel.DisplayName("Other")]
+        LegalAleimadCompound = 60,
     }
 }

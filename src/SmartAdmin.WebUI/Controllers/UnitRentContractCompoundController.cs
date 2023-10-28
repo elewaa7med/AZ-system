@@ -11,6 +11,7 @@ using SmartAdmin.WebUI.Data;
 using SmartAdmin.WebUI.Extensions;
 using SmartAdmin.WebUI.Models;
 using SmartAdmin.WebUI.Models.DTO;
+using SmartAdmin.WebUI.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,6 +21,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -1917,13 +1919,13 @@ namespace SmartAdmin.WebUI.Controllers
                     break;
                 }
             }
-            var rentContract = _context.TUnitRentContract.Include(x=>x.Legal).FirstOrDefault(x => x.IdRentContract == model.UnitRentContractID);
+            var rentContract = _context.TUnitRentContract.Include(x => x.Legal).FirstOrDefault(x => x.IdRentContract == model.UnitRentContractID);
 
             rentContract.AddedtoCourt = false;
             rentContract.LegalId = null;
             _context.Update(rentContract);
             var legalEntity = rentContract.Legal;
-            if(legalEntity != null)
+            if (legalEntity != null)
                 _context.Legals.Remove(legalEntity);
             _context.SaveChanges();
             return RedirectToAction("Payment", new { id = model.UnitRentContractID });
@@ -2451,6 +2453,98 @@ namespace SmartAdmin.WebUI.Controllers
             return string.Empty;
         }
         #endregion
+
+        public async Task<ActionResult> SendWhatsAppInvoice(int unitId)
+        {
+            var dueValues = GetListUsersNotPayedDue(unitId);
+            try
+            {
+
+                foreach (var item in dueValues)
+                {
+                    string value = "عزيزنا المستاجر :" +
+                                "برجاء سرعة سداد الايجار للوحده رقم: " + item.UnitNumber + " قى المبنى رقم: " + item.Building + " للعقد رقم " + item.ContractNumber;
+                    foreach (var date in item.RemainingDates)
+                    {
+                        value += "\n بتاريخ " + date.DueDate.ToShortDateString() + " بقيمة: " + date.RemainingAmount;
+
+                    }
+                    if (!string.IsNullOrEmpty(item.TenantWhatsapp))
+                    {
+                        try
+                        {
+                            var client = new HttpClient();
+                            var request = new HttpRequestMessage(HttpMethod.Post, "https://go-wloop.net/api/v1/message/send");
+                            request.Headers.Add("Accept", "application/json");
+                            request.Headers.Add("AUTHORIZATION", "Bearer 6f8ad056d8d39e466b789264d0960ba4_sXPu0552ZnXd6r6PJFBNX0z0xcYUH1Pr6PQKNGPw");
+                            var content = new MultipartFormDataContent();
+                            string WhatsApp = item.TenantWhatsapp;
+                            content.Add(new StringContent(WhatsApp), "phone");
+                            content.Add(new StringContent(value), "body");
+                            request.Content = content;
+                            if (!string.IsNullOrEmpty(WhatsApp))
+                            {
+                                var response = await client.SendAsync(request);
+                                response.EnsureSuccessStatusCode();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            return View();
+                            throw;
+                        }
+
+                    }
+                }
+                return RedirectToAction("index");
+            }
+            catch (Exception ex)
+            {
+                return View("index");
+                throw;
+            }
+
+        }
+        private List<DueValue> GetListUsersNotPayedDue(int unitId)
+        {
+            var currentTime = DateTime.Now;
+            var next30DaysTime = currentTime.AddMonths(1);
+
+            var due60 = _context.TUnitRentContract.Include(t => t.UnitRentContractPayments)
+                                                  .Include(t => t.mTenant)
+                                                  .Where(c =>
+                                                               !c.Archived
+                                                               && !string.IsNullOrEmpty(c.mTenant.tenantEmail)
+                                                               && c.remainingAmount > 0
+                                                               && c.UnitRentContractPayments.Where(p => !p.Paid).MinOrDefault(p => p.DueDate) != null
+                                                               && c.IdUnitCompound == unitId
+                                                              )
+                                                  .Select(t => new DueValue
+                                                  {
+                                                      ContractID = t.IdRentContract,
+                                                      ContractNumber = t.contractNumber,
+                                                      UnitNumber = t.mUnit.UnitNumber ?? t.mCompoundUnits.UnitNumber ?? string.Empty,
+                                                      TenantName = t.mTenant.tenantName,
+                                                      TenantEmail = t.mTenant.tenantEmail,
+                                                      TenantWhatsapp = t.mTenant.Whatsapp,
+                                                      Mobile = t.mTenant.tenantMobile,
+                                                      AnnualRent = t.yearlyRent,
+                                                      RemainingRents = t.UnitRentContractPayments.Count(p => !p.Paid),
+                                                      Value = t.UnitRentContractPayments.Where(p => !p.Paid && p.DueDate < next30DaysTime).Sum(p => p.RemainingAmount),
+                                                      CollectionDate = t.UnitRentContractPayments.Where(p => !p.Paid).Min(p => p.DueDate).ToShortDateString(),
+                                                      RemainingDates = t.UnitRentContractPayments.Where(p => !p.Paid && p.DueDate < next30DaysTime).OrderBy(e => e.DueDate).Select(e => new DueDatesWithValues { DueDate = e.DueDate, RemainingAmount = e.RemainingAmount }).ToList(),
+                                                      ExpiryDate = t.dtLeaseEnd.ToShortDateString(),
+                                                      TotalDays = t.UnitRentContractPayments.Where(p => !p.Paid).Min(d => d.DueDate).Subtract(currentTime).Days,
+                                                      Building = t.mUnit.mBuilding.BuildingName ?? t.mCompound.compoundName,
+                                                      Mandoob = t.Mandoob.fullName,
+                                                      MandoobPhone = t.Mandoob.PhoneNumber,
+                                                      Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
+                                                      NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault()
+
+                                                  }).OrderBy(t => t.TotalDays).ToList();
+
+            return due60;
+        }
     }
 
     public class PrintContractDTO

@@ -68,10 +68,6 @@ namespace SmartAdmin.WebUI.Controllers
         {
             return GetCompound(new CompoundDTO { CompoundID = 2, CompoundName = "Meadow Park Garden", RepresentitveId = representitveId == "null" ? null : representitveId });
         }
-        public IActionResult DesertApartment(string representitveId = null)
-        {
-            return GetCompound(new CompoundDTO { CompoundID = 7, CompoundName = "Desert Apartments", RepresentitveId = representitveId == "null" ? null : representitveId });
-        }
         public IActionResult DesertRose(string representitveId = null)
         {
             return GetCompound(new CompoundDTO { CompoundID = 3, CompoundName = "Desert Rose", RepresentitveId = representitveId == "null" ? null : representitveId });
@@ -88,6 +84,14 @@ namespace SmartAdmin.WebUI.Controllers
         {
             return GetCompound(new CompoundDTO { CompoundID = 6, CompoundName = "Opal Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
         }
+        public IActionResult DesertApartment(string representitveId = null)
+        {
+            return GetCompound(new CompoundDTO { CompoundID = 7, CompoundName = "Desert Apartments", RepresentitveId = representitveId == "null" ? null : representitveId });
+        }
+        public IActionResult Sanus(string representitveId = null)
+        {
+            return GetCompound(new CompoundDTO { CompoundID = 8, CompoundName = "Sanus Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
+        }
         public IActionResult OasisGardens(string representitveId = null)
         {
             return GetCompound(new CompoundDTO { CompoundID = 9, CompoundName = "Oasis Gardens Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
@@ -96,10 +100,11 @@ namespace SmartAdmin.WebUI.Controllers
         {
             return GetCompound(new CompoundDTO { CompoundID = 10, CompoundName = "Oasis Resorts Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
         }
-        public IActionResult Sanus(string representitveId = null)
+        public IActionResult Aleimad(string representitveId = null)
         {
-            return GetCompound(new CompoundDTO { CompoundID = 8, CompoundName = "Sanus Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
+            return GetCompound(new CompoundDTO { CompoundID = 11, CompoundName = "Aleimad Compound", RepresentitveId = representitveId == "null" ? null : representitveId });
         }
+
         public ActionResult GetNonRentedUnits(int compoundID)
         {
             return View("~/Views/Home/CompundNonRented.cshtml", GetCompoundData(compoundID));
@@ -127,6 +132,21 @@ namespace SmartAdmin.WebUI.Controllers
                         break;
                     case 6:
                         ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.Villa21) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 7:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.DesertApartments) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 8:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.SanusCompound) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 9:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.OasisGardens) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 10:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.OasisResorts) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 11:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.Aleimad) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
                         break;
                     default:
                         break;
@@ -158,6 +178,8 @@ namespace SmartAdmin.WebUI.Controllers
                 return new CompoundDTO { CompoundID = 9, CompoundName = "Oasis Gardens Compound" };
             else if (compoundID == 10)
                 return new CompoundDTO { CompoundID = 10, CompoundName = "Oasis Resorts Compound" };
+            else if (compoundID == 11)
+                return new CompoundDTO { CompoundID = 11, CompoundName = "Aleimad Compound" };
             return null;
         }
         #endregion
@@ -738,7 +760,9 @@ namespace SmartAdmin.WebUI.Controllers
                                                           Mandoob = t.Mandoob.fullName,
                                                           Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
                                                           NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
-                                                          NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString()
+                                                          NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString(),
+                                                          buildingId = t.mUnit.IdBuilding,
+                                                          unitId = t.IdUnit,
 
                                                       }).OrderBy(t => t.TotalDays).ToList();
                 return Json(new DueViewModel
@@ -748,8 +772,8 @@ namespace SmartAdmin.WebUI.Controllers
 
                 });
             }
-
         }
+
         public JsonResult GetBuildingsDueOver60(int id, string representitveId = null)
         {
             var isAdmin = User.IsInRole("Admin") || User.IsInRole("AccountantManager") || User.IsInRole("Accountant");
@@ -774,6 +798,7 @@ namespace SmartAdmin.WebUI.Controllers
                                                                    (string.IsNullOrEmpty(representitveId) ? true : c.IdMandoob == representitveId))
                                                       .Select(t => new DueValue
                                                       {
+
                                                           ContractID = t.IdRentContract,
                                                           UnitNumber = t.mUnit.UnitNumber ?? string.Empty,
                                                           TenantName = t.mTenant.tenantName,
@@ -830,7 +855,9 @@ namespace SmartAdmin.WebUI.Controllers
                                                           Mandoob = t.Mandoob.fullName,
                                                           Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
                                                           NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
-                                                          NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString()
+                                                          NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString(),
+                                                          buildingId = t.mUnit.IdBuilding,
+                                                          unitId = t.IdUnit,
                                                       }).OrderBy(t => t.TotalDays).ToList();
                 return Json(new DueViewModel
                 {
@@ -887,9 +914,9 @@ namespace SmartAdmin.WebUI.Controllers
                                                       Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
                                                       NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
                                                       NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString(),
-
                                                       Mandoob = t.Mandoob.fullName,
-                                                      PropertyType = t.mCompoundUnits.mPropertyType.PropertyTypeName
+                                                      PropertyType = t.mCompoundUnits.mPropertyType.PropertyTypeName,
+
 
                                                   }).OrderBy(t => t.TotalDays).ToList();
             return Json(new DueViewModel
@@ -927,7 +954,9 @@ namespace SmartAdmin.WebUI.Controllers
                                                       Note = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.Note).FirstOrDefault() ?? string.Empty,
                                                       NoteDate = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString() == "01/01/0001" ? string.Empty : t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.CreatedOn).FirstOrDefault().ToShortDateString(),
                                                       NoteID = t.UnitRentContractNotes.OrderByDescending(e => e.CreatedOn).Select(e => e.ID).FirstOrDefault(),
-                                                      Mandoob = t.Mandoob.fullName
+                                                      Mandoob = t.Mandoob.fullName,
+                                                      buildingId = t.mUnit.IdBuilding,
+                                                      unitId = t.IdUnit,
 
                                                   }).OrderBy(t => t.TotalDays).ToList();
             return Json(new DueViewModel
@@ -1009,6 +1038,15 @@ namespace SmartAdmin.WebUI.Controllers
                         break;
                     case 8:
                         ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.SanusCompound) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 9:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.OasisGardens) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 10:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.OasisResorts) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
+                        break;
+                    case 11:
+                        ViewBag.Representatives = new SelectList(_context.Users.Include(u => u.UserPermissions).Where(m => m.UserPermissions.Select(p => p.Permission).Contains(Permission.Aleimad) && mandoobUsersIDs.Contains(m.Id)), "Id", "fullName", string.IsNullOrEmpty(compound.RepresentitveId) ? null : compound.RepresentitveId);
                         break;
                     default:
                         break;
@@ -1961,7 +1999,7 @@ namespace SmartAdmin.WebUI.Controllers
             DateTime.TryParse(model.start, out DateTime start);
             DateTime.TryParse(model.end, out DateTime end);
             var userID = _user.GetUserId(User);
-            
+
             var paymentDetails = _context.TUnitRentContractPayments.Where(x => x.DueDate >= start && x.DueDate <= end);
             var paymentDetailsAfterWhere = model.pageId != null ? paymentDetails.Where(c => (isAdmin || c.UnitRentContract.IdMandoob == userID) &&
                                                                               !c.UnitRentContract.AddedtoCourt && !c.UnitRentContract.Archived &&
@@ -1974,7 +2012,7 @@ namespace SmartAdmin.WebUI.Controllers
                                                           : paymentDetails.Where(c => (isAdmin || c.UnitRentContract.IdMandoob == userID) &&
                                                                                !c.UnitRentContract.AddedtoCourt && !c.UnitRentContract.Archived &&
                                                                        c.UnitRentContract.dtLeaseEnd >= DateTime.Now);
-          
+
 
             var result = paymentDetailsAfterWhere.OrderBy(b => b.DueDate)
                                                                      .Select(c => new PaymentLogDTO
@@ -2001,7 +2039,7 @@ namespace SmartAdmin.WebUI.Controllers
             //}
 
             string name = model.compoundId.HasValue ? _context.TCompounds.Where(c => c.IdCompound == model.compoundId).Select(c => c.compoundName).FirstOrDefault() : model.pageId.HasValue ? "Buildings" : "All";
-            return Json( result);
+            return Json(result);
         }
         private bool HasAccess(Permission permission)
         {
@@ -2051,13 +2089,14 @@ namespace SmartAdmin.WebUI.Controllers
                                                         BuildingNumber = t.IdUnit.HasValue ? t.mUnit.mBuilding.BuildingName : null,
                                                         ID = t.IdTenant,
                                                         pageid = t.mMasterBuilding,
+                                                        Whatsapp = t.mTenant.Whatsapp
                                                     }).ToList();
             ViewBag.CompoundName = compoundID.HasValue ? GetCompoundData(compoundID.Value).CompoundName : "Building";
             ViewBag.id = id;
             return View(tenants);
         }
-        
-       
+
+
     }
     public class Tenant
     {
@@ -2070,6 +2109,7 @@ namespace SmartAdmin.WebUI.Controllers
         public string BuildingNumber { get; set; }
         public int ID { get; set; }
         public int pageid { get; set; }
+        public string Whatsapp { get; set; }
     }
     public class DueValues
     {
@@ -2079,6 +2119,7 @@ namespace SmartAdmin.WebUI.Controllers
     public class DueValue
     {
         public int ContractID { get; set; }
+        public string ContractNumber { get; set; }
         public string UnitNumber { get; set; }
         public string TenantName { get; set; }
         public string Mobile { get; set; }
@@ -2094,10 +2135,15 @@ namespace SmartAdmin.WebUI.Controllers
         public int NoteID { get; set; }
         public List<DueDatesWithValues> RemainingDates { get; set; }
         public string TenantEmail { get; internal set; }
+        public string TenantWhatsapp { get; internal set; }
         public string MandoobPhone { get; internal set; }
         public string MandoobID { get; set; }
         public string PropertyType { get; set; }
         public string NoteDate { get; set; }
+        public int buildingId { get; set; }
+        public int? unitId { get; set; }
+        public int masterBuilding { get; set; }
+
     }
     public class DueDatesWithValues
     {

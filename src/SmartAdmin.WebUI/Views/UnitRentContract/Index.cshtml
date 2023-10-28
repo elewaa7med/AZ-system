@@ -226,7 +226,10 @@
                                                         <a class="dropdown-item" asp-action="Notes" asp-controller="UnitRentContract" asp-route-pageid="@ViewBag.id" asp-route-id=@item.value.IdRentContract> Notes</a>
                                                     }
                                                     <a class="dropdown-item" asp-action="UnitHistory" title="Details" asp-route-unitId=@item.value.IdUnit>Unit History</a>
+
                                                     <a class="dropdown-item" asp-action="TenantHistory" title="Details" asp-route-TenentId=@item.value.IdTenant>Tenant History</a>
+                                                    <a class="dropdown-item" asp-action="SendWhatsAppInvoice" title="Details" asp-route-unitId=@item.value.IdUnit asp-route-BuildingId=@item.value.mUnit?.mBuilding.IdBuilding  asp-route-pageid="@ViewBag.id">Send whatsapp</a>
+
                                                     <a class="dropdown-item" target="_blank" asp-action="ContractPrint" asp-controller="UnitRentContract" asp-route-id=@item.value.IdRentContract> Print</a>
                                                 </div>
                                             </div>

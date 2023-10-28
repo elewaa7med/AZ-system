@@ -11,6 +11,7 @@ using SmartAdmin.WebUI.Data;
 using SmartAdmin.WebUI.Extensions;
 using SmartAdmin.WebUI.Models;
 using SmartAdmin.WebUI.Models.DTO;
+using SmartAdmin.WebUI.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,6 +21,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,9 +53,11 @@ namespace SmartAdmin.WebUI.Controllers
             var isAdmin = User.IsInRole("Admin") || User.IsInRole("AccountantManager") || User.IsInRole("Accountant");
             ViewBag.id = id;
             _context.TUnitRentContract.Where((UnitRentContract m) => false);
-            IQueryable<UnitRentContract> applicationDbContext = (!isAdmin) ? (from m in _context.TUnitRentContract.Include((UnitRentContract u) => u.mCreatedBy).Include((UnitRentContract u) => u.mModifiedBy).Include((UnitRentContract u) => u.mTenant)
-                    .Include((UnitRentContract u) => u.mUnit)
-                    .ThenInclude((Units m) => m.mBuilding)
+            IQueryable<UnitRentContract> applicationDbContext = (!isAdmin) ? (from m in _context.TUnitRentContract.Include((UnitRentContract u) => u.mCreatedBy)
+                                                                                                                  .Include((UnitRentContract u) => u.mModifiedBy)
+                                                                                                                  .Include((UnitRentContract u) => u.mTenant)
+                                                                                                                  .Include((UnitRentContract u) => u.mUnit)
+                                                                                                                  .ThenInclude((Units m) => m.mBuilding)
                                                                                   //by H1
                                                                               where m.IdMandoob == _user.GetUserId(HttpContext.User) && m.IdCompound == null && m.Archived == false && m.AddedtoCourt == false
                                                                               select m) : (from m in _context.TUnitRentContract.Include((UnitRentContract u) => u.mCreatedBy).Include((UnitRentContract u) => u.mModifiedBy).Include((UnitRentContract u) => u.mTenant)
@@ -1746,7 +1750,7 @@ namespace SmartAdmin.WebUI.Controllers
             _context.UnitRentContractPaymentLogs.RemoveRange(payments.SelectMany(p => p.UnitRentContractPaymentLogs).ToList());
             _context.TUnitRentContractPayments.RemoveRange(payments);
             var modifiedBy = _user.GetUserId(HttpContext.User);
-            
+
             int paidAmount = unitRentContract.paidAmount;
             int remainingLastContact = unitRentContract.LastContractRemainingAmount;
             int payedFromRemainingLastContact = 0;
@@ -2039,6 +2043,19 @@ namespace SmartAdmin.WebUI.Controllers
                        .ThenInclude((Units m) => m.mBuilding).Include((UnitRentContract x) => x.Mandoob).Where(x => x.IdTenant == TenentId);
             return View(Result);
         }
+
+        public async Task<ActionResult> SendWhatsAppInvoice(int unitId, int buildingId, int pageid)
+        {
+            Helper helper = new Helper();
+            var dueValue = helper.GetListUsersNotPayedDue(_context, unitId, buildingId);
+            string WhatsAppMessage = helper.buildMessageBody(dueValue);
+            HttpResponseMessage ReturnValue = new HttpResponseMessage();
+            string WhatsAppNumber = helper.ValidateWhatsAppNumber(dueValue.TenantWhatsapp);
+            if (WhatsAppNumber != null)
+                ReturnValue = await helper.SendWhatsappAction(WhatsAppNumber, WhatsAppMessage);
+            return RedirectToAction("index", new { id = pageid });
+        }
+
 
         [NonAction]
         public static string EncryptString(string text, string keyString)

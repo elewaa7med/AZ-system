@@ -124,7 +124,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @{ string block = "", Unblock = "";}
+                            @{
+                                string block = "", Unblock = "";
+                            }
                             @foreach (var item in Model.Select((value, i) => new { i, value }))
                             {
                                 block = item.value.Blocked ? "style=display:none" : "style=display:block";
@@ -209,6 +211,7 @@
                                                     }
                                                     <a class="dropdown-item" asp-action="UnitHistory" title="Details" asp-route-unitId=@item.value.IdUnitCompound>Unit History</a>
                                                     <a class="dropdown-item" asp-action="TenantHistory" title="Details" asp-route-TenentId=@item.value.IdTenant>Tenant History</a>
+                                                    <a class="dropdown-item" asp-action="SendWhatsAppInvoice" title="Details" asp-route-unitId=@item.value.IdUnitCompound>Send whatsapp</a>
                                                     <a class="dropdown-item" @block id="block-@item.value.IdRentContract" onclick=getBlock("@item.value.IdRentContract")>Block</a>
                                                     <a class="dropdown-item" @Unblock id="unblock-@item.value.IdRentContract" onclick=unBlock("@item.value.IdRentContract")>Un Block</a>
                                                 </div>
@@ -246,50 +249,49 @@
 <div class="modal fade" id="default-example-modal" role="dialog" tabindex="-1" style="display: none;" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" id="modal-content">
-
         </div>
     </div>
 </div>
 @section ScriptsBlock
 {
-    <script>
-        $(function () {
-            if (!$("#representitveId").val())
-                $("#representitveIdSelect").val(null);
-        })
-        $("#representitveIdSelect").change(function () {
-            var url = '@Url.Content("~")' + window.location.pathname + "?representitveId=" + $(this).val();;
-            window.location.href = url;
-        })
-        function getBlock(contractID) {
-            $.get("@Url.Action("Block")", { contractID}, function (result) {
-                $("#modal-content").html(result);
-                $("#default-example-modal").modal('show');
-            });
-        }
-        function unBlock(contractID) {
-            blockUI();
-            $.get("@Url.Action("UnBlock")", { contractID }, function (result) {
-                $("#block-" + contractID).show();
-                $("#unblock-" + contractID).hide();
-                unblockUI();
-            });
-        }
+<script>
+    $(function () {
+        if (!$("#representitveId").val())
+            $("#representitveIdSelect").val(null);
+    })
+    $("#representitveIdSelect").change(function () {
+        var url = '@Url.Content("~")' + window.location.pathname + "?representitveId=" + $(this).val();;
+        window.location.href = url;
+    })
+    function getBlock(contractID) {
+        $.get("@Url.Action("Block")", { contractID}, function (result) {
+            $("#modal-content").html(result);
+            $("#default-example-modal").modal('show');
+        });
+    }
+    function unBlock(contractID) {
+        blockUI();
+        $.get("@Url.Action("UnBlock")", { contractID }, function (result) {
+            $("#block-" + contractID).show();
+            $("#unblock-" + contractID).hide();
+            unblockUI();
+        });
+    }
 
-        var first = false;
-        $(document).ajaxStop(function () {
-            setTimeout(function () {
-                if (first)
-                    return;
-                columnNumberWithCommas('formatNumber');
-                first = true;
-            }, 1000);
+    var first = false;
+    $(document).ajaxStop(function () {
+        setTimeout(function () {
+            if (first)
+                return;
+            columnNumberWithCommas('formatNumber');
+            first = true;
+        }, 1000);
+    });
+    $(document).ready(function () {
+        $(".formatNumber").each(function (val) {
+            console.log($(this).text());
+            $(this).text(numberWithCommas($(this).text()));
         });
-        $(document).ready(function () {
-            $(".formatNumber").each(function (val) {
-                console.log($(this).text());
-                $(this).text(numberWithCommas($(this).text()));
-            });
-        });
-    </script>
+    });
+</script>
 }

@@ -44,6 +44,15 @@ namespace SmartAdmin.WebUI.Models
             set;
         }
 
+        [Required]
+        [Phone]
+        [Display(Name = "whatsapp")]
+        public string Whatsapp
+        {
+            get;
+            set;
+        }
+
         [Display(Name = "Emergency Phone")]
         [Phone]
         public string emergencyPhone

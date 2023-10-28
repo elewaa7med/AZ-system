@@ -13,10 +13,28 @@
     var isCompoundMandoob = UserManager.IsInRoleAsync(user, "Mandoob").Result;
     var isHR = UserManager.IsInRoleAsync(user, "HR").Result;
 
+    var hasBuildingDashboardAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingDashboard })).Succeeded);
+    var hasMeadowParkDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MeadowParkGardenDashboard })).Succeeded);
+    var hasDesertRoseDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertRoseDashboard })).Succeeded);
+    var hasDaarResidenceDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DaarResidenceDashboard })).Succeeded);
+    var hasVilla24DashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Villa24Dashboard })).Succeeded);
+    var hasVilla21DashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Villa21Dashboard })).Succeeded);
+    var hasDesertApartmentsDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertApartmentsDashboard })).Succeeded);
+
     var hasBuildingAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingAccountant })).Succeeded);
     var hasBuildingsroohAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingSroohAccountant })).Succeeded);
     var hasBuildingUKAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingUK })).Succeeded);
     var hasBuildingHyamAlrashedAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingHyamAlrashed })).Succeeded);
+    var hasBuildingAlBandariyah = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingAlBandariyah })).Succeeded);
+    var hasLegalBuildingAlBandariyahAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalAlBandariyah })).Succeeded);
+
+    var hasLegalAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Legal })).Succeeded;
+    var hasLegalUKAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalUK })).Succeeded;
+    var hasLegalSroohAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalSrooh })).Succeeded;
+    var hasLegalHyamAlrashedAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalHyamAlrashed })).Succeeded;
+    var hasLegalAlBandariyahAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalAlBandariyah })).Succeeded);
+
+
     var hasMeadowParkAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MeadowParkGarden })).Succeeded);
     var hasDesertRoseAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertRose })).Succeeded);
     var hasDaarResidenceAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DaarResidence })).Succeeded);
@@ -25,29 +43,22 @@
     var hasDesertApartmentsAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertApartments })).Succeeded);
     var hasOasisGardens = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.OasisGardens })).Succeeded;
     var hasOasisResorts = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.OasisResorts })).Succeeded;
-    var hasLegalAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Legal })).Succeeded;
-    var hasLegalSroohAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalSrooh })).Succeeded;
-    var hasLegalHyamAlrashedAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalHyamAlrashed })).Succeeded;
-    var hasLegalUKAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalUK })).Succeeded;
-    var hasLegalOasisGardens = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalOasisGardensCompound })).Succeeded;
-    var hasLegalOasisResorts = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalOasisResortsCompound })).Succeeded;
+    var hasSanusCompound = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.SanusCompound })).Succeeded;
+    var hasAleimadCompound = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Aleimad })).Succeeded;
 
     var hasLegalMeadowParkAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalMeadowPark })).Succeeded;
     var hasLegalDesertRoseAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalDesertRose })).Succeeded;
-    var hasLegalDesertAppartmentsAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalDesertApartments })).Succeeded;
     var hasLegalDaarResidenceAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalDaarResidence })).Succeeded;
     var hasLegalVilla24Access = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalVilla24 })).Succeeded;
     var hasLegalVilla21Access = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalOpalCompound })).Succeeded;
+    var hasLegalDesertAppartmentsAccess = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalDesertApartments })).Succeeded;
+    var hasLegalOasisGardens = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalOasisGardensCompound })).Succeeded;
+    var hasLegalOasisResorts = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalOasisResortsCompound })).Succeeded;
+    var hasLegalSanusCompound = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalSanusCompound })).Succeeded;
+    var hasLegalAleimadCompound = (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.LegalAleimadCompound })).Succeeded;
 
 
-    var hasBuildingDashboardAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.BuildingDashboard })).Succeeded);
     var hasPaymentlogsAccess = isAdmin || isAccountantManager || ((isBuildingMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.PaymentLogs })).Succeeded);
-    var hasMeadowParkDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.MeadowParkGardenDashboard })).Succeeded);
-    var hasDesertRoseDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertRoseDashboard })).Succeeded);
-    var hasDaarResidenceDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DaarResidenceDashboard })).Succeeded);
-    var hasVilla24DashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Villa24Dashboard })).Succeeded);
-    var hasVilla21DashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.Villa21Dashboard })).Succeeded);
-    var hasDesertApartmentsDashboardAccess = isAdmin || isAccountantManager || ((isCompoundMandoob || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.DesertApartmentsDashboard })).Succeeded);
     var hasAddBuildings = isAdmin || ((isAccountantManager || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.AddBuilding })).Succeeded);
     var hasAddUnits = isAdmin || ((isAccountantManager || isAccountant) && (await AuthorizationService.AuthorizeAsync(User, null, new SmartAdmin.WebUI.Authorization.OperationAuthorizationRequirement { Permission = SmartAdmin.WebUI.Authorization.Permission.AddUnites })).Succeeded);
 
@@ -402,6 +413,88 @@
                         </li>
                         <li class="@("Building Maintenance 1".Contains(pageName) ? "active" : "")">
                             <a href="~/Maintenance/GetBuilding?id=1" title="Building Maintenance" data-filter-tags="Building Maintenance">
+                                <span class="nav-link-text">Building Maintenance</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+
+        if (hasBuildingAlBandariyah || hasLegalAlBandariyahAccess)
+        {
+            list = new List<string> { "Keys 5", "Units page 5", "Buildings page 5", "Building dues page 5", "Unit rent contracts 5", "Archived Unit Contracts 5", "Legal 5", "Non-Rented Units 5", "Building Electricity 5", "Building Insurance 5", "Building Tenants 5", "Building Maintenance 5" };
+            <li class="@(list.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Operations" data-filter-tags="Buildings">
+                    <i class="fal fa-edit"></i>
+                    <span class="nav-link-text">AlBandariyah  Buildings</span>
+                </a>
+                <ul>
+                    @if (hasBuildingAlBandariyah)
+                    {
+                        <li class="@("Building dues page 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/BuildingsDues?id=5" title="Buildings Dues & Stats" data-filter-tags="Buildings Dues & Stats">
+                                <span class="nav-link-text">Buildings Dues</span>
+                            </a>
+                        </li>
+                        <li class="@("Non-Rented Units 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/NonRentUnits?id=5" title="Non-Rented Units" data-filter-tags="Non-Rented Units">
+                                <span class="nav-link-text">Non-Rented Units </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasLegalAlBandariyahAccess)
+                    {
+                        <li class="@("Legal 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?id=5" title="Legal" data-filter-tags="Legal">
+                                <span class="nav-link-text">Legal </span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasBuildingAlBandariyah)
+                    {
+                        <li class="@("Unit rent contracts 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract?id=5" title="Rent Contracts" data-filter-tags="Rent Contracts">
+                                <span class="nav-link-text">Contracts</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Electricity 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/ElectricityMeter/GetBuildingMeters?id=5" data-filter-tags="Electricity" title="Electricity" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Electricity</span>
+                            </a>
+                        </li>
+                        <li class="@("Buildings page 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/Buildings?id=5" title="Buildings" data-filter-tags="Buildings">
+                                <span class="nav-link-text">Buildings</span>
+                            </a>
+                        </li>
+                        <li class="@("Units page 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/Units?id=5" title="Units" data-filter-tags="Units">
+                                <span class="nav-link-text">Units</span>
+                            </a>
+                        </li>
+                        <li class="@("Archived Unit Contracts 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitRentContract/Archived?id=5" title="Archived Rent Contracts" data-filter-tags="Archived Rent Contracts">
+                                <span class="nav-link-text">Archived Contracts</span>
+                            </a>
+                        </li>
+                        <li class="@("Keys 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/UnitKeys?id=5" title="Keys of the Units" data-filter-tags="Keys of the Units">
+                                <span class="nav-link-text">Keys of the Units</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Insurance 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetBuildingInsurance?id=5" title="Building Insurance " data-filter-tags="Building Insurance ">
+                                <span class="nav-link-text">Building Insurance</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Tenants 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/Home/GetTenants?id=5" title="Building Tenants" data-filter-tags="Building Tenants">
+                                <span class="nav-link-text">Building Tenants</span>
+                            </a>
+                        </li>
+                        <li class="@("Building Maintenance 5".Contains(pageName) ? "active" : "")">
+                            <a href="~/Maintenance/GetBuilding?id=5" title="Building Maintenance" data-filter-tags="Building Maintenance">
                                 <span class="nav-link-text">Building Maintenance</span>
                             </a>
                         </li>
@@ -925,6 +1018,93 @@
                 </ul>
             </li>
         }
+        if (hasSanusCompound)
+        {
+            <li class="@(new List<string> { "Building Sanus Compound","unit Sanus Compound","Oasis Resorts Sanus Compound", "Sanus Compound Contracts", "Sanus Compound Contract Expiry", "Sanus Compound Non Rented Units","Sanus Compound Insurance ","Sanus Compound Electricity","Sanus Compound Archived Contracts","Sanus Compound Tenants","Sanus Compound Maintenance","Sanus Compound Blocked","Legal Sanus Compound"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Sanus Compound" data-filter-tags="Sanus Compound">
+                    <i class="fal fa-building"></i>
+                    <span class="nav-link-text">Sanus Compound</span>
+                </a>
+                <ul>
+                    <li class="@("Sanus Compound Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/OasisResorts" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+
+                    <li class="@("Sanus Compound Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=8" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Sanus Compound Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=8" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalSanusCompound)
+                    {
+                        <li class="@("Legal Sanus Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=8" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    @*<li class="@("21 Villas Contract Expiry".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/ContractExpiry?compoundID=6" title="Contracts Expiry" class="waves-effect waves-themed ">
+                        <span class="nav-link-text">Contracts Expiry</span>
+                        </a>
+                        </li>*@
+
+                    <li class="@("Sanus Compound Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=8" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
+                            <span class="nav-link-text">Non Rented Units</span>
+                        </a>
+                    </li>
+                    <li class="@("Sanus Compound Electricity".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=8" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
+                        </a>
+                    </li>
+                    <li class="@("Sanus Compound Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=8" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("Sanus Compound Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=10" title="Tenants" data-filter-tags="Opal Compound Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("Sanus Compound Maintenance".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=8" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("Sanus Compound Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=8" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building Sanus Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=8" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit Sanus Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=8" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
         if (hasOasisGardens)
         {
             <li class="@(new List<string> { "Building Oasis Gardens Compound","unit Oasis Gardens Compound","Oasis Gardens Compound Dashboard", "Oasis Gardens Compound Contracts", "Oasis Gardens Compound Contract Expiry", "Oasis Gardens Compound Non Rented Units","Oasis Gardens Compound Insurance ","Oasis Gardens Compound Electricity","Oasis Gardens Compound Archived Contracts","Oasis Gardens Compound Tenants","Oasis Gardens Compound Maintenance","Oasis Gardens Compound Blocked","Legal Oasis Gardens Compound"}.Contains(pageName) ? "active open" : "")">
@@ -1039,7 +1219,7 @@
                     @if (hasLegalOasisResorts)
                     {
                         <li class="@("Legal Oasis Resorts Compound".Contains(pageName) ? "active" : "")">
-                            <a href="~/Legal/Index?compoundID=6" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                            <a href="~/Legal/Index?compoundID=10" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
                                 <span class="nav-link-text">Legal</span>
                             </a>
                         </li>
@@ -1092,6 +1272,93 @@
                     {
                         <li class="@("unit Oasis Resorts Compound".Contains(pageName) ? "active" : "")">
                             <a href="~/CompoundUnits/Index?IdCompound=10" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
+                                <span class="nav-link-text">Add Units</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        if (hasAleimadCompound)
+        {
+            <li class="@(new List<string> { "Building Aleimad Compound","unit Aleimad Compound","Aleimad Compound Dashboard", "Aleimad Compound Contracts", "Aleimad Compound Contract Expiry", "Aleimad Compound Non Rented Units","Aleimad Compound Insurance ","Aleimad Compound Electricity","Aleimad Compound Archived Contracts","Aleimad Compound Tenants","Aleimad Compound Maintenance","Aleimad Compound Blocked","Legal Aleimad Compound"}.Contains(pageName) ? "active open" : "")">
+                <a href="#" title="Aleimad Compound" data-filter-tags="Aleimad Compound">
+                    <i class="fal fa-building"></i>
+                    <span class="nav-link-text">Aleimad Compound</span>
+                </a>
+                <ul>
+                    <li class="@("Aleimad Compound Dashboard".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/Aleimad" title="Collections" class="waves-effect waves-themed " data-filter-tags="Collections">
+                            <span class="nav-link-text">Collections</span>
+                        </a>
+                    </li>
+
+                    <li class="@("Aleimad Compound Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundContracts?compoundID=11" title="Contracts" class="waves-effect waves-themed " data-filter-tags="Contracts">
+                            <span class="nav-link-text">Contracts</span>
+                        </a>
+                    </li>
+                    <li class="@("Aleimad Compound Archived Contracts".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/ArchivedCompound?compoundID=11" title="Archived" class="waves-effect waves-themed " data-filter-tags="Archived Contracts">
+                            <span class="nav-link-text">Archived Contracts</span>
+                        </a>
+                    </li>
+                    @if (hasLegalAleimadCompound)
+                    {
+                        <li class="@("Legal Aleimad Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/Legal/Index?compoundID=11" title="Legal" data-filter-tags="Legal" class="waves-effect waves-themed ">
+                                <span class="nav-link-text">Legal</span>
+                            </a>
+                        </li>
+                    }
+                    @*<li class="@("21 Villas Contract Expiry".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/ContractExpiry?compoundID=6" title="Contracts Expiry" class="waves-effect waves-themed ">
+                        <span class="nav-link-text">Contracts Expiry</span>
+                        </a>
+                        </li>*@
+
+                    <li class="@("Aleimad Compound Non Rented Units".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetNonRentedUnits?compoundID=11" title="Non Rented Units" class="waves-effect waves-themed " data-filter-tags="Non Rented Units">
+                            <span class="nav-link-text">Non Rented Units</span>
+                        </a>
+                    </li>
+                    <li class="@("Aleimad Compound Electricity".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/ElectricityMeter/GetCompoundMeters?compoundID=11" title="Electricity" data-filter-tags="Electricity" class="waves-effect waves-themed ">
+                            <span class="nav-link-text">Electricity</span>
+                        </a>
+                    </li>
+                    <li class="@("Aleimad Compound Insurance ".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetCompoundInsurance?compoundID=11" class="waves-effect waves-themed " data-filter-tags="Insurance ">
+                            <span class="nav-link-text">Insurance</span>
+                        </a>
+                    </li>
+                    <li class="@("Aleimad Compound Tenants".Contains(pageName) ? "active" : "")">
+                        <a href="~/Home/GetTenants?compoundID=11" title="Tenants" data-filter-tags="Opal Compound Tenants">
+                            <span class="nav-link-text">Tenants</span>
+                        </a>
+                    </li>
+                    <li class="@("Aleimad Compound Maintenance".Contains(pageName)==true ? "active" : "")">
+                        <a href="~/Maintenance/GetCompound?compoundID=11" title="Maintenance" class="waves-effect waves-themed " data-filter-tags="Maintenance">
+                            <span class="nav-link-text">Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="@("Aleimad Compound Blocked".Contains(pageName) ? "active" : "")">
+                        <a href="~/UnitRentContractCompound/Blocked?compoundID=11" title="Blocked" class="waves-effect waves-themed " data-filter-tags="Blocked">
+                            <span class="nav-link-text">Blocked</span>
+                        </a>
+                    </li>
+                    @if (hasAddBuildings)
+                    {
+                        <li class="@("Building Aleimad Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundBuildings/Index?IdCompound=11" title="Add Buildings" class="waves-effect waves-themed " data-filter-tags="Add Buildings">
+                                <span class="nav-link-text">Add Buildings</span>
+                            </a>
+                        </li>
+                    }
+                    @if (hasAddUnits)
+                    {
+                        <li class="@("unit Aleimad Compound".Contains(pageName) ? "active" : "")">
+                            <a href="~/CompoundUnits/Index?IdCompound=11" title="Add Units" class="waves-effect waves-themed " data-filter-tags="Add Units">
                                 <span class="nav-link-text">Add Units</span>
                             </a>
                         </li>

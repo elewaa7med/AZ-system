@@ -113,7 +113,7 @@
                 <span class="fw-900">   Over Due (Over 4 days) Rent Payments </span> }
             else
             {
-                <span class="fw-900">   Over Due (Over 30 days) Rent Payments </span>
+                <span class="fw-900">   Over Due (Over 60 days) Rent Payments </span>
             }
         </h1>
         <div id="panel-1" class="panel">
@@ -128,7 +128,7 @@
                     {<span class="fw-500  text-primary"> Total Over Due (Over 4 days) Rent Payments:  </span> }
                     else
                     {
-                        <span class="fw-500  text-primary"> Total Over Due (Over 30 days) Rent Payments:  </span>
+                        <span class="fw-500  text-primary"> Total Over Due (Over 60 days) Rent Payments:  </span>
                     }
                     &nbsp;<span class="color-danger-500"> <span id="overDueTotal">0</span></span>
                     @if (@ViewBag.id == 4)
@@ -404,6 +404,7 @@
                                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="/UnitRentContract/Details/`+row.contractID+`">Contract</a>
+                                        <a class="dropdown-item" title="Send" href="/UnitRentContract/SendWhatsAppInvoice?unitId=`+row.unitId+`&amp;buildingId=`+row.buildingId+`&amp;pageid=`+ @ViewBag.id+`">Send whatsapp</a>
                                         @if (canPay)
                                         {
                                             <a class="dropdown-item" href="/UnitRentContract/Payment/`+ row.contractID +`">Payment</a>
@@ -466,6 +467,7 @@
                                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="/UnitRentContract/Details/`+row.contractID+`">Contract</a>
+                                        <a class="dropdown-item" title="Send" href="/UnitRentContract/SendWhatsAppInvoice?unitId=`+row.unitId+`&amp;buildingId=`+row.buildingId+`&amp;pageid=`+ @ViewBag.id+`">Send whatsapp</a>
                                          <a class="dropdown-item" href="/Legal/Create/`+ row.contractID + `">Legal</a>
                                      @if (canPay)
                                         {
@@ -524,7 +526,7 @@
                         } else {
                             bgbadge = "badge-success";
                         }
-
+                        console.log(row);
                         htmlcontexp += '<tr> ' +
                             '<td><a href="/UnitRentContract/Details/' + row.itemArray[12] + '"  title="Go To Contract"><b> ' + row.itemArray[6] + '</b> </a> </td> ' +
                             '<td> ' + row.itemArray[7] + ' </td>' +
@@ -550,6 +552,7 @@
                             '<a class="dropdown-item " href="/UnitRentContract/Notes/' + row.itemArray[9] + '"> Notes</a>' +
                             '<a class="dropdown-item archive" onclick="return confirm (\'Are you sure ?\')" href="/UnitRentContract/Archive/' + row.itemArray[9] + '">Archive</a>' +
                             '<a class="dropdown-item delete" href="/UnitRentContract/Delete/' + row.itemArray[9] + '">Delete</a>' +
+                            //'<a class="dropdown-item Send" href="/UnitRentContract/SendWhatsAppInvoice?unitId='+row.itemArray[23]+`&amp;buildingId=`+row.itemArray[22]+'&amp;pageid='+ @ViewBag.id+'">Send WhatsApp</a>' +
                             '</div>' +
                             '</div>' +
                             '</div></td>' +
@@ -623,6 +626,7 @@
                                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Operation</button>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="/UnitRentContract/Details/`+ row.contractID + `">Contract</a>
+                                        <a class="dropdown-item" title="Send" href="/UnitRentContract/SendWhatsAppInvoice?unitId=`+row.unitId+`&amp;buildingId=`+row.buildingId+`&amp;pageid=`+ @ViewBag.id+`">Send whatsapp</a>
                                         <a class="dropdown-item" href="/Legal/Create/`+ row.contractID + `">Legal</a>
                                         @if (canPay)
                                         {
